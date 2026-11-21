@@ -89,17 +89,57 @@
         <div class="stage"><img id="ndImg" src="" alt="NDSI"></div>
       </div>
     </div>
-    <div class="guide">
-      <b>What counts as mining:</b> bare sediment bars, active pits, spoil heaps,
-      machinery tracks, barges. <b>Not</b> ordinary wet sand or dry riverbed.
-      Paint over the mining areas in the left panel; the right panel is only a
-      reference. Leave the mask empty for chips with no mining.
-      &nbsp; <span class="kbd">Ctrl+Z</span> undo &nbsp;
-      <span class="kbd">[</span>/<span class="kbd">]</span> size &nbsp;
-      <span class="kbd">E</span> eraser &nbsp;
-      <span class="kbd">←</span>/<span class="kbd">→</span> navigate &nbsp;
-      <span class="kbd">Ctrl+S</span> save
-    </div>
+    <details class="guide" open>
+      <summary><b>Annotation guide</b> — read before painting (click to collapse)</summary>
+      <div style="margin-top:8px">
+        <p><b>Keys:</b> <span class="kbd">Ctrl+Z</span> undo &nbsp;
+        <span class="kbd">[</span>/<span class="kbd">]</span> size &nbsp;
+        <span class="kbd">E</span> eraser &nbsp;
+        <span class="kbd">B</span> brush &nbsp;
+        <span class="kbd">←</span>/<span class="kbd">→</span> navigate &nbsp;
+        <span class="kbd">Ctrl+S</span> save</p>
+
+        <p><b>1. Reading the NDSI panel</b> — NDSI here is MNDWI, so water is
+        <b>positive</b> and sand is <b>negative</b>. Colour = (NDSI+1)/2 on a
+        blue-white-red scale: <b>medium blue</b> (NDSI -0.30) = strong bare sand;
+        <b>light blue</b> (-0.18) = typical sand in our scene; <b>very light blue</b>
+        (-0.10) = sand threshold; <b>white</b> (0.00) = boundary;
+        <b>pinkish white</b> (+0.05) = water. Our values only span about -0.30 to
+        +0.05, so water is the whitest patches, not vivid red. Always confirm
+        with truecolour.</p>
+
+        <p><b>2. The critical distinction</b> — NDSI tells you WHERE sand is,
+        not whether it is being mined. Even NOT MINING chips are 16-55% sand.
+        Paint only sand that also shows extraction damage in truecolour.</p>
+
+        <p><b>3. Signatures to look for</b> — pits (dark angular holes),
+        spoil heaps (lighter mounds beside pits), machinery tracks (straight
+        parallel lines), freshly cut edges (straight, geometric sand-water
+        boundary), barges (small dark rectangles on water), texture contrast
+        (smooth vs rough patches). Natural bars have soft curved edges and
+        uniform texture; mining makes hard angular straight edges.</p>
+
+        <p><b>4. Workflow</b> — (a) find the blue sand in NDSI; (b) inspect those
+        areas in truecolour; (c) paint the damaged parts, not all sand;
+        (d) check the hint — MINING chips should have substantial disturbed area,
+        NOT MINING chips nearly empty, but if a MINING chip looks natural paint
+        little; (e) save and move on.</p>
+
+        <p><b>5. Common mistakes</b> — painting all blue pixels (that is just
+        sand); painting white/red water (not mining); leaving MINING chips empty
+        (small pits matter); painting the whole chip because the hint says MINING
+        (our chips are 60-84% sand, not 100%); tracing the NDSI outline exactly
+        (mining patches are irregular).</p>
+
+        <p style="background:#FDF6E6;padding:7px;border-radius:4px"><b>Rule of
+        thumb:</b> if you can see a geometry nature would not make — straight
+        cuts, angular holes, parallel tracks, piles beside holes — on bare sand
+        (blue NDSI), paint it. Otherwise leave it blank.</p>
+
+        <p style="color:#5A6570;font-size:10.5px">Full version with colour table
+        and examples: <code>C:\New folder\Documentations\09_Annotation_Guide_for_Mining_Masks.pdf</code></p>
+      </div>
+    </details>
   </div>
 </div>
 <script>

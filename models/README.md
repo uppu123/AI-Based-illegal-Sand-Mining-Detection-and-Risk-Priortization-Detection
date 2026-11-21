@@ -1,9 +1,9 @@
 # Models — Phase C (training code ready; no metrics yet)
 
-Nothing has been trained yet. `train_segmentation.py` refuses to start until all 16 human pixel masks exist in `C:\New folder\annotation\masks\`. Metrics will be added here only after a real held-out evaluation run.
+Nothing has been trained yet. `train_segmentation.py` refuses to start until all 28 human pixel masks exist in `C:\New folder\annotation\masks\`. Metrics will be added here only after a real held-out evaluation run.
 
 ```powershell
-# 3-fold GroupKFold by transect on the 16 real masks
+# 3-fold GroupKFold by transect on the 28 real masks
 python models/train_segmentation.py --lmsnet --epochs 40
 # apply the trained folds to all 252 chips (pseudo-masks, not human truth)
 python models/self_train_masks.py "<run_dir_from_previous_step>" 0.7

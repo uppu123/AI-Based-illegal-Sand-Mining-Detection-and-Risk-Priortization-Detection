@@ -20,8 +20,8 @@ Detect illegal sand extraction along the Delhi stretch of the Yamuna (Palla → 
 | Phase A data repair | **Done** — 11 composites + 252 clean chips rebuilt; 11/11 band-position PASS, 5/5 index checks PASS |
 | Chip-level labels | **Done** — 252 human-reviewed labels frozen: **55 MINING / 45 NOT MINING / 152 UNSURE** |
 | Extra labeling features | **Done** — water fraction, CMI (bare-exposure ratio), river distance for 11 scenes + 252 chips |
-| Human pixel masks | **In progress** — 16-chip browser annotation tool running; **0/16 masks saved** |
-| Detection / risk models | **Phase C** — U-Net/LMS-Net training waits for the 16 masks; **no trained metrics claimed** |
+| Human pixel masks | **In progress** — 28-chip browser annotation tool; **16/28 mask files saved** (12 new river chips + T015 repaint pending) |
+| Detection / risk models | **Phase C** — U-Net/LMS-Net training waits for the 28 masks; **no trained metrics claimed** |
 | MERN dashboard | **Not started** |
 | Progress figure shown in deck | **55%** = weighted block completion: data + labels ~55%, models 30%, dashboard 10%, reporting 5% |
 | Strictly usable today | Closer to **55%** — data and labels are complete, pixel masks and models are not |
@@ -57,18 +57,18 @@ Detect illegal sand extraction along the Delhi stretch of the Yamuna (Palla → 
 
 ## 4. What remains (execution plan)
 
-Two hard gates remain: **pixel-mask sign-off (16/16)** and **C15 risk validation**. A10 verification and B7 label sign-off are complete.
+Two hard gates remain: **pixel-mask sign-off (28/28)** and **C15 risk validation**. A10 verification and B7 label sign-off are complete.
 
 | Phase | Work | Owner |
 |---|---|---|
 | **A — Data repair** | **DONE** — 11 composites + 252 clean chips rebuilt, 11/11 band-position PASS, 5/5 index checks PASS | Assistant |
 | **B — Labels** | **DONE for chips** — 252 labels frozen. **In progress:** 16 human pixel masks in the browser tool, then 3-fold GroupKFold by transect | Assistant + **You** (draw masks) |
-| **C — Models** | Train U-Net/LMS-Net on the 16 real masks → self-training loop to auto-mask all 252 chips → RF/XGBoost baseline → S2+S1 late fusion → morphology metrics → AHP-weighted risk score → hotspot **rank** validation | Assistant + **You** (approve weights) |
+| **C — Models** | Train U-Net/LMS-Net on the 28 real masks → self-training loop to auto-mask all 252 chips → RF/XGBoost baseline → S2+S1 late fusion → morphology metrics → AHP-weighted risk score → hotspot **rank** validation | Assistant + **You** (approve weights) |
 | **D — Dashboard** | React + Leaflet map, mining-mask overlay, sortable priority table; Node/Express API + MongoDB (SQLite fallback) | Assistant + **You** (freeze MVP, click-test) |
 | **E — Reports** | Correct slide 2 (real script names), slide 4 (no fixed-day deadline), update literature to 5 references, re-export PDFs | Assistant |
 | **F — Handover** | Timed rehearsal, 12-question Q&A, final checklist, present | **You** |
 
-No fixed calendar target is claimed. Assistant effort is ~22–27 h; your remaining input is roughly **1.5–2.5 h** (16 masks, weight approval, MVP freeze, rehearsal). Three decisions are required from you: **draw the 16 masks**, **approve AHP weights**, **freeze dashboard MVP scope**.
+No fixed calendar target is claimed. Assistant effort is ~22–27 h; your remaining input is roughly **1.5–2.5 h** (12 new river masks + 1 repaint, weight approval, MVP freeze, rehearsal). Three decisions are required from you: **draw the 12 new river masks and repaint T015**, **approve AHP weights**, **freeze dashboard MVP scope**.
 
 ## 5. Repository structure
 
@@ -105,7 +105,7 @@ The original band-order defect is **fixed in the rebuilt data**: 11 composites a
 ## 7. Models (designed; pixel-mask training pending)
 
 1. **Random Forest / XGBoost** — cheap baseline on 14 bands + extra features; go/no-go gate and fallback detector. A model using `sand_frac` will look perfect on the 100 decisive labels; this is reported transparently as a bare-sediment rule, not as a genuine accuracy result.
-2. **U-Net / LMS-Net** — pixel-level mining mask from 256×256×14 chips, BCE+Dice, 3-fold *spatial* GroupKFold by transect on the 16 human masks. LMS-Net multi-scale is chosen because mining patches range from pits to kilometre-long bars. Metrics (IoU, Dice, precision, recall, F1, confusion matrix) will be reported only after real held-out evaluation.
+2. **U-Net / LMS-Net** — pixel-level mining mask from 256×256×14 chips, BCE+Dice, 3-fold *spatial* GroupKFold by transect on the 28 human masks. LMS-Net multi-scale is chosen because mining patches range from pits to kilometre-long bars. Metrics (IoU, Dice, precision, recall, F1, confusion matrix) will be reported only after real held-out evaluation.
 3. **Self-training loop** — apply the trained segmentation model to all 252 chips, keep high-confidence masks, and use them for the full-dataset risk ranking. No accuracy is claimed for pseudo-masks.
 4. **S2 + S1 late fusion** — SAR all-weather path for cloudy monsoon months; optical path stays standalone.
 5. **Risk-score regressor** — AHP weights (detection 30%, persistence 25%, morphology 20%, access 15%, vegetation loss 10%) + learned calibration; validated by **rank correlation** against known hotspots, never a fabricated "risk accuracy". Tiers: High ≥70, Medium 40–70, Low <40.

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Train U-Net / LMS-Net-style segmentation on the 16 human pixel masks.
 
-Hard gate: all 16 masks must exist before any training starts. Metrics are
+Hard gate: all masks in annotation/chips.json (28 chips) must exist before training starts. Metrics are
 computed only on held-out transects (3-fold GroupKFold by transect) and are
 written to JSON. Nothing in this script fabricates a result.
 """

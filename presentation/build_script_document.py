@@ -494,7 +494,7 @@ h2("2.10  One honesty note to keep you safe")
 p("The 252 chip-level labels are now human-reviewed and frozen: 55 MINING, 45 NOT MINING and 152 UNSURE. "
   "Do not claim that the 100 decisive labels prove a classifier: they are perfectly separable by sand_frac > "
   "0.575 by construction, which is a transparent bare-sediment rule, not a measured accuracy. The genuinely "
-  "new ground truth is the 16 human pixel masks; until those exist and the held-out evaluation is run, there "
+  "new ground truth is the 28 human pixel masks; until those exist and the held-out evaluation is run, there "
   "are no segmentation metrics to report.")
 
 # ================================================================ SLIDE 3
@@ -507,7 +507,7 @@ script(
     "First, human pixel masks. Sixteen chips have been selected from unique transects and a browser tool is "
     "ready. We draw a mining mask on each one using the NDSI colour rules from the JIIT Noida study, then use "
     "those real masks to train U-Net or LMS-Net with spatial cross-validation. This is a hard gate: no "
-    "segmentation model before 16 out of 16 masks are saved.\n\n"
+    "segmentation model before 28 out of 28 masks are saved.\n\n"
     "Second, the detection and risk models. A random forest or XGBoost baseline first, because it is cheap and "
     "tells us how much signal the indices actually carry - with the honest caveat that a model using sand_frac "
     "looks perfect on the decisive labels by construction. Then U-Net or LMS-Net segmentation, evaluated on "
@@ -538,18 +538,18 @@ bullet_rich("Dashboard in parallel - ", "it is the only block that does not depe
             "shape of the API. That is why it runs alongside the model work.")
 
 h2("3.3  Why the mask step is the linchpin")
-p("If the 16 masks are inconsistent, the segmentation model learns noise. That is why this step comes first and "
+p("If the 28 masks are inconsistent, the segmentation model learns noise. That is why this step comes first and "
   "has a written guide. Two safeguards:")
 numbered("The NDSI guide defines the colour convention, the sand-versus-mining distinction, extraction signatures "
          "and common mistakes; it is embedded in the annotation tool and saved as PDF 09.")
-numbered("All 16 chips come from unique transects, so 3-fold GroupKFold by transect gives a leak-free held-out "
+numbered("28 chips span 24 transects, so 3-fold GroupKFold by transect gives a leak-free held-out "
          "evaluation instead of an inflated random-split number.")
 
 h2("3.4  Effort, not a deadline")
 table(
     ["Block", "What it means", "Why it comes first"],
     [
-        ["01  Human pixel masks", "16 masks, then 3-fold spatial CV", "Hard gate: no training without real masks"],
+        ["01  Human pixel masks", "28 masks, then 3-fold spatial CV", "Hard gate: no training without real masks"],
         ["02  Detection & risk", "Baseline, U-Net/LMS-Net, self-training, fusion, risk", "Consumes the masks and the frozen labels"],
         ["03  MERN + delivery", "React map/overlay, Node/Express API, MongoDB", "Needs only the API contract, not a trained model"],
     ],
@@ -564,7 +564,7 @@ script(
     "We are showing execution order, not a deadline. The 55 percent is real: data engineering and the 252-chip "
     "label set are finished. The milestones are placed in the order they must happen, without claiming a "
     "calendar date.\n\n"
-    "Step one, 16 human pixel masks. Step two, train U-Net or LMS-Net on those masks with three-fold spatial "
+    "Step one, 28 human pixel masks. Step two, train U-Net or LMS-Net on those masks with three-fold spatial "
     "cross-validation and report IoU, Dice, precision, recall and F1 only after that evaluation exists. Step "
     "three, self-training applies the trained model to all 252 chips. Step four, Sentinel-1 fusion and the "
     "AHP-weighted risk score. Step five, the MERN dashboard with map, mask overlay and priority table. Step six, "
@@ -578,7 +578,7 @@ h2("4.2  The parallelism, stated plainly")
 table(
     ["Track", "Owner", "Depends on", "Content"],
     [
-        ["A  -  Models (critical path)", "Upendra", "16 human masks", "U-Net/LMS-Net, self-training, S2+S1 fusion, AHP risk score"],
+        ["A  -  Models (critical path)", "Upendra", "28 human masks", "U-Net/LMS-Net, self-training, S2+S1 fusion, AHP risk score"],
         ["B  -  Product", "Somya", "API contract only", "Dashboard, map and overlay, chip browser, priority table"],
         ["Joint", "Both", "Stable outputs", "Integration, end-to-end testing, paper, thesis, defense rehearsal"],
     ],
@@ -589,7 +589,7 @@ callout("THE ARGUMENT IN ONE LINE",
         "That is why it can run alongside training.")
 
 h2("4.3  Why each milestone sits where it sits")
-bullet_rich("Masks first - ", "16 human pixel masks are the only genuinely new ground truth and the hard "
+bullet_rich("Masks first - ", "28 human pixel masks are the only genuinely new ground truth and the hard "
             "gate before any segmentation training.")
 bullet_rich("Baseline next - ", "a random forest on the 14 bands and extra features is a cheap go/no-go check. "
             "If it only rediscovers the sand_frac rule, that is reported honestly rather than sold as accuracy.")
@@ -607,7 +607,7 @@ table(
     ["Risk", "Impact", "Mitigation"],
     [
         ["Sentinel-2 re-download for the rebuild is slow or blocked", "Blocks mask training", "The 78 extracted SAFE directories are still on disk, so the rebuild is local if zips are restored; Sentinel-1 already covers the monsoon gap."],
-        ["Masks are inconsistent", "Blocks training", "Use the written NDSI guide, review the 16 masks together, and report low agreement honestly rather than forcing a clean dataset."],
+        ["Masks are inconsistent", "Blocks training", "Use the written NDSI guide, review the 28 masks together, and report low agreement honestly rather than forcing a clean dataset."],
         ["Segmentation underperforms", "Lowers the ceiling", "Fall back to the index plus random-forest pipeline. It is a weaker but fully working product - the project does not fail, the ceiling drops."],
         ["Dashboard scope creep", "Delays integration", "Fixed MVP feature list agreed up front: risk map, overlay, chip browser, labeling UI. Nothing else enters."],
         ["Report writing squeezed at the end", "Weakens the viva", "PROJECT_LOG.md has been maintained throughout, so the thesis is assembly, not archaeology."],
@@ -615,7 +615,7 @@ table(
     widths=[2.3, 1.1, 3.2],
 )
 callout("OFFER THIS BEFORE THEY ASK",
-        "Offer the next concrete milestone rather than a date: 16 out of 16 masks saved, then a held-out IoU/Dice "
+        "Offer the next concrete milestone rather than a date: 28 out of 28 masks saved, then a held-out IoU/Dice "
         "number from spatial cross-validation. Panels respond well to a plan with a verifiable gate, not an "
         "arbitrary deadline.")
 
@@ -664,7 +664,7 @@ qa = [
      "Which is exactly why slide 4 is built on parallel tracks and why the dashboard is off the critical path. "
      "The scope was cut to fit two people: one river, one season pair, one MVP dashboard."),
     ("What is the single biggest threat to finishing?",
-     "Inconsistent masks, because the model can only learn the ground truth we give it. That is why the 16 masks "
+     "Inconsistent masks, because the model can only learn the ground truth we give it. That is why the 28 masks "
      "are a hard gate with a written guide, and why the cheap random-forest baseline remains as a fallback."),
 ]
 for q, a in qa:
@@ -676,7 +676,7 @@ h1("6.  Check before you present")
 for item in [
     "Group number 162, both names, both roll numbers, supervisor spelling - read them off the slide once, out loud, before the panel does.",
     "Confirm the affiliation string for the spectral-index paper against the actual PDF before you say it aloud in the room.",
-    "Say '252 chip labels frozen; 16 pixel masks pending', and never present sand_frac separation as measured accuracy.",
+    "Say '252 chip labels frozen; 28 pixel masks (16 saved)', and never present sand_frac separation as measured accuracy.",
     "Say the band-order defect is fixed in the rebuilt data - the originals being untouched is a strength.",
     "Have these four files open in separate windows: verify_indices output, band_mapping_report.md, one chip RGB+NDVI panel, label_manifest.csv.",
     "Memorise these seven numbers: 29, 51, 42, 50.21, 252, 16, 55.",
@@ -720,7 +720,7 @@ script(
     "We have finished the heaviest part - 29 analysis-ready composites from 2018 to 2024, a 50.21-kilometre "
     "centreline, 51 transects, 42 validated chips and a 252-chip multi-temporal stack, all with a verification "
     "suite that has already caught and fixed a real band-order defect. That is 55 percent of the project.\n\n"
-    "What remains is 16 human pixel masks drawn with the NDSI rules from an India-specific spectral study, "
+    "What remains is 28 human pixel masks drawn with the NDSI rules from an India-specific spectral study, "
     "U-Net/LMS-Net training with spatial cross-validation, a self-training loop for all 252 chips, Sentinel-1 "
     "fusion for the monsoon, an AHP-weighted risk score, and a MERN dashboard running in parallel. There is no "
     "fixed calendar deadline; the milestones are ordered by dependency."
@@ -764,8 +764,8 @@ NOTES = {
         "accuracy until held-out masks are evaluated."),
     3: ("Tasks left - 2.5 min.\n"
         "- Lead with: the heaviest block (data + labels, ~55%) is DONE. Only models, dashboard, reporting remain.\n"
-        "- 01 Human pixel masks: 16 chips from unique transects, browser tool on 127.0.0.1:8765, NDSI guide "
-        "PDF 09. Hard gate: no training before 16/16 masks are saved.\n"
+        "- 01 Human pixel masks: 28 chips (24 transects), cyan water overlay, browser tool on 127.0.0.1:8765, NDSI guide "
+        "PDF 09. Hard gate: no training before 28/28 masks are saved.\n"
         "- 02 Detection & risk: RF/XGB baseline (cheap, but sand_frac looks perfect by construction) -> "
         "U-Net/LMS-Net with 3-fold GroupKFold by transect -> self-training on all 252 chips -> S2+S1 late "
         "fusion for monsoon -> AHP risk score validated by rank.\n"
@@ -774,12 +774,12 @@ NOTES = {
         "model. No fixed calendar deadline is claimed."),
     4: ("Execution order - 1.5 min.\n"
         "- There is NO fixed deadline on this slide. Milestones are shown in dependency order only.\n"
-        "- 55% today = data + 252 labels complete | 16 human masks | U-Net/LMS-Net with spatial CV | "
+        "- 55% today = data + 252 labels complete | 28 human masks | U-Net/LMS-Net with spatial CV | "
         "self-training all 252 | S2+S1 fusion + AHP risk score | MERN dashboard | paper, thesis, defense.\n"
         "- Be explicit: no IoU/Dice/F1 is shown because held-out masks have not been evaluated yet.\n"
         "- Biggest risk = inconsistent masks. Fallback = keep the RF/XGB baseline and the index rubric as a "
         "working product, and report the limitation honestly.\n"
-        "- Offer proactively: the next concrete milestone is 16/16 saved masks, not a calendar date."),
+        "- Offer proactively: the next concrete milestone is 28/28 saved masks, not a calendar date."),
 }
 
 try:

@@ -47,7 +47,12 @@
            border:2px solid #c9d3dd; border-radius:4px; overflow:hidden; }
   .stage img, .stage canvas { position:absolute; top:0; left:0;
                               width:512px; height:512px; }
-  #mask { cursor:crosshair; }
+  #mask { cursor:crosshair; z-index:3; }
+  #wtImg { z-index:2; pointer-events:none; display:none; }
+  .stage.water-on #wtImg { display:block; }
+  .water-stage { background:#0B1622; }
+  .water-stage img { opacity:.95; }
+  .water-frac { font-size:11px; color:var(--grey); margin-top:4px; }
   .guide { margin-top:12px; font-size:11.5px; color:var(--grey);
            background:var(--light); padding:10px; border-radius:5px; line-height:1.5; }
   .guide b { color:var(--navy); }
@@ -57,7 +62,7 @@
 </head>
 <body>
 <header>
-  <h1>Mining Mask Annotation — Option B (16 chips)</h1>
+  <h1>Mining Mask Annotation — river channel + mining damage</h1>
   <span class="badge" id="progress">0 / 16 done</span>
 </header>
 <div class="wrap">
@@ -73,20 +78,27 @@
       <span id="sizeVal" style="font-size:12px;color:var(--grey)">14</span>
       <button id="undoBtn">Undo</button>
       <button id="clearBtn">Clear</button>
+      <button id="waterBtn">Water overlay: OFF</button>
       <button id="saveBtn" class="primary">Save mask</button>
       <span class="status" id="status">Ready</span>
     </div>
     <div class="panels">
       <div class="panel">
         <div class="cap">TRUE COLOUR — draw here</div>
-        <div class="stage">
+        <div class="stage" id="tcStage">
           <img id="tcImg" src="" alt="truecolour">
+          <img id="wtImg" class="water-overlay" src="" alt="water overlay">
           <canvas id="mask" width="256" height="256"></canvas>
         </div>
       </div>
       <div class="panel">
         <div class="cap">NDSI — reference only</div>
         <div class="stage"><img id="ndImg" src="" alt="NDSI"></div>
+      </div>
+      <div class="panel">
+        <div class="cap">WATER — cyan = channel</div>
+        <div class="stage water-stage"><img id="waImg" src="" alt="water mask"></div>
+        <div class="water-frac" id="waterFrac">water: —</div>
       </div>
     </div>
     <details class="guide" open>
@@ -96,6 +108,7 @@
         <span class="kbd">[</span>/<span class="kbd">]</span> size &nbsp;
         <span class="kbd">E</span> eraser &nbsp;
         <span class="kbd">B</span> brush &nbsp;
+        <span class="kbd">W</span> water overlay &nbsp;
         <span class="kbd">←</span>/<span class="kbd">→</span> navigate &nbsp;
         <span class="kbd">Ctrl+S</span> save</p>
 
@@ -119,11 +132,12 @@
         (smooth vs rough patches). Natural bars have soft curved edges and
         uniform texture; mining makes hard angular straight edges.</p>
 
-        <p><b>4. Workflow</b> — (a) find the blue sand in NDSI; (b) inspect those
-        areas in truecolour; (c) paint the damaged parts, not all sand;
-        (d) check the hint — MINING chips should have substantial disturbed area,
-        NOT MINING chips nearly empty, but if a MINING chip looks natural paint
-        little; (e) save and move on.</p>
+        <p><b>4. Workflow</b> — (a) click <b>Water overlay</b> (or look at the
+        WATER panel) to find the channel — cyan is detected water; (b) inspect
+        the exposed sand next to it in truecolour; (c) paint only the damaged
+        parts, not all sand; (d) check the hint — MINING chips should have
+        substantial disturbed area, NOT MINING chips nearly empty; (e) save
+        and move on.</p>
 
         <p><b>5. Common mistakes</b> — painting all blue pixels (that is just
         sand); painting white/red water (not mining); leaving MINING chips empty
@@ -131,10 +145,16 @@
         (our chips are 60-84% sand, not 100%); tracing the NDSI outline exactly
         (mining patches are irregular).</p>
 
+        <p><b>6. Dry chips have no visible river</b> — some old MINING chips are
+        almost 100% bare sand with &lt;2% water. The channel is not in the frame,
+        so extraction cannot be confirmed from pixels. Those hints are now
+        <b>UNSURE</b> and their masks should stay empty. More chips that DO show
+        the river were added to this list — paint those where you see damage.</p>
+
         <p style="background:#FDF6E6;padding:7px;border-radius:4px"><b>Rule of
         thumb:</b> if you can see a geometry nature would not make — straight
         cuts, angular holes, parallel tracks, piles beside holes — on bare sand
-        (blue NDSI), paint it. Otherwise leave it blank.</p>
+        next to the cyan channel, paint it. Otherwise leave it blank.</p>
 
         <p style="color:#5A6570;font-size:10.5px">Full version with colour table
         and examples: <code>C:\New folder\Documentations\09_Annotation_Guide_for_Mining_Masks.pdf</code></p>
@@ -150,6 +170,10 @@ const canvas = document.getElementById('mask');
 const ctx = canvas.getContext('2d');
 const tcImg = document.getElementById('tcImg');
 const ndImg = document.getElementById('ndImg');
+const wtImg = document.getElementById('wtImg');
+const waImg = document.getElementById('waImg');
+const tcStage = document.getElementById('tcStage');
+const waterFracEl = document.getElementById('waterFrac');
 const statusEl = document.getElementById('status');
 const listEl = document.getElementById('chipList');
 const sizeInput = document.getElementById('size');
@@ -172,6 +196,11 @@ function setTool(t){
   tool=t;
   document.getElementById('brushBtn').classList.toggle('active',t==='brush');
   document.getElementById('eraseBtn').classList.toggle('active',t==='erase');
+}
+function toggleWater(){
+  const on=tcStage.classList.toggle('water-on');
+  document.getElementById('waterBtn').textContent='Water overlay: '+(on?'ON':'OFF');
+  say(on?'Cyan = detected water channel':'Water overlay off');
 }
 function pos(e){
   const r=canvas.getBoundingClientRect(), s=scale();
@@ -197,6 +226,9 @@ async function loadChip(i){
   idx=i; const c=chips[i];
   tcImg.src='/images/'+c.chip_id+'_truecolour.png';
   ndImg.src='/images/'+c.chip_id+'_NDSI.png';
+  wtImg.src='/images/'+c.chip_id+'_water.png';
+  waImg.src='/images/'+c.chip_id+'_water.png';
+  waterFracEl.textContent='water: '+(c.water_frac!==undefined?(c.water_frac*100).toFixed(1)+'%':'—');
   // load existing mask if present
   const r=await fetch('/api/mask/'+c.chip_id).then(x=>x.json());
   ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -249,6 +281,7 @@ document.getElementById('eraseBtn').onclick=()=>setTool('erase');
 document.getElementById('undoBtn').onclick=undo;
 document.getElementById('clearBtn').onclick=clearMask;
 document.getElementById('saveBtn').onclick=save;
+document.getElementById('waterBtn').onclick=toggleWater;
 sizeInput.oninput=()=>document.getElementById('sizeVal').textContent=sizeInput.value;
 
 window.addEventListener('keydown',e=>{
@@ -256,6 +289,7 @@ window.addEventListener('keydown',e=>{
   if(e.ctrlKey && e.key==='s'){ e.preventDefault(); save(); }
   if(e.key==='e'||e.key==='E') setTool('erase');
   if(e.key==='b'||e.key==='B') setTool('brush');
+  if(e.key==='w'||e.key==='W') toggleWater();
   if(e.key==='['){ sizeInput.value=Math.max(3,+sizeInput.value-2); sizeInput.oninput(); }
   if(e.key===']'){ sizeInput.value=Math.min(40,+sizeInput.value+2); sizeInput.oninput(); }
   if(e.key==='ArrowLeft') loadChip(idx-1);

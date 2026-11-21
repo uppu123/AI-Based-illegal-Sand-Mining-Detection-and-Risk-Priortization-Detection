@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mining Mask Annotation — Group 162</title>
+<style>
+  :root { --navy:#0E2A47; --gold:#E8A838; --light:#EEF3F8; --grey:#5A6570; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Segoe UI',Calibri,Arial,sans-serif;
+         background:var(--light); color:var(--navy); }
+  header { background:var(--navy); color:white; padding:10px 20px;
+           display:flex; align-items:center; justify-content:space-between; }
+  header h1 { font-size:17px; margin:0; }
+  header .badge { background:var(--gold); color:var(--navy); font-weight:bold;
+                  padding:3px 10px; border-radius:12px; font-size:12px; }
+  .wrap { display:flex; gap:16px; padding:16px; align-items:flex-start; }
+  .sidebar { width:250px; flex-shrink:0; background:white; border-radius:8px;
+             padding:12px; box-shadow:0 1px 4px #0002; }
+  .sidebar h2 { font-size:13px; margin:0 0 8px; color:var(--grey);
+                text-transform:uppercase; letter-spacing:.5px; }
+  .chip-list { list-style:none; padding:0; margin:0; max-height:56vh; overflow:auto; }
+  .chip-list li { padding:6px 8px; margin-bottom:3px; border-radius:5px;
+                  cursor:pointer; font-size:12px; background:var(--light); }
+  .chip-list li.active { background:var(--navy); color:white; }
+  .chip-list li.done { border-left:4px solid #2e9e5b; }
+  .chip-list li .hint { color:var(--grey); font-size:10px; }
+  .chip-list li.active .hint { color:#d8e2ec; }
+  .main { flex:1; background:white; border-radius:8px; padding:14px;
+          box-shadow:0 1px 4px #0002; }
+  .toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+             margin-bottom:10px; }
+  button { font-family:inherit; font-size:12px; padding:6px 12px;
+           border:1px solid #c9d3dd; background:white; border-radius:5px;
+           cursor:pointer; }
+  button:hover { background:var(--light); }
+  button.primary { background:var(--navy); color:white; border-color:var(--navy); }
+  button.primary:hover { background:#1a3d63; }
+  button.active { background:var(--gold); border-color:var(--gold);
+                  color:var(--navy); font-weight:bold; }
+  input[type=range] { width:110px; }
+  .status { font-size:12px; color:var(--grey); margin-left:auto; }
+  .panels { display:flex; gap:12px; justify-content:center; }
+  .panel { text-align:center; }
+  .panel .cap { font-size:11px; color:var(--grey); margin-bottom:4px;
+                font-weight:bold; }
+  .stage { position:relative; width:512px; height:512px;
+           border:2px solid #c9d3dd; border-radius:4px; overflow:hidden; }
+  .stage img, .stage canvas { position:absolute; top:0; left:0;
+                              width:512px; height:512px; }
+  #mask { cursor:crosshair; }
+  .guide { margin-top:12px; font-size:11.5px; color:var(--grey);
+           background:var(--light); padding:10px; border-radius:5px; line-height:1.5; }
+  .guide b { color:var(--navy); }
+  .kbd { background:white; border:1px solid #c9d3dd; border-radius:3px;
+         padding:1px 5px; font-family:monospace; font-size:10px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Mining Mask Annotation — Option B (16 chips)</h1>
+  <span class="badge" id="progress">0 / 16 done</span>
+</header>
+<div class="wrap">
+  <div class="sidebar">
+    <h2>Chips</h2>
+    <ul class="chip-list" id="chipList"></ul>
+  </div>
+  <div class="main">
+    <div class="toolbar">
+      <button id="brushBtn" class="active">Brush</button>
+      <button id="eraseBtn">Eraser</button>
+      <label>Size <input type="range" id="size" min="3" max="40" value="14"></label>
+      <span id="sizeVal" style="font-size:12px;color:var(--grey)">14</span>
+      <button id="undoBtn">Undo</button>
+      <button id="clearBtn">Clear</button>
+      <button id="saveBtn" class="primary">Save mask</button>
+      <span class="status" id="status">Ready</span>
+    </div>
+    <div class="panels">
+      <div class="panel">
+        <div class="cap">TRUE COLOUR — draw here</div>
+        <div class="stage">
+          <img id="tcImg" src="" alt="truecolour">
+          <canvas id="mask" width="256" height="256"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="cap">NDSI — reference only</div>
+        <div class="stage"><img id="ndImg" src="" alt="NDSI"></div>
+      </div>
+    </div>
+    <div class="guide">
+      <b>What counts as mining:</b> bare sediment bars, active pits, spoil heaps,
+      machinery tracks, barges. <b>Not</b> ordinary wet sand or dry riverbed.
+      Paint over the mining areas in the left panel; the right panel is only a
+      reference. Leave the mask empty for chips with no mining.
+      &nbsp; <span class="kbd">Ctrl+Z</span> undo &nbsp;
+      <span class="kbd">[</span>/<span class="kbd">]</span> size &nbsp;
+      <span class="kbd">E</span> eraser &nbsp;
+      <span class="kbd">←</span>/<span class="kbd">→</span> navigate &nbsp;
+      <span class="kbd">Ctrl+S</span> save
+    </div>
+  </div>
+</div>
+<script>
+const API = '';
+let chips = [], idx = 0, tool = 'brush', hist = [], drawing = false;
+
+const canvas = document.getElementById('mask');
+const ctx = canvas.getContext('2d');
+const tcImg = document.getElementById('tcImg');
+const ndImg = document.getElementById('ndImg');
+const statusEl = document.getElementById('status');
+const listEl = document.getElementById('chipList');
+const sizeInput = document.getElementById('size');
+
+function say(m){ statusEl.textContent = m; }
+function scale(){ return canvas.width / canvas.getBoundingClientRect().width; }
+
+function pushHistory(){
+  hist.push(ctx.getImageData(0,0,canvas.width,canvas.height));
+  if(hist.length > 30) hist.shift();
+}
+function undo(){
+  if(!hist.length){ say('Nothing to undo'); return; }
+  ctx.putImageData(hist.pop(),0,0); say('Undone');
+}
+function clearMask(){
+  pushHistory(); ctx.clearRect(0,0,canvas.width,canvas.height); say('Cleared');
+}
+function setTool(t){
+  tool=t;
+  document.getElementById('brushBtn').classList.toggle('active',t==='brush');
+  document.getElementById('eraseBtn').classList.toggle('active',t==='erase');
+}
+function pos(e){
+  const r=canvas.getBoundingClientRect(), s=scale();
+  return {x:(e.clientX-r.left)*s, y:(e.clientY-r.top)*s};
+}
+function paint(e){
+  if(!drawing) return;
+  const p=pos(e), r=+sizeInput.value/2;
+  ctx.globalCompositeOperation = tool==='brush' ? 'source-over' : 'destination-out';
+  ctx.fillStyle = 'rgba(255,255,255,1)';
+  ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2); ctx.fill();
+}
+function start(e){ pushHistory(); drawing=true; paint(e); }
+function stop(){ drawing=false; }
+
+canvas.addEventListener('pointerdown', e=>{ e.preventDefault(); canvas.setPointerCapture(e.pointerId); start(e); });
+canvas.addEventListener('pointermove', paint);
+canvas.addEventListener('pointerup', stop);
+canvas.addEventListener('pointercancel', stop);
+
+async function loadChip(i){
+  if(i<0 || i>=chips.length) return;
+  idx=i; const c=chips[i];
+  tcImg.src='/images/'+c.chip_id+'_truecolour.png';
+  ndImg.src='/images/'+c.chip_id+'_NDSI.png';
+  // load existing mask if present
+  const r=await fetch('/api/mask/'+c.chip_id).then(x=>x.json());
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(r.mask){
+    const img=new Image();
+    img.onload=()=>{ ctx.globalCompositeOperation='source-over';
+                     ctx.drawImage(img,0,0,canvas.width,canvas.height); };
+    img.src=r.mask;
+  }
+  hist=[];
+  renderList();
+  say(c.chip_id+' — hint: '+c.label_hint+(c.mask_exists?' (saved)':''));
+}
+function renderList(){
+  listEl.innerHTML='';
+  chips.forEach((c,i)=>{
+    const li=document.createElement('li');
+    li.className=(i===idx?'active ':'')+(c.mask_exists?'done':'');
+    li.innerHTML=c.chip_id+' <span class="hint">'+c.label_hint+'</span>';
+    li.onclick=()=>loadChip(i);
+    listEl.appendChild(li);
+  });
+}
+async function save(){
+  const d=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+  const out=document.createElement('canvas'); out.width=256; out.height=256;
+  const octx=out.getContext('2d'); const im=octx.createImageData(256,256);
+  let n=0;
+  for(let i=0;i<d.length;i+=4){
+    const m = d[i+3]>128 ? 255 : 0;
+    im.data[i]=im.data[i+1]=im.data[i+2]=m; im.data[i+3]=255;
+    if(m) n++;
+  }
+  octx.putImageData(im,0,0);
+  const png=out.toDataURL('image/png');
+  const c=chips[idx];
+  const r=await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({chip_id:c.chip_id,png})}).then(x=>x.json());
+  if(r.ok){ c.mask_exists=true; renderList();
+            say('Saved '+c.chip_id+' ('+n+' mining px / 65536)'); refreshProgress(); }
+  else say('SAVE FAILED: '+r.error);
+}
+async function refreshProgress(){
+  const p=await fetch('/api/progress').then(x=>x.json());
+  document.getElementById('progress').textContent=p.done+' / '+p.total+' done';
+}
+
+document.getElementById('brushBtn').onclick=()=>setTool('brush');
+document.getElementById('eraseBtn').onclick=()=>setTool('erase');
+document.getElementById('undoBtn').onclick=undo;
+document.getElementById('clearBtn').onclick=clearMask;
+document.getElementById('saveBtn').onclick=save;
+sizeInput.oninput=()=>document.getElementById('sizeVal').textContent=sizeInput.value;
+
+window.addEventListener('keydown',e=>{
+  if(e.ctrlKey && e.key==='z'){ e.preventDefault(); undo(); }
+  if(e.ctrlKey && e.key==='s'){ e.preventDefault(); save(); }
+  if(e.key==='e'||e.key==='E') setTool('erase');
+  if(e.key==='b'||e.key==='B') setTool('brush');
+  if(e.key==='['){ sizeInput.value=Math.max(3,+sizeInput.value-2); sizeInput.oninput(); }
+  if(e.key===']'){ sizeInput.value=Math.min(40,+sizeInput.value+2); sizeInput.oninput(); }
+  if(e.key==='ArrowLeft') loadChip(idx-1);
+  if(e.key==='ArrowRight') loadChip(idx+1);
+});
+
+fetch('/api/chips').then(r=>r.json()).then(data=>{
+  chips=data; renderList(); loadChip(0); refreshProgress();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+=== 01_verify_inventory started at 2026-10-28 01:44:52.296228 ===
+Base data: C:\New folder\yamuna_data
+Output dir: C:\New folder\yamuna_work\metadata
+Expected files: 29
+
+Checking: sentinel2/S2_2018_composite.tif
+  FAIL: File does not exist
+
+Checking: sentinel2/S2_2019_composite.tif
+  FAIL: File does not exist
+
+Checking: sentinel2/S2_2020_composite.tif
+  FAIL: File does not exist
+
+Checking: sentinel2/S2_2021_composite.tif
+  FAIL: File does not exist
+
+Checking: sentinel2/S2_2022_composite.tif
+  FAIL: File does not exist
+
+Checking: sentinel2/S2_2023_Q1_composite.tif
+  FAIL: File does not exist
+
+Checking: sentinel2/S2_2023_Q2_composite.tif
+  FAIL: File does not exist
+
+Checking: sentinel2/S2_2023_Q3_composite.tif
+  FAIL: File does not exist
+
+Checking: sentinel2/S2_2023_Q4_composite.tif
+  FAIL: File does not exist
+
+Checking: sentinel2/S2_2024_Q1_composite.tif
+  FAIL: File does not exist
+
+Checking: sentinel2/S2_2024_Q2_composite.tif
+  FAIL: File does not exist
+
+Checking: sentinel1/2023_2024/S1_2023_Q1_VV.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: sentinel1/2023_2024/S1_2023_Q1_VH.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: sentinel1/2023_2024/S1_2023_Q2_VV.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: sentinel1/2023_2024/S1_2023_Q2_VH.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: sentinel1/2023_2024/S1_2023_Q3_VV.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: sentinel1/2023_2024/S1_2023_Q3_VH.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: sentinel1/2023_2024/S1_2023_Q4_VV.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: sentinel1/2023_2024/S1_2023_Q4_VH.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: sentinel1/2023_2024/S1_2024_Q1_VV.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: sentinel1/2023_2024/S1_2024_Q1_VH.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: sentinel1/2023_2024/S1_2024_Q2_VV.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: sentinel1/2023_2024/S1_2024_Q2_VH.tif
+  Band count: 1 (OK)
+  dtype: uint16 (OK)
+  CRS: EPSG:4326 (OK)
+  Resolution: 10.00 x 9.93 m (OK)
+  Nodata: 0.0 (OK)
+  Bounds overlap AOI: OK
+  Status: OK
+
+Checking: landsat8/2023_2024/L8_2023_Q1.tif
+  FAIL: File does not exist
+
+Checking: landsat8/2023_2024/L8_2023_Q2.tif
+  FAIL: File does not exist
+
+Checking: landsat8/2023_2024/L8_2023_Q3.tif
+  FAIL: File does not exist
+
+Checking: landsat8/2023_2024/L8_2023_Q4.tif
+  FAIL: File does not exist
+
+Checking: landsat8/2023_2024/L8_2024_Q1.tif
+  FAIL: File does not exist
+
+Checking: landsat8/2023_2024/L8_2024_Q2.tif
+  FAIL: File does not exist
+
+--- Cross-file consistency checks ---
+
+Extra/unexpected files found (41):
+  downloaded_scenes\sentinel1\S1A_IW_GRDH_1SDV_20231008T125524_20231008T125553_050674_061B12_DB6A.SAFE.zip.part
+  downloaded_scenes\sentinel1\S1A_IW_GRDH_1SDV_20231125T125523_20231125T125552_051374_063317_99CE.SAFE.zip.part
+  downloaded_scenes\sentinel1\S1A_IW_GRDH_1SDV_20231219T125522_20231219T125551_051724_063F3C_8009_COG.SAFE.zip.part
+  downloaded_scenes\sentinel1\S1A_IW_GRDH_1SDV_20240124T125549_20240124T125614_052249_065114_FBF2.SAFE.zip.part
+  downloaded_scenes\sentinel1\S1A_IW_GRDH_1SDV_20240405T125521_20240405T125550_053299_067618_802A_COG.SAFE.zip.part
+  downloaded_scenes\sentinel1\S1A_IW_GRDH_1SDV_20240511T125550_20240511T125615_053824_068A89_B121_COG.SAFE.zip.part
+  downloaded_scenes\landsat8\LC08_L2SP_146040_20230218_20230223_02_T1.tar_x\LC08_L2SP_146040_20230218_20230223_02_T1_MTL.json
+  downloaded_scenes\landsat8\LC08_L2SP_146040_20230218_20230223_02_T1.tar_x\LC08_L2SP_146040_20230218_20230223_02_T1_SR_stac.json
+  downloaded_scenes\landsat8\LC08_L2SP_146040_20230218_20230223_02_T1.tar_x\LC08_L2SP_146040_20230218_20230223_02_T1_ST_stac.json
+  downloaded_scenes\landsat8\LC09_L2SP_146040_20231211_20231212_02_T1.tar_x\LC09_L2SP_146040_20231211_20231212_02_T1_MTL.json
+  downloaded_scenes\landsat8\LC09_L2SP_146040_20231211_20231212_02_T1.tar_x\LC09_L2SP_146040_20231211_20231212_02_T1_SR_stac.json
+  downloaded_scenes\landsat8\LC09_L2SP_146040_20231211_20231212_02_T1.tar_x\LC09_L2SP_146040_20231211_20231212_02_T1_ST_stac.json
+  landsat8\2023_2024\L8_2023_Q1_thermal_metadata.json
+  landsat8\2023_2024\L8_2023_Q2_thermal_metadata.json
+  landsat8\2023_2024\L8_2023_Q3_thermal_metadata.json
+  landsat8\2023_2024\L8_2023_Q4_thermal_metadata.json
+  landsat8\2023_2024\L8_2024_Q1_thermal_metadata.json
+  landsat8\2023_2024\L8_2024_Q2_thermal_metadata.json
+  sentinel1\2023_2024\S1_2023_Q1_VH_metadata.json
+  sentinel1\2023_2024\S1_2023_Q1_VV_metadata.json
+  sentinel1\2023_2024\S1_2023_Q2_VH_metadata.json
+  sentinel1\2023_2024\S1_2023_Q2_VV_metadata.json
+  sentinel1\2023_2024\S1_2023_Q3_VH_metadata.json
+  sentinel1\2023_2024\S1_2023_Q3_VV_metadata.json
+  sentinel1\2023_2024\S1_2023_Q4_VH_metadata.json
+  sentinel1\2023_2024\S1_2023_Q4_VV_metadata.json
+  sentinel1\2023_2024\S1_2024_Q1_VH_metadata.json
+  sentinel1\2023_2024\S1_2024_Q1_VV_metadata.json
+  sentinel1\2023_2024\S1_2024_Q2_VH_metadata.json
+  sentinel1\2023_2024\S1_2024_Q2_VV_metadata.json
+  sentinel2\2018\S2_2018_composite_metadata.json
+  sentinel2\2019\S2_2019_composite_metadata.json
+  sentinel2\2020\S2_2020_composite_metadata.json
+  sentinel2\2021\S2_2021_composite_metadata.json
+  sentinel2\2022\S2_2022_composite_metadata.json
+  sentinel2\2023_2024\S2_2023_Q1_composite_metadata.json
+  sentinel2\2023_2024\S2_2023_Q2_composite_metadata.json
+  sentinel2\2023_2024\S2_2023_Q3_composite_metadata.json
+  sentinel2\2023_2024\S2_2023_Q4_composite_metadata.json
+  sentinel2\2023_2024\S2_2024_Q1_composite_metadata.json
+  sentinel2\2023_2024\S2_2024_Q2_composite_metadata.json
+MISSING: sentinel2/S2_2018_composite.tif
+MISSING: sentinel2/S2_2019_composite.tif
+MISSING: sentinel2/S2_2020_composite.tif
+MISSING: sentinel2/S2_2021_composite.tif
+MISSING: sentinel2/S2_2022_composite.tif
+MISSING: sentinel2/S2_2023_Q1_composite.tif
+MISSING: sentinel2/S2_2023_Q2_composite.tif
+MISSING: sentinel2/S2_2023_Q3_composite.tif
+MISSING: sentinel2/S2_2023_Q4_composite.tif
+MISSING: sentinel2/S2_2024_Q1_composite.tif
+MISSING: sentinel2/S2_2024_Q2_composite.tif
+MISSING: landsat8/2023_2024/L8_2023_Q1.tif
+MISSING: landsat8/2023_2024/L8_2023_Q2.tif
+MISSING: landsat8/2023_2024/L8_2023_Q3.tif
+MISSING: landsat8/2023_2024/L8_2023_Q4.tif
+MISSING: landsat8/2023_2024/L8_2024_Q1.tif
+MISSING: landsat8/2023_2024/L8_2024_Q2.tif
+
+Written: C:\New folder\yamuna_work\metadata\inventory_check.csv
+
+=== SUMMARY ===
+Total files checked: 46
+OK: 12
+WARN: 1
+FAIL: 34
+
+>>> FAIL: One or more files failed checks

@@ -1,0 +1,101 @@
+============================================================
+BAND MAPPING CHECK STARTED
+============================================================
+============================================================
+STEP 0: CONFIRM PRIOR RESULTS
+============================================================
+Loaded index_stats.csv: 42 rows
+Columns: ['chip_id', 'n_valid', 'n_nodata', 'mean_NDWI_recomputed', 'pct_NDWI_gt_0.2', 'pct_NDSI_lt_neg0.1', 'pct_NDVI_gt_0.3', 'recomp_vs_stored_maxdiff_NDVI', 'recomp_vs_stored_maxdiff_NDWI', 'recomp_vs_stored_maxdiff_NDBI', 'recomp_vs_stored_maxdiff_NDSI']
+Visual check chips from report: ['T039_2023Q2', 'T051_2023Q2', 'T008_2023Q2', 'T009_2023Q2', 'T044_2023Q2', 'T049_2023Q2']
+  T039_2023Q2: NDVI_diff=nan, NDWI_diff=nan
+  T051_2023Q2: NDVI_diff=nan, NDWI_diff=nan
+  T008_2023Q2: NDVI_diff=0.141313, NDWI_diff=0.140008
+  T009_2023Q2: NDVI_diff=nan, NDWI_diff=nan
+  T044_2023Q2: NDVI_diff=nan, NDWI_diff=nan
+  T049_2023Q2: NDVI_diff=nan, NDWI_diff=nan
+WARNING: Could not find 'NDWI difference under 0.02' claim in report
+STEP 0: Prior results confirmed.
+============================================================
+STEP 1: RECONCILE CHECK 2 WITH CHECK 5
+============================================================
+
+  T039_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=nan, NDWI=nan, NDBI=nan, NDSI=nan
+  Recompute (B8): NDVI=0.174188, NDWI=0.175155, NDBI=0.175050, NDSI=0.000313
+  Recompute NDWI (B8A): max=0.195125, p99=0.063813
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.175155 > 0.02
+
+  T051_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=nan, NDWI=nan, NDBI=nan, NDSI=nan
+  Recompute (B8): NDVI=0.190478, NDWI=0.190479, NDBI=0.187742, NDSI=0.000332
+  Recompute NDWI (B8A): max=0.183296, p99=0.060719
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.190479 > 0.02
+
+  T008_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=0.141313, NDWI=0.140008, NDBI=0.147237, NDSI=0.000318
+  Recompute (B8): NDVI=0.141313, NDWI=0.140008, NDBI=0.147237, NDSI=0.000318
+  Recompute NDWI (B8A): max=0.144342, p99=0.054642
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.140008 > 0.02
+
+  T009_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=nan, NDWI=nan, NDBI=nan, NDSI=nan
+  Recompute (B8): NDVI=0.141313, NDWI=0.140008, NDBI=0.147237, NDSI=0.000318
+  Recompute NDWI (B8A): max=0.144342, p99=0.056359
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.140008 > 0.02
+
+  T044_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=nan, NDWI=nan, NDBI=nan, NDSI=nan
+  Recompute (B8): NDVI=0.193671, NDWI=0.193920, NDBI=0.194736, NDSI=0.000310
+  Recompute NDWI (B8A): max=0.182111, p99=0.062660
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.193920 > 0.02
+
+  T049_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=nan, NDWI=nan, NDBI=nan, NDSI=nan
+  Recompute (B8): NDVI=0.190478, NDWI=0.190479, NDBI=0.187742, NDSI=0.000328
+  Recompute NDWI (B8A): max=0.183296, p99=0.062345
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.190479 > 0.02
+
+Loading all chip data for brute-force search...
+============================================================
+STEP 2: BRUTE-FORCE BAND-PAIR SEARCH (ALL CHIPS)
+============================================================
+Testing 90 ordered band pairs per index across 42 chips
+  Progress: 1/90 candidates
+  Progress: 11/90 candidates
+  Progress: 21/90 candidates
+  Progress: 31/90 candidates
+  Progress: 41/90 candidates
+  Progress: 51/90 candidates
+  Progress: 61/90 candidates
+  Progress: 71/90 candidates
+  Progress: 81/90 candidates
+Loading all chip data...
+Loaded 42 chips
+  Candidate 1/90: (B2, B3)
+  Candidate 11/90: (B3, B4)
+  Candidate 21/90: (B4, B5)
+  Candidate 31/90: (B5, B6)
+  Candidate 41/90: (B6, B7)
+  Candidate 51/90: (B7, B8)
+  Candidate 61/90: (B8, B8A)
+  Candidate 71/90: (B8A, B11)
+  Candidate 81/90: (B11, B12)
+============================================================
+STEP 3: CORRELATION VS EXACTNESS
+============================================================
+
+ERROR: 'NDVI'
+Traceback (most recent call last):
+  File "C:\New folder\yamuna_work\scripts\09_band_mapping_check.py", line 798, in main
+    step3_correlation_analysis(logger, {}, None)
+  File "C:\New folder\yamuna_work\scripts\09_band_mapping_check.py", line 513, in step3_correlation_analysis
+    top = brute_results[idx_name][0]
+          ~~~~~~~~~~~~~^^^^^^^^^^
+KeyError: 'NDVI'
+

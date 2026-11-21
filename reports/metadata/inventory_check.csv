@@ -1,0 +1,88 @@
+file,sensor,n_bands,dtype,crs,res_x_m,res_y_m,nodata,west,south,east,north,width,height,band_names,status,notes,transform
+sentinel2/2018/S2_2018_composite.tif,S2,14,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,"B2,B3,B4,B5,B6,B7,B8,B8A,B11,B12,NDVI,NDWI,NDBI,NDSI",WARN,Band descriptions empty; using expected order as fallback;  Extra files: 41; ,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel2/2019/S2_2019_composite.tif,S2,14,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,"B2,B3,B4,B5,B6,B7,B8,B8A,B11,B12,NDVI,NDWI,NDBI,NDSI",WARN,Band descriptions empty; using expected order as fallback; ,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel2/2020/S2_2020_composite.tif,S2,14,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,"B2,B3,B4,B5,B6,B7,B8,B8A,B11,B12,NDVI,NDWI,NDBI,NDSI",WARN,Band descriptions empty; using expected order as fallback; ,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel2/2021/S2_2021_composite.tif,S2,14,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,"B2,B3,B4,B5,B6,B7,B8,B8A,B11,B12,NDVI,NDWI,NDBI,NDSI",WARN,Band descriptions empty; using expected order as fallback; ,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel2/2022/S2_2022_composite.tif,S2,14,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,"B2,B3,B4,B5,B6,B7,B8,B8A,B11,B12,NDVI,NDWI,NDBI,NDSI",WARN,Band descriptions empty; using expected order as fallback; ,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel2/2023_2024/S2_2023_Q1_composite.tif,S2,14,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,"B2,B3,B4,B5,B6,B7,B8,B8A,B11,B12,NDVI,NDWI,NDBI,NDSI",WARN,Band descriptions empty; using expected order as fallback; ,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel2/2023_2024/S2_2023_Q2_composite.tif,S2,14,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,"B2,B3,B4,B5,B6,B7,B8,B8A,B11,B12,NDVI,NDWI,NDBI,NDSI",WARN,Band descriptions empty; using expected order as fallback; ,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel2/2023_2024/S2_2023_Q3_composite.tif,S2,14,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,"B2,B3,B4,B5,B6,B7,B8,B8A,B11,B12,NDVI,NDWI,NDBI,NDSI",WARN,Band descriptions empty; using expected order as fallback; ,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel2/2023_2024/S2_2023_Q4_composite.tif,S2,14,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,"B2,B3,B4,B5,B6,B7,B8,B8A,B11,B12,NDVI,NDWI,NDBI,NDSI",WARN,Band descriptions empty; using expected order as fallback; ,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel2/2023_2024/S2_2024_Q1_composite.tif,S2,14,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,"B2,B3,B4,B5,B6,B7,B8,B8A,B11,B12,NDVI,NDWI,NDBI,NDSI",WARN,Band descriptions empty; using expected order as fallback; ,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel2/2023_2024/S2_2024_Q2_composite.tif,S2,14,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,"B2,B3,B4,B5,B6,B7,B8,B8A,B11,B12,NDVI,NDWI,NDBI,NDSI",WARN,Band descriptions empty; using expected order as fallback; ,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2023_Q1_VV.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VV,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2023_Q1_VH.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VH,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2023_Q2_VV.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VV,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2023_Q2_VH.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VH,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2023_Q3_VV.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VV,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2023_Q3_VH.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VH,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2023_Q4_VV.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VV,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2023_Q4_VH.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VH,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2024_Q1_VV.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VV,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2024_Q1_VH.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VH,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2024_Q2_VV.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VV,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+sentinel1/2023_2024/S1_2024_Q2_VH.tif,S1,1,uint16,EPSG:4326,10.0,9.93,0.0,77.15,28.54,77.32,28.76,1661,2450,VH,OK,,"| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+landsat8/2023_2024/L8_2023_Q1_thermal.tif,L8,3,float32,EPSG:4326,29.98,29.78,,77.15,28.54,77.32,28.76,554,817,"thermal_K,red_B4,nir_B5",WARN,"dtype is float32, expected uint16; Band descriptions empty; using expected order as fallback; ","| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+landsat8/2023_2024/L8_2023_Q2_thermal.tif,L8,3,float32,EPSG:4326,29.98,29.78,,77.15,28.54,77.32,28.76,554,817,"thermal_K,red_B4,nir_B5",WARN,"dtype is float32, expected uint16; Band descriptions empty; using expected order as fallback; ","| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+landsat8/2023_2024/L8_2023_Q3_thermal.tif,L8,3,float32,EPSG:4326,29.98,29.78,,77.15,28.54,77.32,28.76,554,817,"thermal_K,red_B4,nir_B5",WARN,"dtype is float32, expected uint16; Band descriptions empty; using expected order as fallback; ","| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+landsat8/2023_2024/L8_2023_Q4_thermal.tif,L8,3,float32,EPSG:4326,29.98,29.78,,77.15,28.54,77.32,28.76,554,817,"thermal_K,red_B4,nir_B5",WARN,"dtype is float32, expected uint16; Band descriptions empty; using expected order as fallback; ","| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+landsat8/2023_2024/L8_2024_Q1_thermal.tif,L8,3,float32,EPSG:4326,29.98,29.78,,77.15,28.54,77.32,28.76,554,817,"thermal_K,red_B4,nir_B5",WARN,"dtype is float32, expected uint16; Band descriptions empty; using expected order as fallback; ","| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"
+landsat8/2023_2024/L8_2024_Q2_thermal.tif,L8,3,float32,EPSG:4326,29.98,29.78,,77.15,28.54,77.32,28.76,554,817,"thermal_K,red_B4,nir_B5",WARN,"dtype is float32, expected uint16; Band descriptions empty; using expected order as fallback; ","| 0.00, 0.00, 77.15|
+| 0.00,-0.00, 28.76|
+| 0.00, 0.00, 1.00|"

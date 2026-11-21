@@ -1,0 +1,115 @@
+=====================================================================
+COPERNICUS + USGS DIRECT DOWNLOAD - EXAMPLE OUTPUT
+=====================================================================
+
+This is what you will see when you run the script.
+
+----------------------------------------------------------------------
+$ python extract_yamuna_data.py
+======================================================================
+Yamuna River Sand Mining - Data Collection (Copernicus + USGS direct)
+======================================================================
+
+Enter the base output folder path (Enter = default):
+  Path: C:\New folder\yamuna_data
+
+======================================================================
+LOGIN CREDENTIALS
+======================================================================
+Free accounts - create one if you don't have:
+  Copernicus Data Space: https://dataspace.copernicus.eu/
+  USGS Earth Explorer  : https://ers.cr.usgs.gov/register/
+
+  Copernicus Data Space username/email: your@email.com
+  Copernicus Data Space password: **********
+
+  USGS Earth Explorer username: your_usgs_user
+  USGS Earth Explorer password: **********
+
+Verifying Copernicus Data Space credentials...
+  Copernicus login: OK
+
+Verifying USGS credentials...
+  USGS login: OK
+
+Folder structure ready at: C:\New folder\yamuna_data
+  Free disk space: 153 GB
+
+Sources: ['sentinel2', 'sentinel1', 'landsat8'] | workers: 4
+
+----------------------------------------------------------------------
+SENTINEL-2 L2A  (2018-2024)  [trimmed to fit disk]
+----------------------------------------------------------------------
+
+  Processing 2018 ...
+  2018: found 47 L2A scenes, 32 with cloud <= 15%
+  2018: best scene S2A_MSIL2A_20180615T052441_... (6.2% cloud)
+  2018: downloading 1 products (0 already present)
+    [ok] S2A_MSIL2A_20180615... -> S2A_MSIL2A_20180615....zip
+
+  Processing 2019 ...
+  2019: found 52 L2A scenes, 38 with cloud <= 15%
+  2019: best scene S2B_MSIL2A_20190710T053509_... (8.1% cloud)
+  2019: downloading 1 products (0 already present)
+    [ok] S2B_MSIL2A_20190710... -> S2B_MSIL2A_20190710....zip
+  ...
+
+  Processing 2023-Q1 ...
+  2023_Q1: found 28 L2A scenes, 26 with cloud <= 15%
+  2023_Q1: trimmed to 6 cleanest scenes
+           (disk limit, full archive needs ~210 GB)
+  2023_Q1: downloading 6 products (0 already present)
+    [ok] S2A_MSIL2A_20230115... -> S2A_MSIL2A_20230115....zip
+    [ok] S2B_MSIL2A_20230204... -> S2B_MSIL2A_20230204....zip
+    ...
+  S2_2023_Q1_composite.tif: SCL-masked median composite; 6 source scenes
+  Wrote S2_2023_Q1_composite.tif (14 bands)
+
+----------------------------------------------------------------------
+SENTINEL-1 GRD  (2023-2024 quarterly)
+----------------------------------------------------------------------
+
+  Processing 2023-Q1 ...
+  2023_Q1: found 24 GRD IW ascending scenes
+  2023_Q1: trimmed to 8 scenes spread across the quarter
+  2023_Q1: downloading 8 products (0 already present)
+    [ok] S1A_IW_GRDH_1SDV_20230101... -> S1A_IW_GRDH_1SDV....zip
+    ...
+  Wrote S1_2023_Q1_VV.tif
+  Wrote S1_2023_Q1_VH.tif
+
+----------------------------------------------------------------------
+LANDSAT-8 C2 L2 THERMAL  (2023-2024 quarterly)
+----------------------------------------------------------------------
+
+  Processing 2023-Q1 ...
+  2023_Q1: found 8 C2 L2 scenes (cloud <= 10%)
+  2023_Q1: best scene LC08_L2SP_147043_20230215... (7% cloud)
+  ...
+  Wrote L8_2023_Q1_thermal.tif (thermal=K, red, nir)
+
+----------------------------------------------------------------------
+SUMMARY
+----------------------------------------------------------------------
+  Products handled : 52
+  Downloaded OK    : 52
+  Failed           : 0
+  Total size       : 18.4 GB
+  Elapsed          : 1h 42m
+  Metadata written : metadata/complete_inventory.csv, quality_report.txt,
+                     download_log.txt, failed_downloads.csv
+
+  Resume any time  : python extract_yamuna_data.py
+                     --base-path "C:\New folder\yamuna_data"
+                     --sources sentinel2 sentinel1 landsat8
+=====================================================================
+
+RESUMING AFTER A CRASH:
+  Just re-run the same command. The script reads download_state.json,
+  skips completed files, and continues where it left off.
+
+  $ python extract_yamuna_data.py
+    ... (same prompts) ...
+    [resume] skipping S2A_MSIL2A_20180615... (already downloaded)
+    [resume] skipping S2B_MSIL2A_20190710... (already downloaded)
+    ...

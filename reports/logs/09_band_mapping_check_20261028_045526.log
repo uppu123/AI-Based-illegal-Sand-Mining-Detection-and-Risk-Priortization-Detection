@@ -1,0 +1,279 @@
+============================================================
+BAND MAPPING CHECK STARTED
+============================================================
+============================================================
+STEP 0: CONFIRM PRIOR RESULTS
+============================================================
+Loaded index_stats.csv: 42 rows
+Columns: ['chip_id', 'n_valid', 'n_nodata', 'mean_NDWI_recomputed', 'pct_NDWI_gt_0.2', 'pct_NDSI_lt_neg0.1', 'pct_NDVI_gt_0.3', 'recomp_vs_stored_maxdiff_NDVI', 'recomp_vs_stored_maxdiff_NDWI', 'recomp_vs_stored_maxdiff_NDBI', 'recomp_vs_stored_maxdiff_NDSI']
+Visual check chips from report: ['T039_2023Q2', 'T051_2023Q2', 'T008_2023Q2', 'T009_2023Q2', 'T044_2023Q2', 'T049_2023Q2']
+  T039_2023Q2: NDVI_diff=nan, NDWI_diff=nan
+  T051_2023Q2: NDVI_diff=nan, NDWI_diff=nan
+  T008_2023Q2: NDVI_diff=0.141313, NDWI_diff=0.140008
+  T009_2023Q2: NDVI_diff=nan, NDWI_diff=nan
+  T044_2023Q2: NDVI_diff=nan, NDWI_diff=nan
+  T049_2023Q2: NDVI_diff=nan, NDWI_diff=nan
+WARNING: Could not find 'NDWI difference under 0.02' claim in report
+STEP 0: Prior results confirmed.
+============================================================
+STEP 1: RECONCILE CHECK 2 WITH CHECK 5
+============================================================
+
+  T039_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=nan, NDWI=nan, NDBI=nan, NDSI=nan
+  Recompute (B8): NDVI=0.174188, NDWI=0.175155, NDBI=0.175050, NDSI=0.000313
+  Recompute NDWI (B8A): max=0.195125, p99=0.063813
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.175155 > 0.02
+
+  T051_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=nan, NDWI=nan, NDBI=nan, NDSI=nan
+  Recompute (B8): NDVI=0.190478, NDWI=0.190479, NDBI=0.187742, NDSI=0.000332
+  Recompute NDWI (B8A): max=0.183296, p99=0.060719
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.190479 > 0.02
+
+  T008_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=0.141313, NDWI=0.140008, NDBI=0.147237, NDSI=0.000318
+  Recompute (B8): NDVI=0.141313, NDWI=0.140008, NDBI=0.147237, NDSI=0.000318
+  Recompute NDWI (B8A): max=0.144342, p99=0.054642
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.140008 > 0.02
+
+  T009_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=nan, NDWI=nan, NDBI=nan, NDSI=nan
+  Recompute (B8): NDVI=0.141313, NDWI=0.140008, NDBI=0.147237, NDSI=0.000318
+  Recompute NDWI (B8A): max=0.144342, p99=0.056359
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.140008 > 0.02
+
+  T044_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=nan, NDWI=nan, NDBI=nan, NDSI=nan
+  Recompute (B8): NDVI=0.193671, NDWI=0.193920, NDBI=0.194736, NDSI=0.000310
+  Recompute NDWI (B8A): max=0.182111, p99=0.062660
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.193920 > 0.02
+
+  T049_2023Q2:
+  Check 2 (from index_stats.csv): NDVI=nan, NDWI=nan, NDBI=nan, NDSI=nan
+  Recompute (B8): NDVI=0.190478, NDWI=0.190479, NDBI=0.187742, NDSI=0.000328
+  Recompute NDWI (B8A): max=0.183296, p99=0.062345
+  Check 5 claim: NDWI diff < 0.02
+  -> CONTRADICTION: Recompute with B8 gives 0.190479 > 0.02
+
+Loading all chip data for brute-force search...
+============================================================
+STEP 2: BRUTE-FORCE BAND-PAIR SEARCH (ALL CHIPS)
+============================================================
+Testing 90 ordered band pairs per index across 42 chips
+  Progress: 1/90 candidates
+  Progress: 11/90 candidates
+  Progress: 21/90 candidates
+  Progress: 31/90 candidates
+  Progress: 41/90 candidates
+  Progress: 51/90 candidates
+  Progress: 61/90 candidates
+  Progress: 71/90 candidates
+  Progress: 81/90 candidates
+Loading all chip data...
+Loaded 42 chips
+  Candidate 1/90: (B2, B3)
+  Candidate 11/90: (B3, B4)
+  Candidate 21/90: (B4, B5)
+  Candidate 31/90: (B5, B6)
+  Candidate 41/90: (B6, B7)
+  Candidate 51/90: (B7, B8)
+  Candidate 61/90: (B8, B8A)
+  Candidate 71/90: (B8A, B11)
+  Candidate 81/90: (B11, B12)
+============================================================
+STEP 3: CORRELATION VS EXACTNESS
+============================================================
+
+NDVI top candidate: B5 - B4
+  Median frac<0.001: 1.0000
+  Median mean abs diff: 0.000077
+  Median correlation: 1.000000
+  Verdict: EXACT
+
+NDWI top candidate: B3 - B5
+  Median frac<0.001: 1.0000
+  Median mean abs diff: 0.000077
+  Median correlation: 1.000000
+  Verdict: EXACT
+
+NDBI top candidate: B11 - B5
+  Median frac<0.001: 1.0000
+  Median mean abs diff: 0.000069
+  Median correlation: 0.999999
+  Verdict: EXACT
+
+NDSI top candidate: B3 - B11
+  Median frac<0.001: 1.0000
+  Median mean abs diff: 0.000081
+  Median correlation: 0.999999
+  Verdict: EXACT
+============================================================
+STEP 4: SCALE CHECK
+============================================================
+
+Source composite: S2_2023_Q2_composite.tif
+  Band 1 (B2): min=1196.00, max=13894.00, median=1934.00
+  Band 2 (B3): min=1268.00, max=12733.00, median=2204.00
+  Band 3 (B4): min=1278.00, max=13949.00, median=2274.00
+  Band 4 (B5): min=1301.00, max=14987.00, median=3455.00
+  Band 5 (B6): min=1296.00, max=13941.00, median=2615.00
+  Band 6 (B7): min=1293.00, max=13611.00, median=3223.00
+  Band 7 (B8): min=1307.00, max=13446.00, median=3419.00
+  Band 8 (B8A): min=1278.00, max=13588.00, median=3519.00
+  Band 9 (B11): min=1311.00, max=14937.00, median=3229.00
+  Band 10 (B12): min=1239.00, max=15254.00, median=2804.00
+
+Chip T004_2023Q2:
+  Band 1: min=1264.00, max=5350.00, median=1972.00
+  Band 2: min=1327.00, max=5862.00, median=2225.00
+  Band 3: min=1362.00, max=6260.00, median=2306.00
+  Band 4: min=1541.00, max=6241.00, median=3411.00
+  Band 5: min=1392.00, max=5239.00, median=2632.00
+  Band 6: min=1428.00, max=5304.00, median=3189.00
+  Band 7: min=1537.00, max=6063.00, median=3376.00
+  Band 8: min=1547.00, max=6229.00, median=3467.00
+  Band 9: min=1577.00, max=6780.00, median=3164.00
+  Band 10: min=1395.00, max=7535.00, median=2788.00
+
+Chip T005_2023Q2:
+  Band 1: min=1269.00, max=4523.00, median=2220.00
+  Band 2: min=1409.00, max=4738.00, median=2447.00
+  Band 3: min=1386.00, max=5014.00, median=2616.00
+  Band 4: min=1716.00, max=5355.00, median=3206.00
+  Band 5: min=1706.00, max=5811.00, median=2819.00
+  Band 6: min=1979.00, max=5838.00, median=3081.00
+  Band 7: min=2116.00, max=5910.00, median=3193.00
+  Band 8: min=2213.00, max=5801.00, median=3249.00
+  Band 9: min=2105.00, max=7336.00, median=3275.00
+  Band 10: min=1797.00, max=7711.00, median=3030.00
+
+Chip T006_2023Q2:
+  Band 1: min=1253.00, max=3924.00, median=1612.00
+  Band 2: min=1397.00, max=4418.00, median=1923.00
+  Band 3: min=1336.00, max=4501.00, median=1812.00
+  Band 4: min=1365.00, max=6403.00, median=3825.00
+  Band 5: min=1419.00, max=4373.00, median=2340.00
+  Band 6: min=1345.00, max=5266.00, median=3484.00
+  Band 7: min=1370.00, max=6357.00, median=3761.00
+  Band 8: min=1337.00, max=6511.00, median=3900.00
+  Band 9: min=1335.00, max=4536.00, median=3058.00
+  Band 10: min=1274.00, max=4692.00, median=2318.00
+
+Note: Reflectance bands appear to be scaled by 10000 (L2A standard).
+The ratio in normalized differences cancels the scale factor.
+============================================================
+STEP 5: SOURCE COMPOSITE VS CHIPS
+============================================================
+
+Source composite best matches:
+  NDVI: Best = ('B5', 'B4') (frac<0.001=1.0000, mean_diff=0.000077)
+  NDWI: Best = ('B3', 'B5') (frac<0.001=1.0000, mean_diff=0.000077)
+  NDBI: Best = ('B11', 'B5') (frac<0.001=1.0000, mean_diff=0.000070)
+  NDSI: Best = ('B3', 'B11') (frac<0.001=1.0000, mean_diff=0.000079)
+============================================================
+STEP 6: PROCESSING SCRIPT REVIEW (READ ONLY)
+============================================================
+
+Processing script: C:\New folder\extract_yamuna_data.py
+Total lines: 1931
+
+--- Key Constants ---
+Line 99: S2_SPECTRAL_BANDS = S2_10M_BANDS + S2_20M_BANDS          # 10 bands
+Line 100: S2_INDEX_BANDS = ["NDVI", "NDWI", "NDBI", "NDSI"]        # 4 indices
+Line 101: S2_FULL_BANDS = S2_SPECTRAL_BANDS + S2_INDEX_BANDS       # 14 total
+Line 101: S2_FULL_BANDS = S2_SPECTRAL_BANDS + S2_INDEX_BANDS       # 14 total
+Line 101: S2_FULL_BANDS = S2_SPECTRAL_BANDS + S2_INDEX_BANDS       # 14 total
+
+--- Band Definitions ---
+Line 97: S2_10M_BANDS = ["B2", "B3", "B4", "B8"]
+Line 98: S2_20M_BANDS = ["B5", "B6", "B7", "B8A", "B11", "B12"]
+Line 99: S2_SPECTRAL_BANDS = S2_10M_BANDS + S2_20M_BANDS          # 10 bands
+Line 99: S2_SPECTRAL_BANDS = S2_10M_BANDS + S2_20M_BANDS          # 10 bands
+Line 99: S2_SPECTRAL_BANDS = S2_10M_BANDS + S2_20M_BANDS          # 10 bands
+Line 100: S2_INDEX_BANDS = ["NDVI", "NDWI", "NDBI", "NDSI"]        # 4 indices
+Line 101: S2_FULL_BANDS = S2_SPECTRAL_BANDS + S2_INDEX_BANDS       # 14 total
+Line 101: S2_FULL_BANDS = S2_SPECTRAL_BANDS + S2_INDEX_BANDS       # 14 total
+Line 101: S2_FULL_BANDS = S2_SPECTRAL_BANDS + S2_INDEX_BANDS       # 14 total
+Line 964: ok = all(band_filepath(safe, b, "R10m" if b in S2_10M_BANDS else "R20m")
+Line 991: resn = "R10m" if band in S2_10M_BANDS else "R20m"
+
+--- process_sentinel2_products() ---
+Function starts at line 875: def process_sentinel2_products(safe_dirs, out_tif, period_label, res=10.0, logger=None):
+Function ends at line 1052
+
+--- Key Index Computation Lines ---
+Line 99: S2_SPECTRAL_BANDS = S2_10M_BANDS + S2_20M_BANDS          # 10 bands
+Line 100: S2_INDEX_BANDS = ["NDVI", "NDWI", "NDBI", "NDSI"]        # 4 indices
+Line 101: S2_FULL_BANDS = S2_SPECTRAL_BANDS + S2_INDEX_BANDS       # 14 total
+Line 101: S2_FULL_BANDS = S2_SPECTRAL_BANDS + S2_INDEX_BANDS       # 14 total
+Line 965: for b in S2_SPECTRAL_BANDS)
+Line 990: for band in S2_SPECTRAL_BANDS:
+Line 1014: b8 = medians.get("B8"); b4 = medians.get("B4"); b3 = medians.get("B3")
+Line 1014: b8 = medians.get("B8"); b4 = medians.get("B4"); b3 = medians.get("B3")
+Line 1014: b8 = medians.get("B8"); b4 = medians.get("B4"); b3 = medians.get("B3")
+Line 1015: b11 = medians.get("B11")
+Line 1020: indices["NDVI"] = (b8 - b4) / denom
+Line 1022: indices["NDWI"] = (b3 - b8) / denom2
+Line 1024: indices["NDBI"] = (b11 - b8) / denom3
+Line 1026: indices["NDSI"] = (b3 - b11) / denom4
+Line 1030: for b in S2_SPECTRAL_BANDS:
+Line 1035: out_bands.append(np.clip(np.round(arr * 10000), 0, 65535).astype(np.uint16))
+Line 1036: for name in S2_INDEX_BANDS:
+Line 1037: arr = indices.get(name)
+Line 1040: out_bands.append(np.clip(np.round((arr + 1) * 5000), 0, 65535).astype(np.uint16))
+
+--- Band Loading (band_filepath, load_band) ---
+Line 97: S2_10M_BANDS = ["B2", "B3", "B4", "B8"]
+Line 98: S2_20M_BANDS = ["B5", "B6", "B7", "B8A", "B11", "B12"]
+Line 99: S2_SPECTRAL_BANDS = S2_10M_BANDS + S2_20M_BANDS          # 10 bands
+Line 901: def band_filepath(safe, band, res_txt):
+Line 922: def load_band(safe, band, res_txt, resampling):
+Line 964: ok = all(band_filepath(safe, b, "R10m" if b in S2_10M_BANDS else "R20m")
+Line 991: resn = "R10m" if band in S2_10M_BANDS else "R20m"
+
+--- Output Band Order ---
+Line 965: for b in S2_SPECTRAL_BANDS)
+Line 1030: for b in S2_SPECTRAL_BANDS:
+Line 1036: for name in S2_INDEX_BANDS:
+
+--- 16-band Claim Check ---
+Line 1035: out_bands.append(np.clip(np.round(arr * 10000), 0, 65535).astype(np.uint16))
+Line 1040: out_bands.append(np.clip(np.round((arr + 1) * 5000), 0, 65535).astype(np.uint16))
+Line 1043: "driver": "GTiff", "count": len(out_bands), "dtype": "uint16", "compress": "lzw",
+Line 1161: band2 Red reflectance x10000 (uint16)
+Line 1162: band3 NIR reflectance x10000 (uint16)
+
+--- Median of Indices vs Index of Medians ---
+
+--- Index Computation Code (lines 1013-1026) ---
+Line 1014:     b8 = medians.get("B8"); b4 = medians.get("B4"); b3 = medians.get("B3")
+Line 1015:     b11 = medians.get("B11")
+Line 1016:     all_ok = all(m is not None for m in (b8, b4, b3, b11))
+Line 1017:     indices = {}
+Line 1018:     if all_ok:
+Line 1019:         denom = np.where(np.abs(b8 + b4) < 1e-9, np.nan, b8 + b4)
+Line 1020:         indices["NDVI"] = (b8 - b4) / denom
+Line 1021:         denom2 = np.where(np.abs(b3 + b8) < 1e-9, np.nan, b3 + b8)
+Line 1022:         indices["NDWI"] = (b3 - b8) / denom2
+Line 1023:         denom3 = np.where(np.abs(b11 + b8) < 1e-9, np.nan, b11 + b8)
+Line 1024:         indices["NDBI"] = (b11 - b8) / denom3
+Line 1025:         denom4 = np.where(np.abs(b3 + b11) < 1e-9, np.nan, b3 + b11)
+Line 1026:         indices["NDSI"] = (b3 - b11) / denom4
+Line 1027: 
+============================================================
+STEP 7: GENERATING REPORT
+============================================================
+Generating final report...
+Report saved: C:\New folder\yamuna_work\verification\band_mapping_report.md
+Saving band_mapping_stats.csv...
+Saved band_mapping_stats.csv: C:\New folder\yamuna_work\verification\band_mapping_stats.csv (360 rows)
+
+============================================================
+BAND MAPPING CHECK COMPLETE
+============================================================

@@ -1,0 +1,70 @@
+============================================================
+YAMUNA CENTERLINE VALIDATION REPORT
+============================================================
+
+[CHECK 2a] File exists: PASS - 
+[INFO] Loaded 1 feature(s)
+[CHECK 1] CRS: PASS - CRS is EPSG:4326
+[CHECK 2] Geometry type: PASS - Geometry types: {'MultiLineString'}
+[CHECK 3] Merged 1 feature(s) into MultiLineString
+[CHECK 4] Gaps: WARN - MultiLineString with 35 gaps
+  Gap between lines 0-1: 471.4 m
+  Gap between lines 1-2: 14781.2 m
+  Gap between lines 2-3: 14781.2 m
+  Gap between lines 4-5: 5283.0 m
+  Gap between lines 5-6: 9860.0 m
+  Gap between lines 6-7: 9737.2 m
+  Gap between lines 7-8: 7395.0 m
+  Gap between lines 8-9: 7414.7 m
+  Gap between lines 10-11: 5588.2 m
+  Gap between lines 11-12: 15307.5 m
+  Gap between lines 12-13: 6412.5 m
+  Gap between lines 13-14: 10631.9 m
+  Gap between lines 14-15: 11509.1 m
+  Gap between lines 15-16: 8939.4 m
+  Gap between lines 17-18: 4992.9 m
+  Gap between lines 18-19: 13650.5 m
+  Gap between lines 19-20: 298.3 m
+  Gap between lines 20-21: 4881.1 m
+  Gap between lines 21-22: 4843.7 m
+  Gap between lines 22-23: 1681.3 m
+  Gap between lines 24-25: 16887.0 m
+  Gap between lines 25-26: 14675.9 m
+  Gap between lines 26-27: 9457.0 m
+  Gap between lines 27-28: 3039.5 m
+  Gap between lines 28-29: 3163.1 m
+  Gap between lines 31-32: 5158.1 m
+  Gap between lines 32-33: 13921.5 m
+  Gap between lines 33-34: 5322.8 m
+  Gap between lines 36-37: 7623.6 m
+  Gap between lines 38-39: 7914.7 m
+  Gap between lines 41-42: 4288.1 m
+  Gap between lines 42-43: 8549.3 m
+  Gap between lines 43-44: 8643.6 m
+  Gap between lines 44-45: 2011.1 m
+  Gap between lines 45-46: 10570.6 m
+[CHECK 5] Length: PASS - Length: 50.21 km (within 45-60 km)
+[CHECK 6] Vertices in AOI: PASS - All 4638 vertices inside AOI buffer
+[CHECK 7] Direction: WARN - Direction REVERSED: start is south of end
+  Saved oriented version to: C:\New folder\yamuna_work\centerline\yamuna_centerline_oriented.geojson
+[CHECK 8] Segment lengths: WARN - 38 segments > 1000 m
+  Segment 192: 2762.2 m, (77.16949729078868, 28.581530612244897) -> (77.18597531607466, 28.601824489795916)
+  Segment 320: 16740.9 m, (77.17297712221554, 28.601824489795916) -> (77.17901565322096, 28.7531306122449)
+  Segment 452: 16742.4 m, (77.19242323901264, 28.7531306122449) -> (77.18597531607466, 28.601824489795916)
+  Segment 457: 6982.2 m, (77.18597531607466, 28.601824489795916) -> (77.18771523178808, 28.664951020408164)
+  Segment 559: 11160.3 m, (77.18771523178808, 28.65597142857143) -> (77.18791992775436, 28.55504081632653)
+  Segment 698: 11037.6 m, (77.20204394942806, 28.55504081632653) -> (77.1959030704395, 28.654714285714284)
+  Segment 756: 8370.3 m, (77.19006923540036, 28.654714285714284) -> (77.19037627934979, 28.579016326530613)
+  Segment 933: 1740.9 m, (77.17256773028296, 28.578836734693876) -> (77.19037627934979, 28.578926530612243)
+  Segment 934: 8397.5 m, (77.19037627934979, 28.578926530612243) -> (77.1959030704395, 28.654714285714284)
+  Segment 985: 6480.1 m, (77.1959030704395, 28.654714285714284) -> (77.21033413606261, 28.597514285714286)
+  ... and 28 more
+[CHECK 9] Self-intersection: PASS - No self-intersections
+
+============================================================
+OVERALL: PASS
+============================================================
+
+Open centerline_check.png and confirm the line follows
+the river. Note any braided or ambiguous sections.
+Then tell OpenCode to continue.

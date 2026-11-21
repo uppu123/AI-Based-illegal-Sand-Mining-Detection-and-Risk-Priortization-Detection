@@ -1,0 +1,289 @@
+============================================================
+INDEX VERIFICATION STARTED
+============================================================
+Source: C:\New folder\yamuna_data\sentinel2\2023_2024\S2_2023_Q2_composite.tif
+Chips dir: C:\New folder\yamuna_work\chips\2023_Q2
+Chips CSV: C:\New folder\yamuna_work\metadata\chips_2023Q2.csv
+Output: C:\New folder\yamuna_work\verification
+Log: C:\New folder\yamuna_work\logs\08_verify_indices_20261028_043021.log
+Loaded 42 chips from CSV
+Found 42 chip files
+
+============================================================
+CHECK 1: Band Layout and Encoding
+============================================================
+
+=== Source Composite: Band Layout ===
+  Bands: 14 (expected 14)
+  dtype: uint16 (expected uint16)
+  nodata: 0.0 (expected 0)
+  Band descriptions:
+    Band 1: 'None' (expected 'B2') - MISMATCH
+    Band 2: 'None' (expected 'B3') - MISMATCH
+    Band 3: 'None' (expected 'B4') - MISMATCH
+    Band 4: 'None' (expected 'B5') - MISMATCH
+    Band 5: 'None' (expected 'B6') - MISMATCH
+    Band 6: 'None' (expected 'B7') - MISMATCH
+    Band 7: 'None' (expected 'B8') - MISMATCH
+    Band 8: 'None' (expected 'B8A') - MISMATCH
+    Band 9: 'None' (expected 'B11') - MISMATCH
+    Band 10: 'None' (expected 'B12') - MISMATCH
+    Band 11: 'None' (expected 'NDVI') - MISMATCH
+    Band 12: 'None' (expected 'NDWI') - MISMATCH
+    Band 13: 'None' (expected 'NDBI') - MISMATCH
+    Band 14: 'None' (expected 'NDSI') - MISMATCH
+  Band statistics:
+    Band 1: min=1196, max=13894, zeros=0 (0.00%)
+    Band 2: min=1268, max=12733, zeros=0 (0.00%)
+    Band 3: min=1278, max=13949, zeros=0 (0.00%)
+    Band 4: min=1301, max=14987, zeros=0 (0.00%)
+    Band 5: min=1296, max=13941, zeros=0 (0.00%)
+    Band 6: min=1293, max=13611, zeros=0 (0.00%)
+    Band 7: min=1307, max=13446, zeros=0 (0.00%)
+    Band 8: min=1278, max=13588, zeros=0 (0.00%)
+    Band 9: min=1311, max=14937, zeros=0 (0.00%)
+    Band 10: min=1239, max=15254, zeros=0 (0.00%)
+    Band 11: min=4321, max=8407, zeros=0 (0.00%)
+    Band 12: min=1941, max=6304, zeros=0 (0.00%)
+    Band 13: min=2559, max=6769, zeros=0 (0.00%)
+    Band 14: min=2609, max=6973, zeros=0 (0.00%)
+  Nodata analysis (spectral bands 1-10):
+    All 10 bands == 0 (true nodata): 0 (0.00%)
+    Some but not all bands == 0 (suspicious): 0 (0.00%)
+    No zero bands: 4069450 (100.00%)
+
+=== Chip T004_2023Q2: Band Layout ===
+  Bands: 14 (expected 14)
+  dtype: uint16 (expected uint16)
+  nodata: 0.0 (expected 0)
+  Band descriptions:
+    Band 1: 'B2' (expected 'B2') - OK
+    Band 2: 'B3' (expected 'B3') - OK
+    Band 3: 'B4' (expected 'B4') - OK
+    Band 4: 'B5' (expected 'B5') - OK
+    Band 5: 'B6' (expected 'B6') - OK
+    Band 6: 'B7' (expected 'B7') - OK
+    Band 7: 'B8' (expected 'B8') - OK
+    Band 8: 'B8A' (expected 'B8A') - OK
+    Band 9: 'B11' (expected 'B11') - OK
+    Band 10: 'B12' (expected 'B12') - OK
+    Band 11: 'NDVI' (expected 'NDVI') - OK
+    Band 12: 'NDWI' (expected 'NDWI') - OK
+    Band 13: 'NDBI' (expected 'NDBI') - OK
+    Band 14: 'NDSI' (expected 'NDSI') - OK
+  Band statistics:
+    Band 1: min=1264, max=5350, zeros=0 (0.00%)
+    Band 2: min=1327, max=5862, zeros=0 (0.00%)
+    Band 3: min=1362, max=6260, zeros=0 (0.00%)
+    Band 4: min=1541, max=6241, zeros=0 (0.00%)
+    Band 5: min=1392, max=5239, zeros=0 (0.00%)
+    Band 6: min=1428, max=5304, zeros=0 (0.00%)
+    Band 7: min=1537, max=6063, zeros=0 (0.00%)
+    Band 8: min=1547, max=6229, zeros=0 (0.00%)
+    Band 9: min=1577, max=6780, zeros=0 (0.00%)
+    Band 10: min=1395, max=7535, zeros=0 (0.00%)
+    Band 11: min=4872, max=8144, zeros=0 (0.00%)
+    Band 12: min=2139, max=5170, zeros=0 (0.00%)
+    Band 13: min=2929, max=6055, zeros=0 (0.00%)
+    Band 14: min=3118, max=5928, zeros=0 (0.00%)
+  Nodata analysis (spectral bands 1-10):
+    All 10 bands == 0 (true nodata): 0 (0.00%)
+    Some but not all bands == 0 (suspicious): 0 (0.00%)
+    No zero bands: 65536 (100.00%)
+
+=== Chip T005_2023Q2: Band Layout ===
+  Bands: 14 (expected 14)
+  dtype: uint16 (expected uint16)
+  nodata: 0.0 (expected 0)
+  Band descriptions:
+    Band 1: 'B2' (expected 'B2') - OK
+    Band 2: 'B3' (expected 'B3') - OK
+    Band 3: 'B4' (expected 'B4') - OK
+    Band 4: 'B5' (expected 'B5') - OK
+    Band 5: 'B6' (expected 'B6') - OK
+    Band 6: 'B7' (expected 'B7') - OK
+    Band 7: 'B8' (expected 'B8') - OK
+    Band 8: 'B8A' (expected 'B8A') - OK
+    Band 9: 'B11' (expected 'B11') - OK
+    Band 10: 'B12' (expected 'B12') - OK
+    Band 11: 'NDVI' (expected 'NDVI') - OK
+    Band 12: 'NDWI' (expected 'NDWI') - OK
+    Band 13: 'NDBI' (expected 'NDBI') - OK
+    Band 14: 'NDSI' (expected 'NDSI') - OK
+  Band statistics:
+    Band 1: min=1269, max=4523, zeros=0 (0.00%)
+    Band 2: min=1409, max=4738, zeros=0 (0.00%)
+    Band 3: min=1386, max=5014, zeros=0 (0.00%)
+    Band 4: min=1716, max=5355, zeros=0 (0.00%)
+    Band 5: min=1706, max=5811, zeros=0 (0.00%)
+    Band 6: min=1979, max=5838, zeros=0 (0.00%)
+    Band 7: min=2116, max=5910, zeros=0 (0.00%)
+    Band 8: min=2213, max=5801, zeros=0 (0.00%)
+    Band 9: min=2105, max=7336, zeros=0 (0.00%)
+    Band 10: min=1797, max=7711, zeros=0 (0.00%)
+    Band 11: min=4979, max=7755, zeros=0 (0.00%)
+    Band 12: min=2439, max=4952, zeros=0 (0.00%)
+    Band 13: min=3625, max=6038, zeros=0 (0.00%)
+    Band 14: min=3219, max=5143, zeros=0 (0.00%)
+  Nodata analysis (spectral bands 1-10):
+    All 10 bands == 0 (true nodata): 0 (0.00%)
+    Some but not all bands == 0 (suspicious): 0 (0.00%)
+    No zero bands: 65536 (100.00%)
+
+=== Chip T006_2023Q2: Band Layout ===
+  Bands: 14 (expected 14)
+  dtype: uint16 (expected uint16)
+  nodata: 0.0 (expected 0)
+  Band descriptions:
+    Band 1: 'B2' (expected 'B2') - OK
+    Band 2: 'B3' (expected 'B3') - OK
+    Band 3: 'B4' (expected 'B4') - OK
+    Band 4: 'B5' (expected 'B5') - OK
+    Band 5: 'B6' (expected 'B6') - OK
+    Band 6: 'B7' (expected 'B7') - OK
+    Band 7: 'B8' (expected 'B8') - OK
+    Band 8: 'B8A' (expected 'B8A') - OK
+    Band 9: 'B11' (expected 'B11') - OK
+    Band 10: 'B12' (expected 'B12') - OK
+    Band 11: 'NDVI' (expected 'NDVI') - OK
+    Band 12: 'NDWI' (expected 'NDWI') - OK
+    Band 13: 'NDBI' (expected 'NDBI') - OK
+    Band 14: 'NDSI' (expected 'NDSI') - OK
+  Band statistics:
+    Band 1: min=1253, max=3924, zeros=0 (0.00%)
+    Band 2: min=1397, max=4418, zeros=0 (0.00%)
+    Band 3: min=1336, max=4501, zeros=0 (0.00%)
+    Band 4: min=1365, max=6403, zeros=0 (0.00%)
+    Band 5: min=1419, max=4373, zeros=0 (0.00%)
+    Band 6: min=1345, max=5266, zeros=0 (0.00%)
+    Band 7: min=1370, max=6357, zeros=0 (0.00%)
+    Band 8: min=1337, max=6511, zeros=0 (0.00%)
+    Band 9: min=1335, max=4536, zeros=0 (0.00%)
+    Band 10: min=1274, max=4692, zeros=0 (0.00%)
+    Band 11: min=4734, max=8211, zeros=0 (0.00%)
+    Band 12: min=2076, max=5302, zeros=0 (0.00%)
+    Band 13: min=2924, max=5751, zeros=0 (0.00%)
+    Band 14: min=3258, max=5775, zeros=0 (0.00%)
+  Nodata analysis (spectral bands 1-10):
+    All 10 bands == 0 (true nodata): 0 (0.00%)
+    Some but not all bands == 0 (suspicious): 0 (0.00%)
+    No zero bands: 65536 (100.00%)
+
+============================================================
+CHECK 2: Recompute vs Stored (Source Composite)
+============================================================
+
+=== Source Composite: Recompute vs Stored ===
+  Computing indices from reflectance bands (B8, B4, B3, B11)...
+  Decoding stored indices (raw/5000 - 1, raw==0 -> NaN)...
+  NDVI: n_valid=4069450, max_diff=0.276880, p99_diff=0.061302 -> FAIL
+  NDWI: n_valid=4069450, max_diff=0.263187, p99_diff=0.061518 -> FAIL
+  NDBI: n_valid=4069450, max_diff=0.276105, p99_diff=0.064102 -> FAIL
+  NDSI: n_valid=4069450, max_diff=0.000454, p99_diff=0.000237 -> PASS
+  Note: Reflectance bands are uint16 (typically scaled by 10000 for L2A).
+  Ratio cancels the scale, so comparison is valid without rescaling.
+  Note: Cannot determine if stored indices are median of per-scene indices
+  or computed from median reflectance. This requires scene-level data.
+  T004_2023Q2: NDVI diff=0.195740, NDWI diff=0.196935
+  T005_2023Q2: NDVI diff=0.219805, NDWI diff=0.219578
+  T006_2023Q2: NDVI diff=0.177873, NDWI diff=0.181631
+  T007_2023Q2: NDVI diff=0.177873, NDWI diff=0.181631
+  T008_2023Q2: NDVI diff=0.141313, NDWI diff=0.140008
+
+=== CHECK 3: CSV Means Consistency ===
+  Overall max difference: 0.000050
+  Chips with diff > 0.005: 0
+
+  Testing if CSV used different nodata rule (including raw==0)...
+  Note: Cannot fully determine CSV nodata rule without original script.
+  Question: Did CSV use raw==0 as nodata for ALL bands, or per-band?
+
+=== CHECK 4: Distribution Sanity ===
+  FLAG: T004_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T005_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T006_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T007_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T008_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T009_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T010_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T011_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T012_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T013_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T014_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T015_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T016_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T017_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T018_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T019_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T020_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T022_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T025_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T026_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T027_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T028_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T031_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T032_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T033_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T034_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T035_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T036_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T039_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T040_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T041_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T042_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T043_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T044_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T045_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T046_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T049_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T050_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+  FLAG: T051_2023Q2 has 0% pixels with NDWI > 0.2 (river may not be visible)
+
+  Pooled percentiles (all chips):
+  NDVI:
+    P1: 0.0004
+    P5: 0.0376
+    P25: 0.1030
+    P50: 0.2380
+    P75: 0.3478
+    P95: 0.4418
+    P99: 0.4942
+  NDWI:
+    P1: -0.4470
+    P5: -0.4042
+    P25: -0.3306
+    P50: -0.2456
+    P75: -0.1322
+    P95: -0.0704
+    P99: 0.0072
+  NDBI:
+    P1: -0.2230
+    P5: -0.1732
+    P25: -0.1054
+    P50: -0.0520
+    P75: 0.0018
+    P95: 0.0508
+    P99: 0.0776
+  NDSI:
+    P1: -0.3036
+    P5: -0.2780
+    P25: -0.2382
+    P50: -0.1928
+    P75: -0.1394
+    P95: -0.0778
+    P99: 0.0368
+
+  NDWI > 0.2: 0.00%
+  NDWI > 0.0: 1.29%
+  NDSI < -0.1: 90.98%
+  NDVI > 0.3: 36.78%
+
+  Histograms saved: C:\New folder\yamuna_work\verification\index_histograms.png
+
+ERROR: list indices must be integers or slices, not str
+Traceback (most recent call last):
+  File "C:\New folder\yamuna_work\scripts\08_verify_indices.py", line 897, in main
+    check4_stats['frac_ndwi_gt_02'] = 0  # Will be filled from log
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+TypeError: list indices must be integers or slices, not str
+

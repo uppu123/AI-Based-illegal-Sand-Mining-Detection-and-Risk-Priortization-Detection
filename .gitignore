@@ -1,0 +1,36 @@
+# --- Imagery and large rasters (134 GB; kept outside the repo) ---
+*.tif
+*.tiff
+*.jp2
+*.gpkg-wal
+*.gpkg-shm
+yamuna_data/
+chips/
+chips_s1/
+yamuna_work/chips/
+yamuna_work/chips_s1/
+**/images/*.tif
+
+# --- Credentials / secrets ---
+l8_creds.json
+*creds*.json
+.env
+*.pem
+
+# --- Python / Office temp artefacts ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+~$*.pptx
+~$*.docx
+desktop.ini
+Thumbs.db
+.DS_Store
+
+# --- Generated output folders (rebuilds go here) ---
+yamuna_data_fixed/
+chips_fixed/
+verification_fixed/
+models_output/
+dashboard/node_modules/

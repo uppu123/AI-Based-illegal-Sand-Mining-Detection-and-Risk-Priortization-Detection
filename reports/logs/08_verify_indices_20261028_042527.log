@@ -1,0 +1,42 @@
+============================================================
+INDEX VERIFICATION STARTED
+============================================================
+Source: C:\New folder\yamuna_data\sentinel2\S2_2023_Q2_composite.tif
+Chips dir: C:\New folder\yamuna_work\chips\2023_Q2
+Chips CSV: C:\New folder\yamuna_work\metadata\chips_2023Q2.csv
+Output: C:\New folder\yamuna_work\verification
+Log: C:\New folder\yamuna_work\logs\08_verify_indices_20261028_042527.log
+Loaded 42 chips from CSV
+Found 42 chip files
+
+============================================================
+CHECK 1: Band Layout and Encoding
+============================================================
+
+=== Source Composite: Band Layout ===
+
+ERROR: C:\New folder\yamuna_data\sentinel2\S2_2023_Q2_composite.tif: No such file or directory
+Traceback (most recent call last):
+  File "rasterio/_base.pyx", line 321, in rasterio._base.DatasetBase.__init__
+  File "rasterio/_base.pyx", line 233, in rasterio._base.open_dataset
+  File "rasterio/_err.pyx", line 359, in rasterio._err.exc_wrap_pointer
+rasterio._err.CPLE_OpenFailedError: C:\New folder\yamuna_data\sentinel2\S2_2023_Q2_composite.tif: No such file or directory
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\New folder\yamuna_work\scripts\08_verify_indices.py", line 848, in main
+    check1_source = check_band_layout(logger, source_path, "Source Composite")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\New folder\yamuna_work\scripts\08_verify_indices.py", line 188, in check_band_layout
+    with rasterio.open(src_path) as src:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\upend\AppData\Local\Programs\Python\Python312\Lib\site-packages\rasterio\env.py", line 464, in wrapper
+    return f(*args, **kwds)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\upend\AppData\Local\Programs\Python\Python312\Lib\site-packages\rasterio\__init__.py", line 379, in open
+    dataset = DatasetReader(path, driver=driver, sharing=sharing, thread_safe=thread_safe, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "rasterio/_base.pyx", line 330, in rasterio._base.DatasetBase.__init__
+rasterio.errors.RasterioIOError: C:\New folder\yamuna_data\sentinel2\S2_2023_Q2_composite.tif: No such file or directory
+

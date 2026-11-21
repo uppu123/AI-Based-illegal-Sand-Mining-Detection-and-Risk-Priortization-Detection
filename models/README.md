@@ -13,6 +13,14 @@ LMS-Net is marginally better by IoU, but **both results are near zero**. The cau
 
 `model_comparison.csv` / `model_comparison.json` in the runs folder hold the machine-readable comparison.
 
+### Self-training (option B) — completed as a pipeline demo
+
+`self_train_masks.py` was run on the LMS-Net run at threshold 0.7. Two faults were fixed: launcher quoting of the spaced run path, and mean/std broadcast shape (`1x14x1x1` → `14x1x1`) for single-chip inference.
+
+- 252/252 chips processed; 252 mask PNGs + `auto_mask_summary.csv` + `self_train_note.txt` written to `20261122_044039\auto_masks\`.
+- **224 empty** pseudo-masks, 28 non-empty; positive fraction max **0.0137**; mean confidence median **0.0085**, max **0.1022**.
+- With no chip reaching the 0.7 confidence level, these pseudo-masks are not usable for real risk ranking. No accuracy is claimed. See `../docs/documentation_pdfs/10_Self_Training_Results.pdf`.
+
 ## Commands
 
 ```powershell

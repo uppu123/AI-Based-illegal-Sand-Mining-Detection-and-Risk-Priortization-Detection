@@ -56,7 +56,10 @@ def main():
                 arr = load_chip(p)
                 probs = []
                 for model, mean, std in folds:
-                    x = ((arr - mean) / std).astype(np.float32)[None]
+                    # Training stored mean/std as (1,14,1,1); a single chip is (14,256,256).
+                    m = np.asarray(mean).reshape(-1, 1, 1)
+                    s = np.asarray(std).reshape(-1, 1, 1)
+                    x = ((arr - m) / s).astype(np.float32)[None]
                     pr = torch.sigmoid(model(torch.from_numpy(x).to(device)))
                     probs.append(pr.cpu().numpy()[0, 0])
                 prob = np.mean(probs, axis=0)

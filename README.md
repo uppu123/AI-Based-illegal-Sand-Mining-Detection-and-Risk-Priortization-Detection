@@ -30,22 +30,22 @@ Detect illegal sand extraction along the Delhi stretch of the Yamuna (Palla → 
 |---|---|---|
 | 1 | Synopsis, problem definition, 4 core references | `presentation/Project_Synopsis_Final.docx` / `.pdf` |
 | 2 | Literature review (20+ papers scanned → 4 selected) | `docs/documentation_pdfs/05_Literature_and_Reasons.pdf` |
-| 3 | Download/processing pipeline (~1,900 lines, CDSE OData + USGS M2M, resume, SCL median composite) | `src/extract_yamuna_data.py` |
+| 3 | Download/processing pipeline (~1,900 lines, CDSE OData + USGS M2M, resume, SCL median composite) | `src/acquisition/extract_yamuna_data.py` |
 | 4 | **100 scenes downloaded** — 39 Sentinel-2, 55 Sentinel-1A, 6 Landsat-8/9 (134 GB) | `reports/logs/`, `reports/yamuna_data_report.pdf` |
 | 5 | **29 GeoTIFF products** — 11 S2 (5 annual + 6 quarterly), 12 S1 (VV/VH × 6), 6 L8 thermal | `reports/metadata/inventory_check.csv` |
-| 6 | Inventory validation (bands, dtype, CRS, resolution, nodata, AOI overlap) | `src/pipeline/01_verify_inventory.py` |
-| 7 | Centreline: NDWI failed → S1 VV + Otsu → **50.21 km** | `src/pipeline/generate_centerline_s1.py`, `reports/centerline/` |
-| 8 | Centreline validation | `src/pipeline/02_validate_centerline.py` |
-| 9 | **51 transects** at 1 km spacing, 3 km long | `src/pipeline/03_make_transects.py`, `reports/transects/` |
-| 10 | **252 S2 + 252 S1 chips** (256×256), 6 quarters, 42/quarter | `src/pipeline/04_extract_chips.py`, `extract_all_quarters.py`, `extract_s1_chips.py` |
-| 11 | NDVI, NDWI, NDBI, NDSI as bands 11–14 (×5000 encoding) | `src/extract_yamuna_data.py` |
+| 6 | Inventory validation (bands, dtype, CRS, resolution, nodata, AOI overlap) | `src/verification/01_verify_data_inventory.py` |
+| 7 | Centreline: NDWI failed → S1 VV + Otsu → **50.21 km** | `src/geometry/build_centerline_from_sar.py`, `reports/centerline/` |
+| 8 | Centreline validation | `src/verification/02_validate_river_centerline.py` |
+| 9 | **51 transects** at 1 km spacing, 3 km long | `src/geometry/03_generate_transects.py`, `reports/transects/` |
+| 10 | **252 S2 + 252 S1 chips** (256×256), 6 quarters, 42/quarter | `src/processing/04_extract_training_chips.py`, `extract_chips_all_quarters.py`, `extract_sar_chips.py` |
+| 11 | NDVI, NDWI, NDBI, NDSI as bands 11–14 (×5000 encoding) | `src/acquisition/extract_yamuna_data.py` |
 | 12 | Labeling rubric, manifest, agreement log | `labeling/` |
-| 13 | 5-check index verification — found NDVI/NDWI/NDBI mismatch (~0.27) | `src/pipeline/08_verify_indices.py`, `reports/verification/` |
-| 14 | Root-cause: B8 written at position 4 instead of 7 (indices themselves correct) | `src/pipeline/09_band_mapping_check.py`, `reports/verification/band_mapping_report.md` |
-| 15 | Band order fixed at line 99 of extractor — **products not yet rebuilt** | `src/extract_yamuna_data.py` |
+| 13 | 5-check index verification — found NDVI/NDWI/NDBI mismatch (~0.27) | `src/verification/08_verify_spectral_indices.py`, `reports/verification/` |
+| 14 | Root-cause: B8 written at position 4 instead of 7 (indices themselves correct) | `src/verification/09_diagnose_band_mapping.py`, `reports/verification/band_mapping_report.md` |
+| 15 | Band order fixed at line 99 of extractor — **products not yet rebuilt** | `src/acquisition/extract_yamuna_data.py` |
 | 16 | 4-slide progress deck with 55% loader, DTU logo, speaker notes | `presentation/Project_Progress_Presentation.pptx` / `.pdf` |
 | 17 | 13-page script + reasoning document | `presentation/Presentation_Script_and_Reasoning.docx` / `.pdf` |
-| 18 | Deck audit (no overflow, opens without repair) | `src/audit_ppt.py` |
+| 18 | Deck audit (no overflow, opens without repair) | `presentation/helpers/audit_deck_geometry.py` |
 | 19 | Full audit trail | `docs/PROJECT_LOG.md` |
 
 ## 4. What remains (execution plan)
@@ -67,22 +67,34 @@ Only three decisions are required from you: **verify labels**, **approve AHP wei
 
 ## 5. Repository structure
 
+The code is organised by **role**, and files are named `snake_case` with an optional step number so the execution order is visible.
+
 ```
-src/                     Main extractor + helper scripts
-  pipeline/              Numbered pipeline steps 01..09 + quarter/S1 extractors
-presentation/            Final deck, script doc, synopsis, PDFs, logo
-  build_scripts/         Scripts that generate the deck and documents
-docs/                    PROJECT_LOG, setup/troubleshooting, working README
-  documentation_pdfs/    7-PDF documentation pack (index → remaining steps)
-reports/                 Verification, metadata, logs, centreline, transects, data summaries
-labeling/                Rubric, candidate manifest, agreement log, 42 preview PNGs
+config/project_config.py   All paths, AOI, band order and sensing constants
+src/
+  acquisition/             Download + composite + index engine
+  geometry/                Centreline from SAR, 51 transects
+  processing/              Chip extractors (one quarter, all quarters, SAR)
+  labeling/                Labeling-set preparation
+  verification/            Inventory, geometry, index and band-mapping checks
+  experiments/             Superseded NDWI centreline attempt
+  utilities/               Read-only inspection helpers
+models/                    Phase C model design (not trained)
+dashboard/                 Phase D MERN plan (not started)
+presentation/              Final deck + builders; archive/ holds old iterations
+docs/                      Guides, project log, 7-PDF documentation pack
+reports/                   Verification, metadata, logs, centreline, transects
+labeling/                  Rubric, manifest, agreement log, 42 preview PNGs
+data/                      Data-location note (imagery itself is external)
 ```
+
+Start with **[ARCHITECTURE.md](ARCHITECTURE.md)** for the data-flow diagram, then **[docs/PIPELINE_GUIDE.md](docs/PIPELINE_GUIDE.md)** for the exact commands. If someone asks for a script named on slide 2, use **[docs/CODE_MAP.md](docs/CODE_MAP.md)**.
 
 ## 6. Data availability — important
 
 The **134 GB of satellite imagery is NOT in this repository** (GitHub per-file limit is 100 MB; total imagery is ~1,300× that). It lives locally at `C:\New folder\yamuna_data` and `C:\New folder\yamuna_work\chips`. Those folders are **read-only for this project** — rebuilds go to new folders (`yamuna_data_fixed`, `chips_fixed`, `verification_fixed`).
 
-To regenerate from scratch: `src/extract_yamuna_data.py` (needs CDSE + USGS credentials). Precomputed, small derivatives — inventory CSVs, verification reports, centreline GeoJSON, transect tables, labeling metadata — **are** in `reports/` and `labeling/`.
+To regenerate from scratch: `src/acquisition/extract_yamuna_data.py` (needs CDSE + USGS credentials). Precomputed, small derivatives — inventory CSVs, verification reports, centreline GeoJSON, transect tables, labeling metadata — **are** in `reports/` and `labeling/`.
 
 Known defect: raw spectral bands 4–7 of the current composites are permuted (B8 at position 4). Index bands 11–14 are correct. Fix is in code; rebuild pending.
 

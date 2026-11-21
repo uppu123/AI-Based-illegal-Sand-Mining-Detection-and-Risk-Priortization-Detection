@@ -66,9 +66,9 @@ def decode_index(raw):
     return raw.astype(np.float32) / 5000.0 - 1.0
 
 
-def process_quarter(quarter, df_transects, base_output):
-    """Process one quarter composite."""
-    s2_path = S2_BASE / f"S2_{quarter}_composite.tif"
+def process_quarter(quarter, df_transects, base_output, source_dir=None, meta_dir=None):
+    """Process one quarter composite. Optional dirs allow a side-by-side rebuild."""
+    s2_path = (source_dir or S2_BASE) / f"S2_{quarter}_composite.tif"
     if not s2_path.exists():
         print(f"  [SKIP] Missing: {s2_path}")
         return 0, 0
@@ -208,8 +208,8 @@ def process_quarter(quarter, df_transects, base_output):
             plt.close()
 
         # Save metadata CSV
-        meta_dir = _cfg.METADATA_DIR
-        meta_dir.mkdir(exist_ok=True)
+        meta_dir = Path(meta_dir) if meta_dir else _cfg.METADATA_DIR
+        meta_dir.mkdir(parents=True, exist_ok=True)
         df_meta = pd.DataFrame(metadata_rows)
         csv_path = meta_dir / f"chips_{quarter}.csv"
         df_meta.to_csv(csv_path, index=False)
@@ -221,20 +221,34 @@ def process_quarter(quarter, df_transects, base_output):
 def main():
     parser = argparse.ArgumentParser(description="Extract chips for all S2 quarters")
     parser.add_argument("--quarters", nargs="+", default=QUARTERS, help="Quarters to process")
+    parser.add_argument("--source-dir", type=Path, default=None,
+                        help="Directory holding S2_<quarter>_composite.tif (default: config S2_QUARTERLY_DIR)")
+    parser.add_argument("--output-dir", type=Path, default=None,
+                        help="Base output folder (default: config CHIPS_S2_DIR)")
+    parser.add_argument("--meta-dir", type=Path, default=None,
+                        help="Folder for chips_<quarter>.csv (default: config METADATA_DIR)")
     args = parser.parse_args()
+
+    source_dir = args.source_dir or S2_BASE
+    base_output = args.output_dir or BASE_OUTPUT
+    meta_dir = args.meta_dir or _cfg.METADATA_DIR
+    print(f"Source : {source_dir}")
+    print(f"Output : {base_output}")
+    print(f"Meta   : {meta_dir}")
 
     df_transects = pd.read_csv(TRANSECT_TABLE)
     print(f"Loaded {len(df_transects)} transects")
 
     total_kept = total_skipped = 0
     for q in args.quarters:
-        k, s = process_quarter(q, df_transects, BASE_OUTPUT)
+        k, s = process_quarter(q, df_transects, base_output,
+                               source_dir=source_dir, meta_dir=meta_dir)
         total_kept += k
         total_skipped += s
 
     print(f"\n=== TOTAL ===")
     print(f"Kept: {total_kept}, Skipped: {total_skipped}")
-    print(f"Output dirs: {BASE_OUTPUT}/<quarter>/")
+    print(f"Output dirs: {base_output}/<quarter>/")
 
 if __name__ == "__main__":
     main()

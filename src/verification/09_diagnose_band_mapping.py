@@ -152,8 +152,14 @@ def read_band(src, band_idx_1based):
 
 
 def get_chip_paths(chips_dir):
-    """Get sorted list of chip paths."""
-    return sorted(chips_dir.glob("T*_2023Q2.tif"))
+    """Get sorted list of chip paths (supports both 2023Q2 and 2023_Q2 naming)."""
+    chips = sorted(chips_dir.glob("T*_2023Q2.tif")) + sorted(chips_dir.glob("T*_2023_Q2.tif"))
+    seen, out = set(), []
+    for p in chips:
+        if p.name not in seen:
+            seen.add(p.name)
+            out.append(p)
+    return sorted(out)
 
 
 def load_chips_csv(csv_path):
@@ -219,7 +225,7 @@ def step1_reconcile_check2_check5(logger):
     
     visual_chips = select_visual_chips_from_report()
     df_stats = pd.read_csv(INDEX_STATS_CSV)
-    chip_paths = {p.stem: p for p in sorted(CHIPS_DIR.glob("T*_2023Q2.tif"))}
+    chip_paths = {p.stem: p for p in get_chip_paths(CHIPS_DIR)}
     
     results = []
     
@@ -351,7 +357,7 @@ def step2_brute_force_search(logger):
     log_message(logger, "STEP 2: BRUTE-FORCE BAND-PAIR SEARCH (ALL CHIPS)")
     log_message(logger, "=" * 60)
     
-    chip_paths = sorted(CHIPS_DIR.glob("T*_2023Q2.tif"))
+    chip_paths = get_chip_paths(CHIPS_DIR)
     spectral_bands = SPECTRAL_BAND_NAMES
     n_spectral = len(SPECTRAL_BAND_NAMES)
     
@@ -364,7 +370,7 @@ def step2_brute_force_search(logger):
     
     log_message(logger, f"Testing {len(candidates)} ordered band pairs per index across {len(list(CHIPS_DIR.glob('T*_2023Q2.tif')))} chips")
     
-    chip_paths_list = sorted(CHIPS_DIR.glob("T*_2023Q2.tif"))
+    chip_paths_list = get_chip_paths(CHIPS_DIR)
     stored_indices = {
         "NDVI": 10,  # 0-based
         "NDWI": 11,
@@ -384,7 +390,7 @@ def step2_brute_force_search(logger):
         # Per-chip metrics
         chip_metrics = []
         
-        for chip_path in sorted(CHIPS_DIR.glob("T*_2023Q2.tif")):
+        for chip_path in get_chip_paths(CHIPS_DIR):
             chip_id = chip_path.stem
             
             with rasterio.open(chip_path) as src:
@@ -406,7 +412,7 @@ def step2_brute_force_search(logger):
     # Better approach: load all chips once, then test candidates
     log_message(logger, "Loading all chip data...")
     all_chip_data = {}
-    for chip_path in sorted(CHIPS_DIR.glob("T*_2023Q2.tif")):
+    for chip_path in get_chip_paths(CHIPS_DIR):
         chip_id = chip_path.stem
         with rasterio.open(chip_path) as src:
             bands = {}
@@ -567,7 +573,7 @@ def step4_scale_check(logger):
             log_message(logger, f"  Band {i} ({name}): min={np.nanmin(arr):.2f}, max={np.nanmax(arr):.2f}, median={np.nanmedian(arr):.2f}")
     
     # Check a few chips
-    chip_paths = sorted(CHIPS_DIR.glob("T*_2023Q2.tif"))
+    chip_paths = get_chip_paths(CHIPS_DIR)
     for chip_path in list(chip_paths)[:3]:
         with rasterio.open(chip_path) as src:
             log_message(logger, f"\nChip {chip_path.stem}:")
@@ -757,13 +763,29 @@ def step6_processing_script_review(logger):
 # MAIN
 # ============================================================
 def main():
+    global OUTPUT_DIR, LOGS_DIR, CHIPS_DIR, SOURCE_COMPOSITE, CHIPS_CSV
+    global INDEX_VER_REPORT, INDEX_STATS_CSV, REPORT_PATH, STATS_CSV_PATH
     parser = argparse.ArgumentParser(description="Band mapping diagnostic for Sentinel-2 indices")
     parser.add_argument("--chips-dir", default=str(CHIPS_DIR), help="Chips directory")
     parser.add_argument("--source", default=str(SOURCE_COMPOSITE), help="Source composite path")
     parser.add_argument("--chips-csv", default=str(CHIPS_CSV), help="Chips CSV path")
     parser.add_argument("--output-dir", default=str(OUTPUT_DIR), help="Output directory")
     parser.add_argument("--logs-dir", default=str(LOGS_DIR), help="Logs directory")
+    parser.add_argument("--index-dir", default=str(VERIFICATION_DIR),
+                        help="Directory holding index_verification_report.md and index_stats.csv")
     args = parser.parse_args()
+    
+    output_dir = Path(args.output_dir)
+    logs_dir = Path(args.logs_dir)
+    OUTPUT_DIR, LOGS_DIR = output_dir, logs_dir
+    CHIPS_DIR = Path(args.chips_dir)
+    SOURCE_COMPOSITE = Path(args.source)
+    CHIPS_CSV = Path(args.chips_csv)
+    index_dir = Path(args.index_dir)
+    INDEX_VER_REPORT = index_dir / "index_verification_report.md"
+    INDEX_STATS_CSV = index_dir / "index_stats.csv"
+    REPORT_PATH = output_dir / "band_mapping_report.md"
+    STATS_CSV_PATH = output_dir / "band_mapping_stats.csv"
     
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
@@ -786,7 +808,7 @@ def main():
         # Load all chip data for brute force
         log_message(logger, "\nLoading all chip data for brute-force search...")
         all_chip_data = {}
-        for chip_path in sorted(CHIPS_DIR.glob("T*_2023Q2.tif")):
+        for chip_path in get_chip_paths(CHIPS_DIR):
             chip_id = chip_path.stem
             with rasterio.open(chip_path) as src:
                 data = {}
@@ -977,9 +999,9 @@ def save_band_mapping_stats_csv(logger):
     log_message(logger, "Saving band_mapping_stats.csv...")
     
     # Run the brute force and save
-    chip_paths = sorted(CHIPS_DIR.glob("T*_2023Q2.tif"))
+    chip_paths = get_chip_paths(CHIPS_DIR)
     all_chip_data = {}
-    for chip_path in sorted(CHIPS_DIR.glob("T*_2023Q2.tif")):
+    for chip_path in get_chip_paths(CHIPS_DIR):
         chip_id = chip_path.stem
         with rasterio.open(chip_path) as src:
             data = {}

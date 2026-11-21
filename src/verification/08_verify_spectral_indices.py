@@ -158,9 +158,14 @@ def compute_indices(b8, b4, b3, b11):
 
 
 def get_chip_paths(chips_dir):
-    """Get sorted list of chip paths."""
-    chips = sorted(chips_dir.glob("T*_2023Q2.tif"))
-    return chips
+    """Get sorted list of chip paths (supports both 2023Q2 and 2023_Q2 naming)."""
+    chips = sorted(chips_dir.glob("T*_2023Q2.tif")) + sorted(chips_dir.glob("T*_2023_Q2.tif"))
+    seen, out = set(), []
+    for p in chips:
+        if p.name not in seen:
+            seen.add(p.name)
+            out.append(p)
+    return sorted(out)
 
 
 def load_chips_csv(csv_path):
@@ -819,6 +824,7 @@ def save_index_stats_csv(check4_stats, check2_chips, check3_df, output_path):
 # MAIN
 # ============================================================
 def main():
+    global OUTPUT_DIR, LOGS_DIR, SOURCE_COMPOSITE, CHIPS_DIR, CHIPS_CSV
     parser = argparse.ArgumentParser(description="Verify spectral indices in S2 composite and chips")
     parser.add_argument("--source", default=str(SOURCE_COMPOSITE), help="Source composite path")
     parser.add_argument("--chips-dir", default=str(CHIPS_DIR), help="Chips directory")
@@ -832,6 +838,10 @@ def main():
     chips_csv_path = Path(args.chips_csv)
     output_dir = Path(args.output_dir)
     logs_dir = Path(args.logs_dir)
+    # Helper functions (generate_report, check_visual, save_index_stats_csv)
+    # reference these module globals, so keep them in sync with the CLI args.
+    OUTPUT_DIR, LOGS_DIR = output_dir, logs_dir
+    SOURCE_COMPOSITE, CHIPS_DIR, CHIPS_CSV = source_path, chips_dir, chips_csv_path
     
     output_dir.mkdir(parents=True, exist_ok=True)
     logs_dir.mkdir(parents=True, exist_ok=True)

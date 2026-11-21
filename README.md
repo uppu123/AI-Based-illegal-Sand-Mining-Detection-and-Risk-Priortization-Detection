@@ -18,7 +18,7 @@ Detect illegal sand extraction along the Delhi stretch of the Yamuna (Palla → 
 |---|---|
 | Data engineering (download, composites, centreline, transects, chips, indices) | **Done** |
 | Labeling set-up | Done — 42 **candidate** labels (16 mining / 14 not / 12 unsure), **not human-verified** |
-| Index verification | Found band-order defect; fix applied in code, **rebuild pending** |
+| Index verification | Band-order defect fixed and **rebuilt**; all 5 checks PASS on new data |
 | Detection / risk models | **Designed, not trained** |
 | MERN dashboard | **Not started** |
 | Progress figure shown in deck | **55%** (data + labeling block complete) |
@@ -42,7 +42,7 @@ Detect illegal sand extraction along the Delhi stretch of the Yamuna (Palla → 
 | 12 | Labeling rubric, manifest, agreement log | `labeling/` |
 | 13 | 5-check index verification — found NDVI/NDWI/NDBI mismatch (~0.27) | `src/verification/08_verify_spectral_indices.py`, `reports/verification/` |
 | 14 | Root-cause: B8 written at position 4 instead of 7 (indices themselves correct) | `src/verification/09_diagnose_band_mapping.py`, `reports/verification/band_mapping_report.md` |
-| 15 | Band order fixed at line 99 of extractor — **products not yet rebuilt** | `src/acquisition/extract_yamuna_data.py` |
+| 15 | Band order fixed, 11 composites + 252 chips rebuilt into NEW folders, all 5 checks PASS | `src/acquisition/rebuild_composites_from_local.py`, `src/processing/extract_chips_all_quarters.py` |
 | 16 | 4-slide progress deck with 55% loader, DTU logo, speaker notes | `presentation/Project_Progress_Presentation.pptx` / `.pdf` |
 | 17 | 13-page script + reasoning document | `presentation/Presentation_Script_and_Reasoning.docx` / `.pdf` |
 | 18 | Deck audit (no overflow, opens without repair) | `presentation/helpers/audit_deck_geometry.py` |
@@ -54,7 +54,7 @@ Three hard gates cannot be skipped: **A10** verification, **B7** label sign-off,
 
 | Phase | Work | Owner |
 |---|---|---|
-| **A — Data repair** | Rebuild S2 composites/chips with corrected band order into NEW folders; remove 42 duplicate 2023_Q2 files; re-run all 5 verification checks | Assistant |
+| **A — Data repair** | **DONE** — 11 composites + 252 clean chips rebuilt, 11/11 band-position PASS, 5/5 index checks PASS (`C:\New folder\Documentations\07_Phase_A_Data_Repair_Report.pdf`) | Assistant |
 | **B — Labels** | Freeze rubric, regenerate candidates, build reviewer sheet; **verify 42 chips** (focus on 12 UNSURE), sign off | Assistant + **You** |
 | **C — Models** | RF/XGBoost baseline → U-Net/LMS-Net with spatial CV → S2+S1 late fusion → morphology metrics → AHP-weighted risk score → hotspot rank validation | Assistant + **You** (approve weights) |
 | **D — Dashboard** | React + Leaflet map, mining-mask overlay, sortable priority table; Node/Express API + MongoDB (SQLite fallback) | Assistant + **You** (freeze MVP, click-test) |

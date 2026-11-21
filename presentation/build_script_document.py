@@ -494,8 +494,9 @@ h2("2.10  One honesty note to keep you safe")
 p("The 252 chip-level labels are now human-reviewed and frozen: 55 MINING, 45 NOT MINING and 152 UNSURE. "
   "Do not claim that the 100 decisive labels prove a classifier: they are perfectly separable by sand_frac > "
   "0.575 by construction, which is a transparent bare-sediment rule, not a measured accuracy. The genuinely "
-  "new ground truth is the 28 human pixel masks; until those exist and the held-out evaluation is run, there "
-  "are no segmentation metrics to report.")
+  "new ground truth is the 28 human pixel masks. Both held-out evaluations have now been run: IoU 0.0055 for "
+  "U-Net and 0.0059 for LMS-Net. These are measured and near zero because the masks are sparse - report them honestly "
+  "and do not call them a working detector.")
 
 # ================================================================ SLIDE 3
 h1("3.  Slide 3 - Tasks left to be done")
@@ -506,8 +507,9 @@ script(
     "What remains is three things, and I want to explain why they are in this order.\n\n"
     "First, human pixel masks. Sixteen chips have been selected from unique transects and a browser tool is "
     "ready. We draw a mining mask on each one using the NDSI colour rules from the JIIT Noida study, then use "
-    "those real masks to train U-Net or LMS-Net with spatial cross-validation. This is a hard gate: no "
-    "segmentation model before 28 out of 28 masks are saved.\n\n"
+    "those real masks to train U-Net and LMS-Net with spatial cross-validation. That gate is closed: 28/28 "
+    "masks were saved and both runs completed. The next decision is whether to improve the sparse masks before "
+    "using model output for self-training.\n\n"
     "Second, the detection and risk models. A random forest or XGBoost baseline first, because it is cheap and "
     "tells us how much signal the indices actually carry - with the honest caveat that a model using sand_frac "
     "looks perfect on the decisive labels by construction. Then U-Net or LMS-Net segmentation, evaluated on "
@@ -615,7 +617,7 @@ table(
     widths=[2.3, 1.1, 3.2],
 )
 callout("OFFER THIS BEFORE THEY ASK",
-        "Offer the next concrete milestone rather than a date: 28 out of 28 masks saved, then a held-out IoU/Dice "
+        "Offer the next concrete milestone rather than a date: improve the sparse masks, then repeat held-out IoU/Dice "
         "number from spatial cross-validation. Panels respond well to a plan with a verifiable gate, not an "
         "arbitrary deadline.")
 
@@ -676,7 +678,7 @@ h1("6.  Check before you present")
 for item in [
     "Group number 162, both names, both roll numbers, supervisor spelling - read them off the slide once, out loud, before the panel does.",
     "Confirm the affiliation string for the spectral-index paper against the actual PDF before you say it aloud in the room.",
-    "Say '252 chip labels frozen; 28 pixel masks (16 saved)', and never present sand_frac separation as measured accuracy.",
+    "Say '252 chip labels frozen; 28 masks saved; both models trained with near-zero IoU', and never present sand_frac separation as measured accuracy.",
     "Say the band-order defect is fixed in the rebuilt data - the originals being untouched is a strength.",
     "Have these four files open in separate windows: verify_indices output, band_mapping_report.md, one chip RGB+NDVI panel, label_manifest.csv.",
     "Memorise these seven numbers: 29, 51, 42, 50.21, 252, 16, 55.",
@@ -720,7 +722,7 @@ script(
     "We have finished the heaviest part - 29 analysis-ready composites from 2018 to 2024, a 50.21-kilometre "
     "centreline, 51 transects, 42 validated chips and a 252-chip multi-temporal stack, all with a verification "
     "suite that has already caught and fixed a real band-order defect. That is 55 percent of the project.\n\n"
-    "What remains is 28 human pixel masks drawn with the NDSI rules from an India-specific spectral study, "
+    "What remains is better human pixel masks drawn with the NDSI rules from an India-specific spectral study, "
     "U-Net/LMS-Net training with spatial cross-validation, a self-training loop for all 252 chips, Sentinel-1 "
     "fusion for the monsoon, an AHP-weighted risk score, and a MERN dashboard running in parallel. There is no "
     "fixed calendar deadline; the milestones are ordered by dependency."
@@ -765,7 +767,7 @@ NOTES = {
     3: ("Tasks left - 2.5 min.\n"
         "- Lead with: the heaviest block (data + labels, ~55%) is DONE. Only models, dashboard, reporting remain.\n"
         "- 01 Human pixel masks: 28 chips (24 transects), cyan water overlay, browser tool on 127.0.0.1:8765, NDSI guide "
-        "PDF 09. Hard gate: no training before 28/28 masks are saved.\n"
+        "PDF 09. The 28/28 gate is closed; the current bottleneck is mask quality, not missing masks.\n"
         "- 02 Detection & risk: RF/XGB baseline (cheap, but sand_frac looks perfect by construction) -> "
         "U-Net/LMS-Net with 3-fold GroupKFold by transect -> self-training on all 252 chips -> S2+S1 late "
         "fusion for monsoon -> AHP risk score validated by rank.\n"
@@ -779,7 +781,7 @@ NOTES = {
         "- Be explicit: no IoU/Dice/F1 is shown because held-out masks have not been evaluated yet.\n"
         "- Biggest risk = inconsistent masks. Fallback = keep the RF/XGB baseline and the index rubric as a "
         "working product, and report the limitation honestly.\n"
-        "- Offer proactively: the next concrete milestone is 28/28 saved masks, not a calendar date."),
+        "- Offer proactively: the next concrete milestone is improved masks, not a calendar date."),
 }
 
 try:

@@ -21,10 +21,10 @@ Detect illegal sand extraction along the Delhi stretch of the Yamuna (Palla → 
 | Chip-level labels | **Done** — 252 human-reviewed labels frozen: **55 MINING / 45 NOT MINING / 152 UNSURE** |
 | Extra labeling features | **Done** — water fraction, CMI (bare-exposure ratio), river distance for 11 scenes + 252 chips |
 | Human pixel masks | **In progress** — 28-chip browser annotation tool; **16/28 mask files saved** (12 new river chips + T015 repaint pending) |
-| Detection / risk models | **Phase C** — U-Net/LMS-Net training waits for the 28 masks; **no trained metrics claimed** |
+| Detection / risk models | **Phase C** - U-Net and LMS-Net trained on 28 masks; honest held-out IoU 0.0055 / 0.0059 (near zero, sparse masks) |
 | MERN dashboard | **Not started** |
 | Progress figure shown in deck | **55%** = weighted block completion: data + labels ~55%, models 30%, dashboard 10%, reporting 5% |
-| Strictly usable today | Closer to **55%** — data and labels are complete, pixel masks and models are not |
+| Strictly usable today | **55%** - data, labels and masks complete; models trained but not yet useful; dashboard and reporting remain |
 
 ## 3. What has been done so far
 
@@ -63,7 +63,7 @@ Pixel-mask sign-off is complete (**28/28** masks saved) and the training hard ga
 |---|---|---|
 | **A — Data repair** | **DONE** — 11 composites + 252 clean chips rebuilt, 11/11 band-position PASS, 5/5 index checks PASS | Assistant |
 | **B — Labels** | **DONE** — 252 chip labels frozen, 28 human pixel masks saved (28/28), 3-fold GroupKFold by transect applied | Assistant + **You** (masks signed off) |
-| **C — Models** | U-Net trained on the 28 real masks (held-out IoU 0.0055 — honest, weak); LMS-Net training in progress → → self-training loop to auto-mask all 252 chips → RF/XGBoost baseline → S2+S1 late fusion → morphology metrics → AHP-weighted risk score → hotspot **rank** validation | Assistant + **You** (approve weights) |
+| **C - Models** | U-Net and LMS-Net trained on 28 masks (IoU 0.0055 / 0.0059 - honest, weak) then self-training all 252 chips, RF/XGBoost baseline, S1+S2 fusion, morphology, AHP-weighted risk score and hotspot **rank** validation | Assistant + **You** (approve weights) |
 | **D — Dashboard** | React + Leaflet map, mining-mask overlay, sortable priority table; Node/Express API + MongoDB (SQLite fallback) | Assistant + **You** (freeze MVP, click-test) |
 | **E — Reports** | Correct slide 2 (real script names), slide 4 (no fixed-day deadline), update literature to 5 references, re-export PDFs | Assistant |
 | **F — Handover** | Timed rehearsal, 12-question Q&A, final checklist, present | **You** |
@@ -84,7 +84,7 @@ src/
   verification/            Inventory, geometry, index and band-mapping checks
   experiments/             Superseded NDWI centreline attempt
   utilities/               Read-only inspection helpers
-models/                    Phase C: U-Net trained, LMS-Net running, AHP risk scorer, self-trainer
+models/                    Phase C: U-Net + LMS-Net trained (honest metrics), AHP risk scorer, self-trainer
 dashboard/                 Phase D MERN plan (not started)
 presentation/              Final deck + builders; archive/ holds old iterations
 docs/                      Guides, project log, documentation PDFs 00-06
@@ -102,10 +102,10 @@ The **134 GB of satellite imagery is NOT in this repository** (GitHub per-file l
 
 The original band-order defect is **fixed in the rebuilt data**: 11 composites and 252 chips in the NEW folders have PASS on all band-position and index checks. Originals were left byte-identical. To regenerate from scratch: `src/acquisition/extract_yamuna_data.py` (needs CDSE + USGS credentials). Precomputed, small derivatives — inventory CSVs, verification reports, centreline GeoJSON, transect tables, labeling metadata — **are** in `reports/` and `labeling/`.
 
-## 7. Models (U-Net trained; LMS-Net running; risk score is rule-based)
+## 7. Models (both segmentation runs completed; risk score is rule-based)
 
 1. **Random Forest / XGBoost** — cheap baseline on 14 bands + extra features; go/no-go gate and fallback detector. A model using `sand_frac` will look perfect on the 100 decisive labels; this is reported transparently as a bare-sediment rule, not as a genuine accuracy result.
-2. **U-Net / LMS-Net** — pixel-level mining mask from 256×256×14 chips, BCE+Dice, 3-fold *spatial* GroupKFold by transect on the 28 human masks. LMS-Net multi-scale is chosen because mining patches range from pits to kilometre-long bars. U-Net held-out results are real: IoU 0.0055, Dice 0.0110, F1 0.0110 — near zero because the masks are sparse (0.2–3.1% positive pixels). LMS-Net metrics will be added when its run finishes; no accuracy is inflated.
+2. **U-Net / LMS-Net** — pixel-level mining mask from 256×256×14 chips, BCE+Dice, 3-fold *spatial* GroupKFold by transect on the 28 human masks. LMS-Net multi-scale is chosen because mining patches range from pits to kilometre-long bars. Both held-out evaluations are real: U-Net IoU 0.0055 / Dice 0.0110 / F1 0.0110; LMS-Net IoU 0.0059 / Dice 0.0117 / F1 0.0117. They are near zero because the masks are sparse (0.2–3.1% positive pixels in 12 of 28 chips). No accuracy is inflated; see `C:\New folder\segmentation_runs\model_comparison.csv`.
 3. **Self-training loop** — apply the trained segmentation model to all 252 chips, keep high-confidence masks, and use them for the full-dataset risk ranking. No accuracy is claimed for pseudo-masks.
 4. **S2 + S1 late fusion** — SAR all-weather path for cloudy monsoon months; optical path stays standalone.
 5. **Risk scorer (rule-based, not a trained regressor)** — `models/compute_risk_score.py` applies AHP weights (detection 30%, persistence 25%, morphology 20%, access 15%, vegetation loss 10%) to min-max-scaled features. There is **no supervised risk model and no risk ground truth** here, so no risk accuracy or calibration can be claimed; validation is by **rank correlation against known hotspots only**. Weights are PROPOSED pending approval. Tiers: High ≥70, Medium 40–70, Low <40.

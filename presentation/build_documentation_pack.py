@@ -175,16 +175,16 @@ done_rows = [
     ["20", "Extra features", "2026-11-22", "src/processing/compute_extra_features.py, 08_Extra_Features_and_Thresholds.pdf", "Water fraction (Otsu clamped to >=0), CMI=(B11-B12)/(B11+B12) bare-exposure ratio, distance to centreline for 11 scenes + 252 chips"],
     ["21", "Decisive-label caveat", "2026-11-22", "data/verified_labels.csv, label_validation.txt", "100 decisive labels perfectly separable by sand_frac > 0.575. Documented as transparent bare-sediment rule, NOT a measured accuracy"],
     ["22", "Reviewer packages", "2026-11-22", "C:\\New folder\\label_review\\<quarter>\\", "6 quarterly PDFs + CSVs + previews covering all 252 chips; geometrically verified clean (0 overlaps)"],
-    ["23", "Pixel-mask annotation tool", "2026-11-22", "src/labeling/08_select_annotation_chips.py, annotation_server.py, annotation_ui.html", "28 chips (16 original + 12 river), cyan water overlay, 24 unique transects; Flask server on 127.0.0.1:8765; 256x256 binary masks (16/28 saved so far)"],
+    ["23", "Pixel-mask annotation tool", "2026-11-22", "src/labeling/08_select_annotation_chips.py, annotation_server.py, annotation_ui.html", "28 chips (16 original + 12 river), cyan water overlay, 24 unique transects; Flask server on 127.0.0.1:8765; 256x256 binary masks (28/28 saved); U-Net/LMS-Net trained on them"],
     ["24", "NDSI annotation guide", "2026-11-22", "docs/documentation_pdfs/09_Annotation_Guide_for_Mining_Masks.pdf", "Colour convention, sand-vs-mining distinction, extraction signatures, workflow, common mistakes; also embedded in the annotation UI"],
 ]
 
 open_rows = [
-    ["O1", "Draw 16 human pixel masks in the browser tool", "Blocks U-Net/LMS-Net training"],
-    ["O2", "Train U-Net/LMS-Net with 3-fold GroupKFold by transect", "Need real IoU/Dice/F1 before any claim"],
+    ["O1", "Improve sparse masks (12/28 non-empty, 0.2-3.1% paint)", "Near-zero IoU 0.0055/0.0059 blocks useful self-training"],
+    ["O2", "Run RF/XGBoost baseline and S1+S2 late fusion", "Cheap fallback + cloud-season path"],
     ["O3", "Self-training loop to auto-mask all 252 chips", "Needed for full-dataset risk ranking"],
     ["O4", "Approve AHP weights and validate hotspot ranking", "C15 hard gate"],
-    ["O5", "Fix deck slide 2 script names and slide 4 fixed-day timeline", "Now stale"],
+    ["O5", "Freeze dashboard MVP scope", "Needed before implementation"],
 ]
 
 build("01_Work_Completed_To_Date.pdf", "Work Completed To Date",
@@ -199,9 +199,10 @@ build("01_Work_Completed_To_Date.pdf", "Work Completed To Date",
     Spacer(1, 8),
     P("3. Honest completion statement", H1),
     P("The deck reports 55%. That is the weight of the data-engineering and labeling block, which is now closed end-to-end "
-      "(rebuild PASS, 252 labels frozen). The strictly usable share today is therefore about 55%, not more: the 16 human "
-      "pixel masks are still outstanding, so U-Net/LMS-Net training has not started and no metric is claimed. Models (30%), "
-      "dashboard (10%) and reporting (5%) remain. Do not claim more than 55%.", CALLOUT),
+      "(rebuild PASS, 252 labels frozen). The 28 human pixel masks were signed off and both U-Net and LMS-Net were "
+      "trained with 3-fold spatial CV: held-out IoU 0.0055 / 0.0059 is measured and near zero because masks are "
+      "sparse - not a detection capability claim. Dashboard (10%), reporting (5%) and mask improvement remain. "
+      "Do not claim more than 55%.", CALLOUT),
 ])
 
 # ============================================================ 02 DATA
@@ -335,13 +336,13 @@ build("03_Pipeline_Scripts.pdf", "Pipeline Scripts and Execution Order",
 # ============================================================ 04 MODELS
 build("04_Models_and_Justification.pdf", "Detection and Risk Models - Design and Justification",
       "Which model is used at each stage, why, and how it is evaluated", [
-    P("Status: these four models are DESIGNED but NOT YET TRAINED. Everything below is the plan, not a result.", CALLOUT),
+    P("Status: U-Net and LMS-Net have been trained on the 28 real masks with 3-fold spatial CV. ""Held-out IoU 0.0055 / 0.0059 is measured and near zero because masks are sparse; RF/XGBoost, S1 fusion and the ""rule-based AHP risk scorer are still design/plan.", CALLOUT),
     P("1. The four models", H1),
     tbl(["#", "Model", "Input", "Output", "Why this model", "Evaluation"], [
         ["1", "Random Forest / XGBoost", "14 values per pixel (10 bands + 4 indices)", "mining probability", "Cheap sanity benchmark (an afternoon). If trees already work, the deep model is confirmation not a gamble. Gives feature importances proving the indices carry signal. Also the fallback detector.", "Precision, recall, F1; feature importance ranking"],
         ["2", "U-Net / LMS-Net segmentation", "256x256x14 chip", "256x256 mining mask", "The main detector. Segmentation not classification, because the deliverable is a pixel-level map and risk needs area. LMS-Net multi-scale handles pits and kilometre-long bars; 98.07% at 1/10 U-Net parameters matches the lightweight constraint.", "IoU, F1, per-class PR, confusion matrix"],
         ["3", "S2 + S1 late fusion", "optical probability map + VV/VH probability map", "fused probability map", "Monsoon (June-Sept) is cloud-blocked and is peak mining season. SAR is all-weather. Late fusion means the optical model still works standalone when SAR is missing.", "Compare fused vs optical-only, especially on Q2/Q3"],
-        ["4", "Risk-score regressor", "detection area + persistence + morphology + access + vegetation loss", "0-100 score per 1 km segment", "Enforcement needs a priority list, not just detection. AHP weights are auditable; learned calibration improves fit. The Nair paper reports the hybrid beats either component alone (AUC > 0.93).", "Rank correlation against known hotspots (Palla, Jaitpur-Kondli)"],
+        ["4", "AHP risk scorer (rule-based)", "detection area + persistence + morphology + access + vegetation loss", "0-100 score per 1 km segment", "Enforcement needs a priority list, not just detection. AHP weights are auditable. No supervised risk model exists because there is no risk ground truth; no calibration or risk accuracy is claimed.", "Rank correlation against known hotspots (Palla, Jaitpur-Kondli)"],
     ], [8 * mm, 32 * mm, 33 * mm, 25 * mm, 58 * mm, 26 * mm], font=6.9),
     PageBreak(),
 
@@ -456,10 +457,10 @@ build("06_Remaining_Steps.pdf", "Remaining Steps - Full Execution Plan",
         ["B4", "Human-verify all 252 chips", "verified_labels.csv: 55/45/152", "YOU", "DONE"],
         ["B5", "Freeze chip labels + split roles", "data/verified_labels.csv", "Me", "DONE"],
         ["B6", "Select 28 chips + build annotation tool", "browser tool on :8765", "Me", "DONE"],
-        ["B7", "Draw 16 human pixel masks", "16 binary PNG masks", "YOU", "~1 h"],
-        ["B8", "Mask sign-off (28/28)", "training-ready dataset", "YOU", "10 min"],
+        ["B7", "Draw 28 human pixel masks", "28 binary PNG masks", "YOU", "DONE"],
+        ["B8", "Mask sign-off (28/28)", "training-ready dataset", "YOU", "DONE"],
     ], [12 * mm, 82 * mm, 46 * mm, 18 * mm, 18 * mm], font=7.2),
-    P("GATE B8: no segmentation training before 28/28 masks. Chip-label sign-off (B7 in the old plan) is already DONE.", CALLOUT),
+    P("GATE B8 CLOSED: 28/28 masks saved and both U-Net and LMS-Net trained with 3-fold spatial CV.", CALLOUT),
     Spacer(1, 8),
 
     P("3. Phase C - Models (critical path)", H1),
@@ -468,9 +469,9 @@ build("06_Remaining_Steps.pdf", "Remaining Steps - Full Execution Plan",
         ["C2", "Build pixel dataset with transect ID as grouping key", "arrays + groups", "Me", "30 min"],
         ["C3", "Train RF / XGBoost baseline", "model + importances", "Me", "45 min"],
         ["C4", "Evaluate baseline, go/no-go report", "metrics", "Me", "10 min"],
-        ["C5", "Implement U-Net / LMS-Net for the 28 real masks", "architecture code", "Me", "60 min"],
-        ["C6", "Train with BCE+Dice, augmentation, 3-fold GroupKFold by transect", "3 trained folds", "Me", "2-4 h GPU / 8-12 h CPU"],
-        ["C7", "Evaluate IoU, Dice, precision, recall, F1, confusion matrix", "metrics table", "Me", "30 min"],
+        ["C5", "Implement U-Net / LMS-Net for the 28 real masks", "architecture code", "Me", "DONE"],
+        ["C6", "Train with BCE+Dice, augmentation, 3-fold GroupKFold by transect", "3 trained folds x 2 arch", "Me", "DONE"],
+        ["C7", "Evaluate IoU/Dice/F1 honestly", "IoU 0.0055 U-Net / 0.0059 LMS-Net", "Me", "DONE"],
         ["C8", "Error analysis: worst transects + mask visuals", "error report", "Me", "30 min"],
         ["C8b", "Self-training: apply trained model to all 252 chips, keep high-confidence masks", "auto-masks + confidence", "Me", "1-2 h"],
         ["C9", "Implement S1 late fusion", "fusion code", "Me", "60 min"],
@@ -478,7 +479,7 @@ build("06_Remaining_Steps.pdf", "Remaining Steps - Full Execution Plan",
         ["C11", "Morphology change metrics from 6 quarters", "bank shift / area table", "Me", "60 min"],
         ["C12", "Propose 5-factor AHP matrix", "draft weights", "Me", "20 min"],
         ["C13", "Approve AHP weights", "final weights", "YOU", "20 min"],
-        ["C14", "Train risk calibrator, score 51 segments, tier them", "risk table", "Me", "60 min"],
+        ["C14", "Compute rule-based AHP risk index for 51 segments (no trained calibrator)", "risk table", "Me", "60 min"],
         ["C15", "Validate against Palla / Jaitpur-Kondli hotspots", "rank report", "Me", "30 min"],
     ], [12 * mm, 82 * mm, 46 * mm, 18 * mm, 18 * mm], font=7.2),
     P("GATE C15: ranking must be behaviourally correct. Report rank correlation, never an invented risk accuracy.", CALLOUT),

@@ -108,7 +108,7 @@ The original band-order defect is **fixed in the rebuilt data**: 11 composites a
 2. **U-Net / LMS-Net** — pixel-level mining mask from 256×256×14 chips, BCE+Dice, 3-fold *spatial* GroupKFold by transect on the 28 human masks. LMS-Net multi-scale is chosen because mining patches range from pits to kilometre-long bars. U-Net held-out results are real: IoU 0.0055, Dice 0.0110, F1 0.0110 — near zero because the masks are sparse (0.2–3.1% positive pixels). LMS-Net metrics will be added when its run finishes; no accuracy is inflated.
 3. **Self-training loop** — apply the trained segmentation model to all 252 chips, keep high-confidence masks, and use them for the full-dataset risk ranking. No accuracy is claimed for pseudo-masks.
 4. **S2 + S1 late fusion** — SAR all-weather path for cloudy monsoon months; optical path stays standalone.
-5. **Risk-score regressor** — AHP weights (detection 30%, persistence 25%, morphology 20%, access 15%, vegetation loss 10%) + learned calibration; validated by **rank correlation** against known hotspots, never a fabricated "risk accuracy". Tiers: High ≥70, Medium 40–70, Low <40.
+5. **Risk scorer (rule-based, not a trained regressor)** — `models/compute_risk_score.py` applies AHP weights (detection 30%, persistence 25%, morphology 20%, access 15%, vegetation loss 10%) to min-max-scaled features. There is **no supervised risk model and no risk ground truth** here, so no risk accuracy or calibration can be claimed; validation is by **rank correlation against known hotspots only**. Weights are PROPOSED pending approval. Tiers: High ≥70, Medium 40–70, Low <40.
 
 ## 8. Papers behind the design
 

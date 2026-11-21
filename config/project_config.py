@@ -56,9 +56,16 @@ VERIFICATION_DIR = WORK_DIR / "verification"
 LABELING_DIR = WORK_DIR / "labeling"
 SCRIPTS_DIR = REPO_ROOT / "src"                     # clean source tree
 
-CHIPS_S2_DIR = WORK_DIR / "chips"
+CHIPS_S2_DIR = WORK_DIR / "chips"          # ORIGINAL - protected, do not modify
 CHIPS_S1_DIR = WORK_DIR / "chips_s1"
 CHIPS_S2_Q2_DIR = CHIPS_S2_DIR / "2023_Q2"
+
+# Rebuilt, band-order-correct chips and the human pixel-mask workspace.
+CHIPS_FIXED_DIR = WORKSPACE_ROOT / "chips_fixed"
+ANNOTATION_DIR = WORKSPACE_ROOT / "annotation"
+ANNOTATION_CHIPS_JSON = ANNOTATION_DIR / "chips.json"
+ANNOTATION_MASKS_DIR = ANNOTATION_DIR / "masks"
+SEGMENTATION_RUNS_DIR = WORKSPACE_ROOT / "segmentation_runs"
 
 # ---------------------------------------------------------------------------
 # Frequently used individual files

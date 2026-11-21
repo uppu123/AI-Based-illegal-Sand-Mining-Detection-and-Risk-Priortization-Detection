@@ -11,4 +11,4 @@ Slide 2 of the current deck uses three convenient short names. Two of them were 
 | `compute_indices.py` | inline in `src/acquisition/extract_yamuna_data.py` (spectral-index section) | NDVI/NDWI/NDBI/NDSI are computed by band name there; no separate file exists |
 | `verify_indices.py` | `src/verification/08_verify_spectral_indices.py` and `09_diagnose_band_mapping.py` | One 5-check suite plus the root-cause diagnostic |
 
-Planned fix (Phase E): update slide 2 to show the real filenames, so the deck matches the repository exactly.
+Status: deck slide 2 is being updated to show the real filenames, so the deck matches the repository exactly. This map remains the authoritative answer if a short name is still shown.

@@ -203,7 +203,7 @@ table(
         ["Supervisor", "Dr. Anita Thakur"],
         ["Deck", "Project_Progress_Presentation.pptx (4 slides)"],
         ["Speaking time", "9-10 minutes + 3-4 minutes Q&A"],
-        ["Hard constraint", "45 days remaining"],
+        ["Hard constraint", "No fixed calendar deadline - milestone order only"],
         ["Status claimed", "55% complete"],
     ],
     widths=[1.5, 4.9],
@@ -223,7 +223,7 @@ table(
         ["1", "Title, team, supervisor", "1:00", "You know the problem and why it matters."],
         ["2", "Progress: literature + code + 55%", "4:00", "The hard work is already done and it is verifiable."],
         ["3", "Tasks left", "2:30", "You know exactly what remains and why in that order."],
-        ["4", "45-day timeline", "1:30", "The plan fits the deadline and you understand the risk."],
+        ["4", "Execution order (no fixed deadline)", "1:30", "You understand the sequence and the single hard gate."],
     ],
     widths=[0.55, 2.5, 0.6, 2.8],
 )
@@ -246,7 +246,7 @@ script(
     "Satellite imagery already covers that stretch every five days and it is free. What does not exist is the "
     "layer that converts those pixels into an enforcement decision: which segment, how severe, and in what order "
     "to act. That conversion layer is our project.\n\n"
-    "Today I will cover three things: what we have completed, what remains, and how the remaining 45 days are planned."
+    "Today I will cover three things: what we have completed, what remains, and the order in which we will finish it."
 )
 
 h2("1.2  Why each element is on the slide")
@@ -259,7 +259,7 @@ bullet_rich("Group 162 - ", "administrative requirement; wrong number invalidate
 h2("1.3  Why the opening mentions 'enforcement decision'")
 p("This single phrase sets up the entire architecture. If the problem were only detection, a segmentation model "
   "would be enough and the project would be half its size. Because the problem is prioritization, the project "
-  "needs a risk score, which needs morphology change metrics, which is why two of the four papers are about "
+  "needs a risk score, which needs morphology change metrics, which is why two of the five papers are about "
   "change and risk rather than about segmentation. Say it early so slides 2 and 3 feel inevitable.")
 
 # ================================================================ SLIDE 2
@@ -305,7 +305,7 @@ callout("SAY THIS IF PRESSED",
         "and we deliberately did not claim credit for planning the models.")
 
 # ---- 2.3 papers
-h2("2.3  The four papers - what each says, why we chose it, what we took")
+h2("2.3  The five papers - what each says, why we chose it, what we took")
 
 h3("Paper 1  -  Zhang, Liu & Liu (2025), Remote Sensing 17(2):227  |  LMS-Net")
 bullet_rich("What it does: ", "a lightweight multi-scale segmentation network for riverbank sand mining areas in "
@@ -360,15 +360,26 @@ bullet_rich("Why we chose it: ", "two reasons, and the second is the one that ma
             "index thresholds are sensor- and atmosphere-dependent. Global thresholds taken from non-Indian "
             "studies misclassify Indian river sand because sediment mineralogy, surface moisture and atmospheric "
             "path differ. This paper gives us India-calibrated starting ranges. Second, and more important: we "
-            "have 42 chips and no ground truth. Without a principled labeling rule, 'manual labeling' means two "
-            "people eyeballing chips with no rubric - slow, inconsistent and impossible to defend. This paper "
-            "converts labeling into a semi-automatic, reproducible step: compute four physically meaningful "
-            "indices, threshold them, generate candidate labels, then have a human verify. That is exactly Task "
-            "01 on the next slide, and it is why we can still finish in 45 days.")
+            "had 42 candidate chips and no verified ground truth at the time. Without a principled labeling rule, "
+            "'manual labeling' means two people eyeballing chips with no rubric - slow, inconsistent and "
+            "impossible to defend. This paper converts labeling into a semi-automatic, reproducible step: "
+            "compute four physically meaningful indices, threshold them, generate candidate labels, then have "
+            "a human verify. That is exactly how the 252-chip label set was produced and frozen.")
 bullet_rich("What we take from it: ", "the index family, the sand-versus-water-versus-vegetation separability "
             "logic, and the threshold ranges as our starting point.")
 bullet_rich("What we do not take: ", "its thresholds as final. Our sensor, season and stretch differ, so we "
-            "recalibrate on our own 42 chips and record the final thresholds.")
+            "recalibrated on our 252 chips and recorded the final thresholds.")
+
+h3("Paper 5  -  Mukherjee et al.  |  Coal Mine Index (CMI)")
+bullet_rich("What it does: ", "defines CMI = (B11 - B12)/(B11 + B12), a ratio of SWIR-I to SWIR-II used as an "
+            "exposed-surface contrast measure. The scaling of reflectance cancels in the ratio.")
+bullet_rich("Why we chose it: ", "it adds an independent bare-exposure feature alongside NDVI/NDWI/NDBI/NDSI. "
+            "B11 and B12 are already in our 14-band chips, so it costs no extra download, and it helps separate "
+            "fresh bare sediment from vegetation and wet ground.")
+bullet_rich("What we take from it: ", "the bare-exposure ratio only, used as an extra feature for labeling and "
+            "risk scoring.")
+bullet_rich("What we do not take: ", "any interpretation as a COAL detector. There is no coal in our AOI; we "
+            "reuse the index as a generic SWIR exposure ratio and say so explicitly.")
 
 h3("Papers we reviewed and deliberately rejected")
 table(
@@ -480,38 +491,39 @@ callout("LIVE DEMO - 60 SECONDS MAX",
         "scroll code - it burns time and invites nitpicking.")
 
 h2("2.10  One honesty note to keep you safe")
-p("The 42 candidate labels currently in the manifest - 16 mining, 14 not-mining, 12 unsure - are "
-  "auto-generated from the index thresholds, not ground truth. Always describe them as 'candidate labels pending "
-  "human verification'. If a panel member later discovers they were presented as ground truth, every number on "
-  "the slide loses credibility. The 12 unsure chips are the honest and useful part: they are exactly the "
-  "ambiguous cases the human-review step exists to resolve.")
+p("The 252 chip-level labels are now human-reviewed and frozen: 55 MINING, 45 NOT MINING and 152 UNSURE. "
+  "Do not claim that the 100 decisive labels prove a classifier: they are perfectly separable by sand_frac > "
+  "0.575 by construction, which is a transparent bare-sediment rule, not a measured accuracy. The genuinely "
+  "new ground truth is the 16 human pixel masks; until those exist and the held-out evaluation is run, there "
+  "are no segmentation metrics to report.")
 
 # ================================================================ SLIDE 3
 h1("3.  Slide 3 - Tasks left to be done")
 
 h2("3.1  What to say")
 script(
-    "The largest single block - collecting the satellite data and producing a label set - is finished. What "
-    "remains is three things, and I want to explain why they are in this order.\n\n"
-    "First, the index model and auto-labeling, seven days. Everything downstream depends on labels, so nothing "
-    "can start before this. We compute NDVI, NDWI, NDBI and NDSI per the JIIT Noida study, calibrate the "
-    "thresholds on our own 42 chips, let the model assign candidate labels, and then a human reviews - "
-    "concentrating on the twelve that come back unsure.\n\n"
-    "Second, the detection and risk models, thirty days. A random forest or XGBoost baseline first, because it "
-    "is cheap and tells us how much signal the indices actually carry. Then U-Net or LMS-Net segmentation, "
-    "evaluated with spatial cross-validation rather than random splits. Then Sentinel-2 plus Sentinel-1 late "
-    "fusion for the monsoon months. Then the risk score itself.\n\n"
-    "Third, the MERN dashboard and delivery, twenty days. React front end with the risk map and pixel overlay, "
-    "Node and Express for the API, MongoDB for the label store.\n\n"
+    "The largest single block - collecting the satellite data and freezing a 252-chip label set - is finished. "
+    "What remains is three things, and I want to explain why they are in this order.\n\n"
+    "First, human pixel masks. Sixteen chips have been selected from unique transects and a browser tool is "
+    "ready. We draw a mining mask on each one using the NDSI colour rules from the JIIT Noida study, then use "
+    "those real masks to train U-Net or LMS-Net with spatial cross-validation. This is a hard gate: no "
+    "segmentation model before 16 out of 16 masks are saved.\n\n"
+    "Second, the detection and risk models. A random forest or XGBoost baseline first, because it is cheap and "
+    "tells us how much signal the indices actually carry - with the honest caveat that a model using sand_frac "
+    "looks perfect on the decisive labels by construction. Then U-Net or LMS-Net segmentation, evaluated on "
+    "held-out transects. Then a self-training loop applies the trained model to all 252 chips. Then Sentinel-2 "
+    "plus Sentinel-1 late fusion and the risk score.\n\n"
+    "Third, the MERN dashboard and delivery. React front end with the risk map and pixel overlay, Node and "
+    "Express for the API, MongoDB for the label store.\n\n"
     "The important point is the parallelism: the dashboard only needs the API contract, not a trained model, so "
-    "it starts at day twelve while training is still running."
+    "it can be built alongside training. We are not committing to a fixed calendar date."
 )
 
 h2("3.2  Why this order and not another order")
-bullet_rich("Labels before models - ", "a model trained on unverified labels produces metrics you cannot explain. "
-            "Seven days spent here protects twenty-five days of training.")
+bullet_rich("Masks before models - ", "a segmentation model trained without real pixel masks would only "
+            "re-learn our own threshold rule. Sixteen honest masks are the hard gate before training.")
 bullet_rich("Baseline before deep learning - ", "a random forest on 14 features costs an afternoon. If it lands "
-            "close to the network, the network is over-engineered and you have saved three weeks. It also gives "
+            "close to the network, the network is over-engineered and you have saved significant GPU time. It also gives "
             "you feature importances, which is direct evidence in your paper that the four indices carry real signal.")
 bullet_rich("Segmentation, not classification - ", "the deliverable is a map with a pixel-level overlay. A "
             "chip-level label throws away spatial extent, and extent is what feeds area-based risk. Also, the "
@@ -523,28 +535,25 @@ bullet_rich("Fusion after segmentation - ", "you need a working optical model be
             "half-built models produces a result you cannot attribute to either sensor.")
 bullet_rich("Risk score last - ", "it consumes detection output plus change metrics; both must exist first.")
 bullet_rich("Dashboard in parallel - ", "it is the only block that does not depend on model accuracy, only on the "
-            "shape of the API. That is the whole basis of the 45-day plan on the next slide.")
+            "shape of the API. That is why it runs alongside the model work.")
 
-h2("3.3  Why the labeling model is the linchpin")
-p("If the auto-labeling step slips, everything slips. That is why it gets the first seven days and the most "
-  "care. Two safeguards:")
-numbered("Human spot-check with a written rubric, and two reviewers on the unsure cases, so we can report an "
-         "agreement statistic rather than a bare assertion.")
-numbered("Fixed, recorded thresholds committed alongside the labels, so the labeling is reproducible - anyone can "
-         "re-derive the 42 labels from the four index rasters.")
+h2("3.3  Why the mask step is the linchpin")
+p("If the 16 masks are inconsistent, the segmentation model learns noise. That is why this step comes first and "
+  "has a written guide. Two safeguards:")
+numbered("The NDSI guide defines the colour convention, the sand-versus-mining distinction, extraction signatures "
+         "and common mistakes; it is embedded in the annotation tool and saved as PDF 09.")
+numbered("All 16 chips come from unique transects, so 3-fold GroupKFold by transect gives a leak-free held-out "
+         "evaluation instead of an inflated random-split number.")
 
-h2("3.4  Day estimates - the reasoning behind each number")
+h2("3.4  Effort, not a deadline")
 table(
-    ["Block", "Estimate", "Why that number"],
+    ["Block", "What it means", "Why it comes first"],
     [
-        ["01  Index model + auto-labeling", "7 days",
-         "Four indices are already computed, so this is threshold calibration plus review of 42 chips. Two people, roughly three days each with a day of reconciliation."],
-        ["02  Detection & risk models", "30 days",
-         "Baseline 4 d, segmentation training and tuning 12 d, spatial CV and error analysis 5 d, S2+S1 fusion 6 d, risk score 3 d. It is the critical path."],
-        ["03  MERN dashboard + delivery", "20 days",
-         "API + schema 5 d, map and overlay 7 d, chip browser and labeling UI 4 d, integration and testing 4 d. Runs in parallel from day 12."],
+        ["01  Human pixel masks", "16 masks, then 3-fold spatial CV", "Hard gate: no training without real masks"],
+        ["02  Detection & risk", "Baseline, U-Net/LMS-Net, self-training, fusion, risk", "Consumes the masks and the frozen labels"],
+        ["03  MERN + delivery", "React map/overlay, Node/Express API, MongoDB", "Needs only the API contract, not a trained model"],
     ],
-    widths=[2.3, 0.8, 3.3],
+    widths=[2.3, 2.0, 2.1],
 )
 
 # ================================================================ SLIDE 4
@@ -552,59 +561,63 @@ h1("4.  Slide 4 - Expected timeline")
 
 h2("4.1  What to say")
 script(
-    "We have 45 days. The plan is built backwards from that date, and the milestones are placed proportionally "
-    "on a day axis rather than spaced evenly, so the drawing does not lie about the gaps.\n\n"
-    "Day zero is today, at 55 percent. Day seven, the index model is done and the label set is verified. Day "
-    "sixteen, baseline models are in and we know whether the indices carry signal. Day twenty-six, segmentation "
-    "is trained and spatially validated. Day thirty-four, Sentinel-1 fusion and the risk score are in place. "
-    "Day forty, the dashboard is live. Day forty-five, paper, thesis and defense.\n\n"
-    "One thing I want to be explicit about: the effort numbers - thirty days of models, twenty of dashboard, "
-    "seven of reporting - add up to fifty-seven, which is more than forty-five. That is not an error; it is the "
-    "plan. Two of us run two tracks from day twelve. If we tried to do this serially it would not fit, and I "
-    "would rather say that now than discover it in week four."
+    "We are showing execution order, not a deadline. The 55 percent is real: data engineering and the 252-chip "
+    "label set are finished. The milestones are placed in the order they must happen, without claiming a "
+    "calendar date.\n\n"
+    "Step one, 16 human pixel masks. Step two, train U-Net or LMS-Net on those masks with three-fold spatial "
+    "cross-validation and report IoU, Dice, precision, recall and F1 only after that evaluation exists. Step "
+    "three, self-training applies the trained model to all 252 chips. Step four, Sentinel-1 fusion and the "
+    "AHP-weighted risk score. Step five, the MERN dashboard with map, mask overlay and priority table. Step six, "
+    "paper, thesis and defense.\n\n"
+    "One thing I want to be explicit about: the risk score is validated by rank against known hotspots, not by "
+    "an invented risk accuracy, and pseudo-masks carry confidence scores rather than a false claim of human "
+    "truth."
 )
 
 h2("4.2  The parallelism, stated plainly")
 table(
-    ["Track", "Owner", "Runs", "Content"],
+    ["Track", "Owner", "Depends on", "Content"],
     [
-        ["A  -  Models (critical path)", "Upendra", "Day 0 - 34", "Index model, labels, baseline, segmentation, S2+S1 fusion, risk score"],
-        ["B  -  Product", "Somya", "Day 12 - 40", "API contract from day 12, dashboard, map and overlay, chip browser, labeling UI"],
-        ["Joint", "Both", "Day 34 - 45", "Integration, end-to-end testing, paper, thesis, defense rehearsal"],
+        ["A  -  Models (critical path)", "Upendra", "16 human masks", "U-Net/LMS-Net, self-training, S2+S1 fusion, AHP risk score"],
+        ["B  -  Product", "Somya", "API contract only", "Dashboard, map and overlay, chip browser, priority table"],
+        ["Joint", "Both", "Stable outputs", "Integration, end-to-end testing, paper, thesis, defense rehearsal"],
     ],
-    widths=[2.2, 0.8, 1.1, 3.3],
+    widths=[2.2, 0.8, 1.4, 2.0],
 )
 callout("THE ARGUMENT IN ONE LINE",
         "The dashboard is deliberately off the critical path - it needs the API contract, not a trained model. "
-        "That is what buys the schedule.")
+        "That is why it can run alongside training.")
 
 h2("4.3  Why each milestone sits where it sits")
-bullet_rich("Day 7 - ", "labels verified. Nothing else can start, so it is front-loaded and it has a hard gate.")
-bullet_rich("Day 16 - ", "baseline in. This is the go/no-go decision point. If a random forest on the four indices "
-            "already separates mining from non-mining well, the deep model becomes a confirmation rather than a "
-            "gamble. If it does not, we know at day 16 and not at day 40.")
-bullet_rich("Day 26 - ", "segmentation validated. Placed at the midpoint because training plus error analysis is "
-            "the single most variable block; it is the one that can overrun.")
-bullet_rich("Day 34 - ", "fusion and risk score. Deliberately before the dashboard so integration has a stable API.")
-bullet_rich("Day 40 - ", "dashboard live. Five days of slack before the deadline; if it slips it eats buffer, not scope.")
-bullet_rich("Day 45 - ", "paper, thesis, defense. Reporting is seven days of writing, not seven days of analysis - "
-            "that distinction is why it is last and small.")
+bullet_rich("Masks first - ", "16 human pixel masks are the only genuinely new ground truth and the hard "
+            "gate before any segmentation training.")
+bullet_rich("Baseline next - ", "a random forest on the 14 bands and extra features is a cheap go/no-go check. "
+            "If it only rediscovers the sand_frac rule, that is reported honestly rather than sold as accuracy.")
+bullet_rich("Segmentation - ", "U-Net/LMS-Net with 3-fold GroupKFold by transect; IoU, Dice, precision, recall "
+            "and F1 come only from held-out real masks.")
+bullet_rich("Self-training - ", "the trained model masks all 252 chips with confidence scores, providing full "
+            "coverage without pretending pseudo-masks are human labels.")
+bullet_rich("Fusion and risk - ", "Sentinel-1 late fusion then the AHP-weighted score, validated by rank against "
+            "known hotspots.")
+bullet_rich("Product and reporting - ", "the dashboard needs only the API contract, so it runs alongside the "
+            "model work; paper and thesis come last.")
 
 h2("4.4  Risks and the mitigation for each")
 table(
     ["Risk", "Impact", "Mitigation"],
     [
-        ["Sentinel-2 re-download for the rebuild is slow or blocked", "Delays Day 7", "The 78 extracted SAFE directories are still on disk, so the rebuild is local if zips are restored; Sentinel-1 already covers the monsoon gap."],
-        ["Reviewers disagree on labels", "Delays Day 7", "Third-party tie-break, and report the agreement statistic honestly instead of forcing consensus."],
-        ["Segmentation underperforms", "Threatens Day 26", "Fall back to the index plus random-forest pipeline. It is a weaker but fully working product - the project does not fail, the ceiling drops."],
-        ["Dashboard scope creep", "Threatens Day 40", "Fixed MVP feature list agreed before day 12: risk map, overlay, chip browser, labeling UI. Nothing else enters."],
-        ["Report writing squeezed at the end", "Threatens Day 45", "PROJECT_LOG.md has been maintained throughout, so the thesis is assembly, not archaeology."],
+        ["Sentinel-2 re-download for the rebuild is slow or blocked", "Blocks mask training", "The 78 extracted SAFE directories are still on disk, so the rebuild is local if zips are restored; Sentinel-1 already covers the monsoon gap."],
+        ["Masks are inconsistent", "Blocks training", "Use the written NDSI guide, review the 16 masks together, and report low agreement honestly rather than forcing a clean dataset."],
+        ["Segmentation underperforms", "Lowers the ceiling", "Fall back to the index plus random-forest pipeline. It is a weaker but fully working product - the project does not fail, the ceiling drops."],
+        ["Dashboard scope creep", "Delays integration", "Fixed MVP feature list agreed up front: risk map, overlay, chip browser, labeling UI. Nothing else enters."],
+        ["Report writing squeezed at the end", "Weakens the viva", "PROJECT_LOG.md has been maintained throughout, so the thesis is assembly, not archaeology."],
     ],
     widths=[2.3, 1.1, 3.2],
 )
 callout("OFFER THIS BEFORE THEY ASK",
-        "Ask for the internal target to be day 42, not day 45, leaving three days of genuine slack for review "
-        "comments and submission logistics. Panels respond well to a plan that already contains its own buffer.")
+        "Offer the next concrete milestone rather than a date: 16 out of 16 masks saved, then a held-out IoU/Dice "
+        "number from spatial cross-validation. Panels respond well to a plan with a verifiable gate, not an "
+        "arbitrary deadline.")
 
 # ================================================================ Q&A
 h1("5.  Questions you will be asked - and the answer")
@@ -651,8 +664,8 @@ qa = [
      "Which is exactly why slide 4 is built on parallel tracks and why the dashboard is off the critical path. "
      "The scope was cut to fit two people: one river, one season pair, one MVP dashboard."),
     ("What is the single biggest threat to finishing?",
-     "The segmentation block, because it is the most variable in duration. That is why the baseline at day 16 is "
-     "a go/no-go gate - it tells us early whether we are on the fast path or the fallback path."),
+     "Inconsistent masks, because the model can only learn the ground truth we give it. That is why the 16 masks "
+     "are a hard gate with a written guide, and why the cheap random-forest baseline remains as a fallback."),
 ]
 for q, a in qa:
     h3("Q:  " + q)
@@ -663,10 +676,10 @@ h1("6.  Check before you present")
 for item in [
     "Group number 162, both names, both roll numbers, supervisor spelling - read them off the slide once, out loud, before the panel does.",
     "Confirm the affiliation string for the spectral-index paper against the actual PDF before you say it aloud in the room.",
-    "Say 'candidate labels pending human verification', never 'ground truth'.",
-    "Do not claim the composites are final - the rebuild is on slide 3, and saying so is a strength.",
+    "Say '252 chip labels frozen; 16 pixel masks pending', and never present sand_frac separation as measured accuracy.",
+    "Say the band-order defect is fixed in the rebuilt data - the originals being untouched is a strength.",
     "Have these four files open in separate windows: verify_indices output, band_mapping_report.md, one chip RGB+NDVI panel, label_manifest.csv.",
-    "Memorise these seven numbers: 29, 51, 42, 50.21, 252, 14, 45.",
+    "Memorise these seven numbers: 29, 51, 42, 50.21, 252, 16, 55.",
     "Rehearse the 55% justification until it is one breath, not three sentences of hedging.",
 ]:
     bullet(item)
@@ -688,10 +701,11 @@ table(
         ["6", "Quarters: 2023 Q1-Q4 and 2024 Q1-Q2"],
         ["252", "Multi-temporal Sentinel-2 chips (42 x 6), plus 252 Sentinel-1"],
         ["5", "Verification checks that caught the band-order bug"],
-        ["16 / 14 / 12", "Candidate labels: mining / not mining / unsure - pending human review"],
+        ["55 / 45 / 152", "Frozen chip labels: mining / not mining / unsure (252 total)"],
+        ["16", "Human pixel masks to be drawn before segmentation training"],
         ["55%", "Completion: the full weight of the data and label block"],
-        ["45 / 30 / 20 / 7", "Days left / models / dashboard / reporting"],
-        ["4 + 20", "Core papers used, papers reviewed in total"],
+        ["55 / 30 / 10 / 5", "Weighted completion: data+labels / models / dashboard / reporting"],
+        ["5 + 20", "Core papers used, papers reviewed in total"],
     ],
     widths=[2.0, 4.5],
 )
@@ -706,9 +720,10 @@ script(
     "We have finished the heaviest part - 29 analysis-ready composites from 2018 to 2024, a 50.21-kilometre "
     "centreline, 51 transects, 42 validated chips and a 252-chip multi-temporal stack, all with a verification "
     "suite that has already caught and fixed a real band-order defect. That is 55 percent of the project.\n\n"
-    "What remains is a seven-day index-based labeling model drawn from an India-specific spectral study, thirty "
-    "days of detection and risk models including Sentinel-1 fusion for the monsoon, and a twenty-day MERN "
-    "dashboard running in parallel - done in 45 days with two people on two tracks."
+    "What remains is 16 human pixel masks drawn with the NDSI rules from an India-specific spectral study, "
+    "U-Net/LMS-Net training with spatial cross-validation, a self-training loop for all 252 chips, Sentinel-1 "
+    "fusion for the monsoon, an AHP-weighted risk score, and a MERN dashboard running in parallel. There is no "
+    "fixed calendar deadline; the milestones are ordered by dependency."
 )
 
 doc.save(OUT_DOC)
@@ -723,12 +738,12 @@ NOTES = {
         "SC/NGT ban, yet mining continues because enforcement = manual patrols.\n"
         "- Frame the gap: imagery already covers it every 5 days, free. Missing piece = pixels -> ranked "
         "enforcement decision. That is our project.\n"
-        "- Roadmap line: what is done, what remains, how 45 days are planned.\n"
+        "- Roadmap line: what is done, what remains, and the order by dependency (no fixed deadline).\n"
         "- Do NOT read the slide. Say the title once, then move."),
     2: ("Progress - 4 min. Justify 55%, do not assert it.\n"
         "- 55% = weight of the completed block (data+labels 55 / models 30 / dashboard 10 / reporting 5).\n"
-        "- Evidence: 29 composites (2018-2024), 50.21 km S1 centreline, 51 transects, 42 chips, 252-chip "
-        "6-quarter stack, 4 index rasters, 5-check verification, labeling manifest ready.\n"
+        "- Evidence: 29 composites (2018-2024), 50.21 km S1 centreline, 51 transects, 252 chips, "
+        "252 labels frozen (55/45/152), 4 index rasters, 5-check verification PASS, label manifest ready.\n"
         "- Papers, one line each + WHY:\n"
         "  * LMS-Net (Zhang 2025): same label definition, 98.07% at 1/10 U-Net params - matches our "
         "'lightweight, laptop-deployable' constraint; multi-scale handles pit-to-kilometre patch range.\n"
@@ -736,36 +751,35 @@ NOTES = {
         "erosion 2,263 ha vs deposition 1,562 ha; same Himalayan monsoonal sand-bed regime as Yamuna.\n"
         "  * AHP+ML (Nair 2025): our prioritization blueprint; all 8 parameters free-data derivable; "
         "hybrid > either alone (AUC>0.93) justifies expert weights + learned calibration.\n"
-        "  * JIIT Noida index study: India-calibrated NDVI/NDWI/NDBI/NDSI. Critical because we have NO "
-        "ground truth - it makes labeling semi-automatic and reproducible instead of 42 blind eyeballs.\n"
+        "  * JIIT Noida index study: India-calibrated NDVI/NDWI/NDBI/NDSI. This is the manual-labeling "
+        "model - it made labeling reproducible instead of blind eyeballing.\n"
+        "  * Mukherjee CMI: (B11-B12)/(B11+B12), a bare-exposure ratio only; NOT a coal detector.\n"
         "- Design reasons: 10 m/5-day free S2 (SWIR needed); S1 for monsoon + it beat NDWI on dry-season "
         "centreline; L8 thermal as an independent physical check.\n"
         "- Band-order bug: B8 at index 4 instead of 7. Stored indices/CSVs were CORRECT (computed by band "
         "name); only the written channel order was wrong. Would have silently capped any positional model.\n"
         "- Demo 60 sec max: verify_indices output -> band_mapping_report.md -> one RGB+NDVI panel -> "
-        "label_manifest.csv.\n"
-        "- HONESTY: call the 42 labels 'candidates pending human verification', never ground truth."),
+        "verified_labels.csv.\n"
+        "- HONESTY: 252 chip labels are frozen; sand_frac alone looks perfect by construction, so claim no "
+        "accuracy until held-out masks are evaluated."),
     3: ("Tasks left - 2.5 min.\n"
         "- Lead with: the heaviest block (data + labels, ~55%) is DONE. Only models, dashboard, reporting remain.\n"
-        "- 01 Index model + auto-labeling, 7 days: compute 4 indices per JIIT Noida, calibrate thresholds on "
-        "our 42 chips, model assigns candidates, human reviews - focus on the 12 unsure. Everything "
-        "downstream depends on this, so it is first and it is a hard gate.\n"
-        "- 02 Detection & risk, 30 days: RF/XGB baseline (cheap go/no-go at day 16, gives feature "
-        "importances) -> U-Net/LMS-Net segmentation with SPATIAL cross-validation (random splits leak "
-        "between overlapping neighbouring chips) -> S2+S1 late fusion for monsoon -> risk score.\n"
-        "- 03 MERN + delivery, 20 days: React map/overlay, Node/Express API, MongoDB label store, paper+thesis.\n"
+        "- 01 Human pixel masks: 16 chips from unique transects, browser tool on 127.0.0.1:8765, NDSI guide "
+        "PDF 09. Hard gate: no training before 16/16 masks are saved.\n"
+        "- 02 Detection & risk: RF/XGB baseline (cheap, but sand_frac looks perfect by construction) -> "
+        "U-Net/LMS-Net with 3-fold GroupKFold by transect -> self-training on all 252 chips -> S2+S1 late "
+        "fusion for monsoon -> AHP risk score validated by rank.\n"
+        "- 03 MERN + delivery: React map/overlay, Node/Express API, MongoDB label store, paper+thesis.\n"
         "- Key point: 01 and 03 run in PARALLEL with 02. The dashboard needs the API contract, not a trained "
-        "model - that is what makes 45 days possible."),
-    4: ("Timeline - 1.5 min.\n"
-        "- 45 days, built backwards from the deadline. Milestones are placed PROPORTIONALLY on the day axis, "
-        "not evenly - the drawing should not flatter the gaps.\n"
-        "- Day 0 today 55% | 7 index model + verified labels | 16 baseline in (go/no-go) | 26 segmentation "
-        "validated | 34 S2+S1 fusion + risk score | 40 dashboard live | 45 paper, thesis, defense.\n"
-        "- Be explicit: 30+20+7 = 57 effort-days > 45 calendar days. Not an error - it is two tracks from "
-        "day 12 (A: models, critical path; B: product). Serial would not fit; say so now, not in week four.\n"
-        "- Biggest risk = segmentation duration; that is why day 16 is a gate. Fallback = index + random "
-        "forest: weaker ceiling, still a working product.\n"
-        "- Offer proactively: internal target day 42, leaving 3 days of real slack for review comments."),
+        "model. No fixed calendar deadline is claimed."),
+    4: ("Execution order - 1.5 min.\n"
+        "- There is NO fixed deadline on this slide. Milestones are shown in dependency order only.\n"
+        "- 55% today = data + 252 labels complete | 16 human masks | U-Net/LMS-Net with spatial CV | "
+        "self-training all 252 | S2+S1 fusion + AHP risk score | MERN dashboard | paper, thesis, defense.\n"
+        "- Be explicit: no IoU/Dice/F1 is shown because held-out masks have not been evaluated yet.\n"
+        "- Biggest risk = inconsistent masks. Fallback = keep the RF/XGB baseline and the index rubric as a "
+        "working product, and report the limitation honestly.\n"
+        "- Offer proactively: the next concrete milestone is 16/16 saved masks, not a calendar date."),
 }
 
 try:

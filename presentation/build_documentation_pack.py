@@ -40,17 +40,17 @@ def safe(s):
 
 ss = getSampleStyleSheet()
 H1 = ParagraphStyle("H1", parent=ss["Heading1"], fontName="Helvetica-Bold",
-                    fontSize=15, textColor=NAVY, spaceBefore=12, spaceAfter=7)
+                    fontSize=15, leading=19, textColor=NAVY, spaceBefore=12, spaceAfter=7)
 H2 = ParagraphStyle("H2", parent=ss["Heading2"], fontName="Helvetica-Bold",
-                    fontSize=11.5, textColor=GOLD, spaceBefore=10, spaceAfter=5)
+                    fontSize=11.5, leading=15.5, textColor=GOLD, spaceBefore=10, spaceAfter=5)
 BODY = ParagraphStyle("BODY", parent=ss["BodyText"], fontName="Helvetica",
-                      fontSize=9, leading=12.5, spaceAfter=5, alignment=TA_LEFT)
-SMALL = ParagraphStyle("SMALL", parent=BODY, fontSize=7.6, leading=9.6, spaceAfter=0)
+                      fontSize=9, leading=13.0, spaceAfter=5, alignment=TA_LEFT)
+SMALL = ParagraphStyle("SMALL", parent=BODY, fontSize=7.6, leading=11.2, spaceAfter=0)
 SMALLB = ParagraphStyle("SMALLB", parent=SMALL, fontName="Helvetica-Bold")
 TITLE = ParagraphStyle("TITLE", parent=ss["Title"], fontName="Helvetica-Bold",
-                       fontSize=20, textColor=NAVY, spaceAfter=4, alignment=TA_LEFT)
-SUB = ParagraphStyle("SUB", parent=BODY, fontSize=10.5, textColor=GREY, spaceAfter=12)
-CALLOUT = ParagraphStyle("CALLOUT", parent=BODY, fontSize=8.6, leading=11.5,
+                       fontSize=20, leading=25, textColor=NAVY, spaceAfter=4, alignment=TA_LEFT)
+SUB = ParagraphStyle("SUB", parent=BODY, fontSize=10.5, leading=14.2, textColor=GREY, spaceAfter=12)
+CALLOUT = ParagraphStyle("CALLOUT", parent=BODY, fontSize=8.6, leading=12.4,
                          textColor=NAVY, backColor=CREAM, borderPadding=6,
                          leftIndent=4, rightIndent=4, spaceBefore=6, spaceAfter=8)
 
@@ -67,10 +67,10 @@ def bullets(items):
 def tbl(headers, rows, widths=None, font=7.6):
     data = [[Paragraph("<b>%s</b>" % safe(h), ParagraphStyle("th", parent=SMALL,
              textColor=WHITE, fontName="Helvetica-Bold", fontSize=font,
-             leading=font + 2)) for h in headers]]
+             leading=font + 3.6)) for h in headers]]
     for r in rows:
         data.append([Paragraph(safe(c), ParagraphStyle("td", parent=SMALL,
-                     fontSize=font, leading=font + 2.2)) for c in r])
+                     fontSize=font, leading=font + 3.6)) for c in r])
     t = Table(data, colWidths=widths, repeatRows=1, hAlign="LEFT")
     style = [
         ("BACKGROUND", (0, 0), (-1, 0), NAVY),
@@ -124,7 +124,7 @@ build("00_Documentation_Index.pdf", "Documentation Index",
         ["02_Data_and_Sensors.pdf", "Satellites, scene counts, all 14 bands, products, chips, band-order defect", "Someone asks 'what is your data?'"],
         ["03_Pipeline_Scripts.pdf", "Every script: what it does, real filename, command, output, execution order", "Someone asks 'which file does what?'"],
         ["04_Models_and_Justification.pdf", "The 4 models, which one is used where and why, metrics, risk factors", "Someone asks 'what models and why?'"],
-        ["05_Literature_and_Reasons.pdf", "The 4 core papers, why each was chosen, what was taken and rejected", "Someone asks 'why this paper?'"],
+        ["05_Literature_and_Reasons.pdf", "The 5 core papers (incl. Mukherjee CMI), why each was chosen, what was taken and rejected", "Someone asks 'why this paper?'"],
         ["06_Remaining_Steps.pdf", "Every remaining step, owner, estimate, and the 3 hard gates", "Before we start execution"],
         ["07_Phase_A_Data_Repair_Report.pdf", "Band-order fix, 11 rebuilt composites, 252 clean chips, all checks PASS", "Someone asks 'is the data fixed?'"],
         ["08_Extra_Features_and_Thresholds.pdf", "Water fraction, CMI, river distance, and the Otsu threshold decision", "Someone asks about the extra labeling features"],
@@ -139,22 +139,22 @@ build("00_Documentation_Index.pdf", "Documentation Index",
         ["Supervisor", "Dr. Anita Thakur"],
         ["Progress claimed on slide 2", "55% (data engineering + labeling set complete)"],
         ["Models / dashboard", "Not started"],
-        ["Known blocker", "Band-order defect fixed in code; composites and chips need rebuild"],
+        ["Data status", "Band-order defect fixed in code AND rebuilt into NEW folders; originals byte-identical"],
     ], [55 * mm, 127 * mm]),
     Spacer(1, 8),
     P("3. Ground rules for the remaining work", H1),
     bullets([
         "Nothing under C:\\New folder\\yamuna_data or C:\\New folder\\yamuna_work\\chips will be modified. All rebuilt data goes to new folders.",
-        "Three things require you: verify 42 candidate labels, approve the AHP weights, freeze the dashboard MVP scope.",
-        "Three hard gates cannot be skipped: verification passes (A10), labels signed off (B7), risk ranking validated (C15).",
+        "Three things require you: draw 16 human pixel masks, approve the AHP weights, freeze the dashboard MVP scope.",
+        "A10 verification and B7 label sign-off are DONE. Two hard gates remain: 16/16 masks signed off, risk ranking validated (C15).",
         "No metric or result will be fabricated. If something is not measured, it will say 'not measured'.",
     ]),
 ])
 
 # ============================================================ 01 WORK COMPLETED
 done_rows = [
-    ["1", "Synopsis and problem definition", "2026-09", "Project_Synopsis_Final.docx / .pdf; synopsis .md", "Problem, objectives, 4 references, methodology written"],
-    ["2", "Literature review", "2026-09/10", "Synopsis references + slide 2", "20+ papers scanned; 4 core selected: LMS-Net, Sutlej morphometry, AHP+ML, JIIT Noida indices"],
+    ["1", "Synopsis and problem definition", "2026-09", "Project_Synopsis_Final.docx / .pdf; synopsis .md", "Problem, objectives, 5 references, methodology written"],
+    ["2", "Literature review", "2026-09/10", "Synopsis references + slide 2", "20+ papers scanned; 5 core selected: LMS-Net, Sutlej morphometry, AHP+ML, JIIT Noida indices, Mukherjee CMI"],
     ["3", "Download pipeline written", "2026-10", "C:\\New folder\\extract_yamuna_data.py (~1,900 lines)", "CDSE OData OAuth2 + USGS M2M clients, scene selection, parallel download with resume, SCL masked median composite"],
     ["4", "Imagery downloaded", "2026-10", "download_state.json, s1_extract_state.json, l8_download_state.json", "100 scenes: 39 Sentinel-2 (S2A 19 / S2B 20), 55 Sentinel-1A, 6 Landsat-8/9. 134 GB on disk"],
     ["5", "Products generated", "2026-10", "yamuna_data\\{sentinel2,sentinel1,landsat8}", "29 GeoTIFFs: 11 S2 (5 annual + 6 quarterly), 12 S1 (VV/VH x 6), 6 L8 thermal"],
@@ -162,24 +162,29 @@ done_rows = [
     ["7", "River centreline", "2026-10", "generate_centerline.py (failed), generate_centerline_s1.py (used)", "NDWI on dry-season S2 failed; switched to S1 VV + Otsu. Result: 50.21 km, geojson + gpkg"],
     ["8", "Centreline validation", "2026-10", "scripts\\02_validate_centerline.py", "CRS, geometry, length, direction, segment lengths, self-intersections checked"],
     ["9", "Sampling design", "2026-10", "scripts\\03_make_transects.py, transects\\", "51 perpendicular transects at 1 km spacing, 3 km long; points, lines, CSV, map"],
-    ["10", "Chip extraction", "2026-10", "scripts\\04_extract_chips.py, extract_all_quarters.py, extract_s1_chips.py", "42 chips retained of 51 (9 rejected: barrage/urban). 252 S2 chips (14-band) + 252 S1 chips (2-band), 6 quarters"],
+    ["10", "Chip extraction", "2026-10", "scripts\\04_extract_training_chips.py, extract_chips_all_quarters.py, extract_sar_chips.py", "42 transects retained of 51 (9 rejected: barrage/urban). 252 S2 chips (14-band) + 252 S1 chips (2-band), 6 quarters"],
     ["11", "Spectral indices", "2026-10", "extract_yamuna_data.py lines 1020-1026", "NDVI, NDWI, NDBI, NDSI computed by band NAME; written as bands 11-14 with x5000 encoding"],
-    ["12", "Labeling setup", "2026-10", "scripts\\05_prepare_labeling.py, labeling\\", "Rubric, 42 candidate labels (16 mining / 14 not / 12 unsure), manifest and agreement log created - NOT yet human verified"],
+    ["12", "Labeling setup and sign-off", "2026-10/11", "scripts\\05_prepare_labeling.py, 06_generate_reviewer_sheet.py, 07_finalize_labels.py", "Rubric + 6 quarterly review packages; 252 human-reviewed labels FROZEN: 55 MINING / 45 NOT MINING / 152 UNSURE"],
     ["13", "Index verification", "2026-10-28", "scripts\\08_verify_indices.py, index_verification_report.md", "5-check suite. Found NDVI/NDWI/NDBI mismatch (~0.27 max diff) while NDSI passed"],
     ["14", "Root-cause diagnosis", "2026-10-28", "scripts\\09_band_mapping_check.py, band_mapping_report.md", "Brute-force band-pair search proved B8 written at position 4 instead of 7. Stored indices correct; output band order wrong"],
-    ["15", "Band-order fix in code", "2026-10-28", "extract_yamuna_data.py line 99", "S2_SPECTRAL_BANDS corrected to wavelength order. Rebuild of products still pending"],
+    ["15", "Band-order fix AND rebuild", "2026-10/11", "src/acquisition/rebuild_composites_from_local.py, C:\\New folder\\yamuna_data_fixed, chips_fixed", "S2_SPECTRAL_BANDS corrected; 11 composites + 252 chips rebuilt into NEW folders; 11/11 band-position PASS, 5/5 index checks PASS; originals untouched"],
     ["16", "Progress deck", "2026-10-28", "Project_Progress_Presentation.pptx (4 slides)", "Navy/gold theme, DTU logo on every slide, 55% visual loader, proportional day timeline, speaker notes on all 4 slides"],
     ["17", "Presentation script", "2026-10-28", "Presentation_Script_and_Reasoning.docx / .pdf (13 pages)", "Verbatim script, reasoning per slide, paper justifications, 12 Q&A, numbers cheat sheet"],
     ["18", "Deck audit and export", "2026-10-28", "audit_ppt.py, .pdf exports", "No text overflow or out-of-bounds except 2 intentional decorative circles; PowerPoint opens with no repair prompt"],
-    ["19", "Persistent notes", "2026-10-28", "C:\\scamshield vault, commit ae7a8c1", "Project memory + workflows updated and pushed to GitHub"],
+    ["19", "Persistent notes", "2026-10-28", "C:\\scamshield vault", "Project memory + workflows updated and pushed to GitHub"],
+    ["20", "Extra features", "2026-11-22", "src/processing/compute_extra_features.py, 08_Extra_Features_and_Thresholds.pdf", "Water fraction (Otsu clamped to >=0), CMI=(B11-B12)/(B11+B12) bare-exposure ratio, distance to centreline for 11 scenes + 252 chips"],
+    ["21", "Decisive-label caveat", "2026-11-22", "data/verified_labels.csv, label_validation.txt", "100 decisive labels perfectly separable by sand_frac > 0.575. Documented as transparent bare-sediment rule, NOT a measured accuracy"],
+    ["22", "Reviewer packages", "2026-11-22", "C:\\New folder\\label_review\\<quarter>\\", "6 quarterly PDFs + CSVs + previews covering all 252 chips; geometrically verified clean (0 overlaps)"],
+    ["23", "Pixel-mask annotation tool", "2026-11-22", "src/labeling/08_select_annotation_chips.py, annotation_server.py, annotation_ui.html", "16 chips with unique transects; Flask server on 127.0.0.1:8765; exports 256x256 binary masks (0/16 saved so far)"],
+    ["24", "NDSI annotation guide", "2026-11-22", "docs/documentation_pdfs/09_Annotation_Guide_for_Mining_Masks.pdf", "Colour convention, sand-vs-mining distinction, extraction signatures, workflow, common mistakes; also embedded in the annotation UI"],
 ]
 
 open_rows = [
-    ["O1", "Rebuild composites and chips with corrected band order", "Blocks all modelling"],
-    ["O2", "Remove 42 duplicate 2023_Q2 chip files (verified identical MD5)", "Q2 would get double training weight"],
-    ["O3", "Human verification of the 42 candidate labels", "No ground truth yet"],
-    ["O4", "Rename real scripts to match the 6 names shown on slide 2", "Panel could ask for a file that does not exist"],
-    ["O5", "Update slide 4: the 45-day timeline was written 2026-10-28", "Now stale"],
+    ["O1", "Draw 16 human pixel masks in the browser tool", "Blocks U-Net/LMS-Net training"],
+    ["O2", "Train U-Net/LMS-Net with 3-fold GroupKFold by transect", "Need real IoU/Dice/F1 before any claim"],
+    ["O3", "Self-training loop to auto-mask all 252 chips", "Needed for full-dataset risk ranking"],
+    ["O4", "Approve AHP weights and validate hotspot ranking", "C15 hard gate"],
+    ["O5", "Fix deck slide 2 script names and slide 4 fixed-day timeline", "Now stale"],
 ]
 
 build("01_Work_Completed_To_Date.pdf", "Work Completed To Date",
@@ -193,10 +198,10 @@ build("01_Work_Completed_To_Date.pdf", "Work Completed To Date",
     tbl(["#", "Item", "Why it matters"], open_rows, [10 * mm, 82 * mm, 90 * mm]),
     Spacer(1, 8),
     P("3. Honest completion statement", H1),
-    P("The deck reports 55%. That is the weight of the data-engineering and labeling block, which is closed end-to-end. "
-      "Because the band-order rebuild is still pending and the 42 labels are candidates rather than verified ground truth, "
-      "the strictly usable share today is closer to 50%. Models (30%), dashboard (10%) and reporting (5%) have not started "
-      "in terms of implementation. Do not claim more than 55%.", CALLOUT),
+    P("The deck reports 55%. That is the weight of the data-engineering and labeling block, which is now closed end-to-end "
+      "(rebuild PASS, 252 labels frozen). The strictly usable share today is therefore about 55%, not more: the 16 human "
+      "pixel masks are still outstanding, so U-Net/LMS-Net training has not started and no metric is claimed. Models (30%), "
+      "dashboard (10%) and reporting (5%) remain. Do not claim more than 55%.", CALLOUT),
 ])
 
 # ============================================================ 02 DATA
@@ -310,7 +315,7 @@ build("03_Pipeline_Scripts.pdf", "Pipeline Scripts and Execution Order",
         ["2", "generate_centerline_s1.py", "centreline geojson (50.21 km)"],
         ["3", "02_validate_centerline.py", "centreline validation"],
         ["4", "03_make_transects.py", "51 transects"],
-        ["5", "04_extract_chips.py", "42 chips (one quarter)"],
+        ["5", "04_extract_training_chips.py", "42 chips (one quarter)"],
         ["6", "05_prepare_labeling.py", "labeling set + manifest"],
         ["7", "extract_all_quarters.py / extract_s1_chips.py", "252 S2 + 252 S1 chips"],
         ["8", "08_verify_indices.py", "index verification report"],
@@ -377,13 +382,14 @@ build("04_Models_and_Justification.pdf", "Detection and Risk Models - Design and
 # ============================================================ 05 LITERATURE
 build("05_Literature_and_Reasons.pdf", "Literature Review - Why Each Paper Was Used",
       "What each paper says, why it was chosen, what was taken, and what was rejected", [
-    P("1. The four core papers", H1),
+    P("1. The five core papers", H1),
     tbl(["Paper", "What it says", "Why we chose it", "What we take", "What we do NOT take"], [
         ["Zhang, Liu & Liu (2025), Remote Sensing 17(2):227 - LMS-Net", "Lightweight multi-scale segmentation of riverbank sand mining areas; 98.07% accuracy at ~1/10 U-Net parameters", "Same label definition as ours; matches the 'lightweight, laptop-deployable' constraint in our problem statement; multi-scale covers pit-to-kilometre patch range", "Multi-scale backbone idea; accuracy/parameter trade-off as benchmark", "Their trained weights - different sensor, river and season"],
         ["Kaur, Gani, Pathak & Tiwari (2025), Env. Geochem. Health 47(11):459 - Sutlej", "23-year morphometric study: channel width variation, 8.6 m bank shift, 2,263 ha erosion vs 1,562 ha deposition", "Supplies the PHYSICAL quantities risk needs; Sutlej is a Himalayan-fed monsoonal sand-bed river like the Yamuna, so magnitudes transfer", "Change-metric definitions; annual-composite comparison design; sanity band", "Discharge-based calibration - no gauge data for Delhi"],
         ["Nair et al. (2025), Geocarto International 40(1):2551261 - AHP + ML", "AHP weighting plus 8 ML models over 8 conditioning parameters; AUC-ROC > 0.93", "Our prioritization blueprint; all 8 parameters derivable from free data; hybrid beats either component alone, justifying expert weights + learned calibration", "Parameter set, AHP procedure, hybrid evaluation", "Flood-vulnerability target variable - we predict mining intensity"],
-        ["India-specific multispectral sandbank detection study (JIIT Noida)", "India-calibrated NDVI/NDWI/NDBI/NDSI for sand vs water vs vegetation vs built-up", "Most important for schedule: we have NO ground truth. This converts labeling from 42 blind eyeballs into a reproducible semi-automatic step (compute indices, threshold, human verify)", "Index family, separability logic, starting threshold ranges", "Thresholds as final - we recalibrate on our 42 chips"],
-    ], [32 * mm, 43 * mm, 52 * mm, 37 * mm, 28 * mm], font=6.6),
+        ["India-specific multispectral sandbank detection study (JIIT Noida)", "India-calibrated NDVI/NDWI/NDBI/NDSI for sand vs water vs vegetation vs built-up", "Defines the MANUAL-LABELING model used for our reviewer sheets: compute indices, threshold, then human-verify. This is the India-specific paper, NOT the IIT Kharagpur study", "Index family, separability logic, starting threshold ranges", "Thresholds as final - we recalibrated on our 252 chips"],
+        ["Mukherjee et al. - Coal Mine Index (CMI)", "CMI = (B11 - B12)/(B11 + B12): SWIR-I minus SWIR-II over their sum, an exposed-surface contrast ratio", "Adds an independent bare-exposure feature alongside NDVI/NDWI/NDBI/NDSI. B11/B12 are already in our 14-band chips, so it costs no extra download", "Bare-exposure ratio only; used as an extra feature for labeling and risk", "Treating it as a COAL detector. We have no coal in the AOI; the index is reused as a generic SWIR exposure ratio"],
+    ], [32 * mm, 43 * mm, 52 * mm, 37 * mm, 28 * mm], font=6.4),
     PageBreak(),
     P("2. Approaches reviewed and deliberately rejected", H1),
     tbl(["Approach", "Reason for rejection"], [
@@ -425,8 +431,8 @@ build("05_Literature_and_Reasons.pdf", "Literature Review - Why Each Paper Was U
 # ============================================================ 06 REMAINING STEPS
 build("06_Remaining_Steps.pdf", "Remaining Steps - Full Execution Plan",
       "Every step from here to delivery, with owner, estimate and hard gates", [
-    P("1. Phase A - Data repair (before any model sees data)", H1),
-    P("All outputs go to NEW folders. Nothing under yamuna_data or chips is modified.", CALLOUT),
+    P("1. Phase A - Data repair (COMPLETE)", H1),
+    P("All outputs went to NEW folders. Nothing under yamuna_data or chips was modified. 11/11 band-position PASS, 5/5 index checks PASS.", CALLOUT),
     tbl(["#", "Action", "Output", "Owner", "Est."], [
         ["A1", "Snapshot originals (file list + hashes)", "baseline inventory", "Me", "5 min"],
         ["A2", "Confirm band-order fix at extract_yamuna_data.py line 99", "verified list", "Me", "2 min"],
@@ -439,20 +445,21 @@ build("06_Remaining_Steps.pdf", "Remaining Steps - Full Execution Plan",
         ["A9", "Relink 252 S1 chips (unaffected)", "new path", "Me", "10 min"],
         ["A10", "Re-run 08_verify_indices + 09_band_mapping_check", "fresh reports", "Me", "20 min"],
     ], [12 * mm, 82 * mm, 46 * mm, 18 * mm, 18 * mm], font=7.2),
-    P("GATE A10: all five checks must PASS before Phase C.", CALLOUT),
+    P("GATE A10: PASSED — all five checks PASS on the rebuilt data. Phase B chip labels are also complete.", CALLOUT),
     PageBreak(),
 
     P("2. Phase B - Labels (one human step)", H1),
     tbl(["#", "Action", "Output", "Owner", "Est."], [
-        ["B1", "Freeze labeling rubric", "1-page rule set", "Me", "10 min"],
-        ["B2", "Regenerate candidate labels on rebuilt chips", "candidate manifest", "Me", "20 min"],
-        ["B3", "Build reviewer sheet (preview + 4 index stats + suggestion)", "review CSV/HTML", "Me", "20 min"],
-        ["B4", "Verify 42 chips, focus on the 12 UNSURE", "your decisions", "YOU", "1-2 h"],
-        ["B5", "Resolve disagreement, compute agreement statistic", "agreement log + kappa", "Me", "20 min"],
-        ["B6", "Freeze thresholds + final label_manifest.csv", "versioned config", "Me", "10 min"],
-        ["B7", "Sign-off", "signed manifest", "YOU", "5 min"],
+        ["B1", "Freeze labeling rubric", "1-page rule set", "Me", "DONE"],
+        ["B2", "Regenerate candidates on rebuilt chips", "candidate manifest", "Me", "DONE"],
+        ["B3", "Build 6 quarterly reviewer sheets", "252-chip review packs", "Me", "DONE"],
+        ["B4", "Human-verify all 252 chips", "verified_labels.csv: 55/45/152", "YOU", "DONE"],
+        ["B5", "Freeze chip labels + split roles", "data/verified_labels.csv", "Me", "DONE"],
+        ["B6", "Select 16 chips + build annotation tool", "browser tool on :8765", "Me", "DONE"],
+        ["B7", "Draw 16 human pixel masks", "16 binary PNG masks", "YOU", "~1 h"],
+        ["B8", "Mask sign-off (16/16)", "training-ready dataset", "YOU", "5 min"],
     ], [12 * mm, 82 * mm, 46 * mm, 18 * mm, 18 * mm], font=7.2),
-    P("GATE B7: no training before label sign-off.", CALLOUT),
+    P("GATE B8: no segmentation training before 16/16 masks. Chip-label sign-off (B7 in the old plan) is already DONE.", CALLOUT),
     Spacer(1, 8),
 
     P("3. Phase C - Models (critical path)", H1),
@@ -461,10 +468,11 @@ build("06_Remaining_Steps.pdf", "Remaining Steps - Full Execution Plan",
         ["C2", "Build pixel dataset with transect ID as grouping key", "arrays + groups", "Me", "30 min"],
         ["C3", "Train RF / XGBoost baseline", "model + importances", "Me", "45 min"],
         ["C4", "Evaluate baseline, go/no-go report", "metrics", "Me", "10 min"],
-        ["C5", "Implement U-Net / LMS-Net", "architecture code", "Me", "60 min"],
-        ["C6", "Train with BCE+Dice, augmentation, 3-fold spatial CV", "3 trained folds", "Me", "2-4 h GPU / 8-12 h CPU"],
-        ["C7", "Evaluate IoU, F1, PR, confusion matrix", "metrics table", "Me", "30 min"],
+        ["C5", "Implement U-Net / LMS-Net for the 16 real masks", "architecture code", "Me", "60 min"],
+        ["C6", "Train with BCE+Dice, augmentation, 3-fold GroupKFold by transect", "3 trained folds", "Me", "2-4 h GPU / 8-12 h CPU"],
+        ["C7", "Evaluate IoU, Dice, precision, recall, F1, confusion matrix", "metrics table", "Me", "30 min"],
         ["C8", "Error analysis: worst transects + mask visuals", "error report", "Me", "30 min"],
+        ["C8b", "Self-training: apply trained model to all 252 chips, keep high-confidence masks", "auto-masks + confidence", "Me", "1-2 h"],
         ["C9", "Implement S1 late fusion", "fusion code", "Me", "60 min"],
         ["C10", "Train and compare optical-only vs fused", "comparison table", "Me", "60 min"],
         ["C11", "Morphology change metrics from 6 quarters", "bank shift / area table", "Me", "60 min"],
@@ -492,11 +500,11 @@ build("06_Remaining_Steps.pdf", "Remaining Steps - Full Execution Plan",
     Spacer(1, 6),
     P("5. Phase E - Reports and deck", H1),
     tbl(["#", "Action", "Owner", "Est."], [
-        ["E1", "Draft paper: abstract, method, results, 4 papers, limitations", "Me", "90 min"],
+        ["E1", "Draft paper: abstract, method, results, 5 papers, limitations", "Me", "90 min"],
         ["E2", "Assemble thesis section from PROJECT_LOG.md", "Me", "60 min"],
         ["E3", "Fix slide 2 script names -> real filenames", "Me", "15 min"],
-        ["E4", "Fix slide 4 stale 45-day timeline", "Me", "15 min"],
-        ["E5", "Adjust slide 3 if scope changed", "Me", "10 min"],
+        ["E4", "Replace slide 4 fixed-day axis with milestone order (no deadline)", "Me", "15 min"],
+        ["E5", "Remove fixed-day estimates from slide 3", "Me", "10 min"],
         ["E6", "Update speaker notes", "Me", "15 min"],
         ["E7", "Re-export pptx, script docx and both PDFs", "Me", "10 min"],
         ["E8", "Verify 4 slides, no repair, text extractable", "Me", "10 min"],

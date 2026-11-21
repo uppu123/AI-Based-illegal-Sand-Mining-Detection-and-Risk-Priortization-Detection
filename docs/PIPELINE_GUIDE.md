@@ -40,9 +40,13 @@ Output: 39 S2 SAFE products, 55 S1 products, 6 L8 products, 29 GeoTIFF products.
 | 05 | `python src/processing/04_extract_training_chips.py` | 42 chips for the demo quarter |
 | 06 | `python src/processing/extract_chips_all_quarters.py` | 252 optical chips (6 quarters) |
 | 07 | `python src/processing/extract_sar_chips.py` | 252 SAR chips (6 quarters) |
-| 08 | `python src/labeling/05_prepare_labeling_set.py` | rubric + 42 candidate labels in `labeling/` |
+| 08 | `python src/labeling/05_prepare_labeling_set.py` | rubric + candidate labels in `labeling/` |
+| 09 | `python src/labeling/06_generate_reviewer_sheet.py` | 6 quarterly review packages (252 chips) |
+| 10 | `python src/labeling/07_finalize_labels.py` | `data/verified_labels.csv` — 55 MINING / 45 NOT / 152 UNSURE |
+| 11 | `python src/labeling/08_select_annotation_chips.py` | 16 chips for human pixel masks (unique transects) |
+| 12 | `python src/labeling/annotation_server.py` | browser tool at `http://127.0.0.1:8765` → `C:\New folder\annotation\masks\` |
 
-**Human gate:** the 42 candidates are *suggestions*, not ground truth. Verify them before training.
+**Human gate:** chip labels are frozen (252 rows, validated). The remaining human input is **16 pixel masks** in the browser tool; U-Net/LMS-Net training starts only after 16/16 masks are saved. The NDSI rules are in `docs/documentation_pdfs/09_Annotation_Guide_for_Mining_Masks.pdf` and embedded in the tool.
 
 ## 4. Index and band checks (hard gate)
 

@@ -34,14 +34,19 @@ This document explains how the project fits together. It is the first page to sh
       (one demo quarter)        (252 optical chips)       (252 SAR chips)
               |
               v
-    05_prepare_labeling_set
-    (rubric + 42 candidate labels -> HUMAN VERIFICATION GATE)
+    05_prepare_labeling_set  ->  06_generate_reviewer_sheet
+    (rubric + 252 human labels -> 07_finalize_labels: 55/45/152)
+              |
+              v
+    08_select_annotation_chips + annotation_server
+    (16 human pixel masks -> U-Net/LMS-Net -> self-train 252)
               |
               v
         ___________________________________________________
-       |  NEXT PHASE - designed, not yet trained          |
-       |  models/  RF/XGBoost -> U-Net/LMS-Net            |
-       |           -> S2+S1 fusion -> risk score          |
+       |  NEXT PHASE - no trained metrics yet             |
+       |  models/  U-Net/LMS-Net -> self-training         |
+       |           -> RF/XGBoost -> S2+S1 fusion          |
+       |           -> morphology -> AHP risk score        |
        |  dashboard/ React + Leaflet + Express + MongoDB  |
        |___________________________________________________|
 ```

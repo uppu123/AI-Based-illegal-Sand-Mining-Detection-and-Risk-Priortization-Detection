@@ -145,7 +145,7 @@ build("00_Documentation_Index.pdf", "Documentation Index",
     P("3. Ground rules for the remaining work", H1),
     bullets([
         "Nothing under C:\\New folder\\yamuna_data or C:\\New folder\\yamuna_work\\chips will be modified. All rebuilt data goes to new folders.",
-        "Three things require you: draw 16 human pixel masks, approve the AHP weights, freeze the dashboard MVP scope.",
+        "Three things require you: draw 28 human pixel masks, approve the AHP weights, freeze the dashboard MVP scope.",
         "A10 verification and B7 label sign-off are DONE. Two hard gates remain: 28/28 masks signed off, risk ranking validated (C15).",
         "No metric or result will be fabricated. If something is not measured, it will say 'not measured'.",
     ]),

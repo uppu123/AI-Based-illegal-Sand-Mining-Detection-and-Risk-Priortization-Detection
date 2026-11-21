@@ -71,18 +71,20 @@ def load_candidates(path: Path) -> dict[str, str]:
     return candidates
 
 
-def build_csv(rows: list[dict], out: Path) -> None:
-    cols = ["chip_id", "transect_id", "candidate_label_AUTO_ONLY",
+def build_csv(rows: list[dict], out: Path,
+              filename: str = "reviewer_sheet.csv") -> None:
+    cols = ["chip_id", "quarter", "transect_id", "candidate_label_AUTO_ONLY",
             "mean_NDVI", "mean_NDWI", "mean_NDBI", "mean_NDSI", "sand_frac",
+            "water_frac", "cmi_mean", "distance_mean_m", "distance_min_m",
             "reviewer_final_label", "reviewer_initials", "notes"]
-    with (out / "reviewer_sheet.csv").open("w", newline="", encoding="utf-8-sig") as f:
+    with (out / filename).open("w", newline="", encoding="utf-8-sig") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
         for r in rows:
             w.writerow({c: r.get(c, "") for c in cols})
 
 
-def build_pdf(rows: list[dict], out: Path) -> None:
+def build_pdf(rows: list[dict], out: Path, quarter: str = "2023_Q2") -> None:
     """Print-ready contact sheet.
 
     Uses real Image flowables in fixed-width columns instead of <img> tags inside
@@ -100,13 +102,19 @@ def build_pdf(rows: list[dict], out: Path) -> None:
     th = ParagraphStyle("th", parent=small, fontName="Helvetica-Bold",
                         textColor=colors.white)
 
-    story = [Paragraph("Label Review Sheet - Sentinel-2 2023 Q2 (REBUILT CHIPS)", h1)]
+    story = [Paragraph(f"Label Review Sheet - Sentinel-2 {quarter} (REBUILT CHIPS)", h1)]
     story.append(Paragraph(
-        "42 candidate labels are <b>auto-generated, NOT ground truth</b>. For each chip, view "
-        "both panels and write your decision in the last column. In the NDSI panel, bare sand "
-        "trends blue and open water trends red. Mining requires visible extraction signatures "
-        "(bare bars, pits, spoil heaps, tracks, barges) - sand alone is not enough. "
+        "Any candidate label shown is <b>auto-generated, NOT ground truth</b>. For each chip, "
+        "view both panels and write your decision in the last column. In the NDSI panel, bare "
+        "sand trends blue and open water trends red. Mining requires visible extraction "
+        "signatures (bare bars, pits, spoil heaps, tracks, barges) - sand alone is not enough. "
         "Use UNSURE rather than guessing.", body))
+    story.append(Paragraph(
+        "Features: <b>sand</b> = bare-sediment fraction (NDSI&lt;-0.1 and NDVI&lt;0.3); "
+        "<b>water</b> = fraction above the scene water threshold; <b>CMI</b> = "
+        "(B11-B12)/(B11+B12), the Coal Mine Index of Mukherjee et al. used here as a "
+        "bare-exposure ratio; <b>dist</b> = metres from the river centreline. Candidates are "
+        "carried over from the earlier Q2 pass only.", body))
     story.append(Spacer(1, 4))
 
     col_w = [22 * mm, 34 * mm, 34 * mm, 58 * mm, 30 * mm]  # 178 mm < 180 mm available
@@ -125,7 +133,9 @@ def build_pdf(rows: list[dict], out: Path) -> None:
                              if p.exists() else Paragraph("missing", tiny))
             stats = (
                 "<b>NDVI</b> {mean_NDVI} &nbsp; <b>NDSI</b> {mean_NDSI}<br/>"
-                "<b>sand</b> {sand_frac} &nbsp; <b>cand</b> {candidate_label_AUTO_ONLY}"
+                "<b>sand</b> {sand_frac} &nbsp; <b>cand</b> {candidate_label_AUTO_ONLY}<br/>"
+                "<b>water</b> {water_frac} &nbsp; <b>CMI</b> {cmi_mean}<br/>"
+                "<b>dist</b> {distance_mean_m} m &nbsp; (min {distance_min_m} m)"
             ).format(**r)
             write_in = Paragraph("MINING / NOT / UNSURE<br/>&nbsp;<br/>&nbsp;", small)
             data.append([
@@ -173,42 +183,67 @@ def build_pdf(rows: list[dict], out: Path) -> None:
     doc.build(story, onFirstPage=decor, onLaterPages=decor)
 
 
+QUARTERS = ("2023_Q1", "2023_Q2", "2023_Q3", "2023_Q4", "2024_Q1", "2024_Q2")
+CHIPS_ROOT = Path(r"C:\New folder\chips_fixed")
+FEATURES_CSV = Path(r"C:\New folder\extra_features\chip_features.csv")
+
+
+def load_features(path: Path) -> dict[str, dict]:
+    import csv as _csv
+    if not path.exists():
+        return {}
+    with path.open(newline="", encoding="utf-8-sig") as f:
+        return {r["chip_id"]: r for r in _csv.DictReader(f)}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Generate the human label-review package")
-    ap.add_argument("--chips-dir", type=Path, default=FIXED_Q2)
+    ap.add_argument("--out-root", type=Path, default=DEFAULT_OUT)
     ap.add_argument("--candidate-csv", type=Path, default=OLD_MANIFEST)
-    ap.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    ap.add_argument("--features-csv", type=Path, default=FEATURES_CSV)
+    ap.add_argument("--all-quarters", action="store_true",
+                    help="build a sheet for each of the 6 quarters (default: Q2 only)")
     args = ap.parse_args()
 
-    out = args.out
-    (out / "previews").mkdir(parents=True, exist_ok=True)
-
     candidates = load_candidates(args.candidate_csv)
+    features = load_features(args.features_csv)
+    quarters = QUARTERS if args.all_quarters else ("2023_Q2",)
 
-    rows = []
-    tifs = sorted(args.chips_dir.glob("T*_2023_Q2.tif"))
-    print(f"chips found: {len(tifs)}")
-    for tif in tifs:
-        chip_id = tif.stem
-        tid = chip_id.split("_")[0]
-        for suffix in ("truecolour", "NDSI"):
-            src = args.chips_dir / "previews" / f"{chip_id}_{suffix}.png"
-            if src.exists():
-                shutil.copy2(src, out / "previews" / src.name)
-        row = {
-            "chip_id": chip_id,
-            "transect_id": tid,
-            "candidate_label_AUTO_ONLY": candidates.get(chip_id, "(missing)"),
-        }
-        row.update(chip_stats(tif))
-        rows.append(row)
+    master = []
+    for q in quarters:
+        chips_dir = CHIPS_ROOT / q
+        out = args.out_root / q
+        (out / "previews").mkdir(parents=True, exist_ok=True)
+        tifs = sorted(chips_dir.glob(f"T*_{q}.tif"))
+        print(f"\n=== {q}: {len(tifs)} chips ===")
+        rows = []
+        for tif in tifs:
+            chip_id = tif.stem
+            for suffix in ("truecolour", "NDSI"):
+                src = chips_dir / "previews" / f"{chip_id}_{suffix}.png"
+                if src.exists():
+                    shutil.copy2(src, out / "previews" / src.name)
+            row = {
+                "chip_id": chip_id,
+                "quarter": q,
+                "transect_id": chip_id.split("_")[0],
+                "candidate_label_AUTO_ONLY": candidates.get(chip_id, ""),
+            }
+            row.update(chip_stats(tif))
+            f = features.get(chip_id, {})
+            for k in ("water_frac", "cmi_mean", "distance_mean_m", "distance_min_m"):
+                row[k] = f.get(k, "")
+            rows.append(row)
+        master.extend(rows)
+        build_csv(rows, out)
+        build_pdf(rows, out, q)
+        print("  written:", out / "reviewer_sheet.csv")
+        print("  written:", out / "Label_Review_Sheet.pdf")
 
-    build_csv(rows, out)
-    build_pdf(rows, out)
-    from collections import Counter
-    print("candidate counts:", dict(Counter(r["candidate_label_AUTO_ONLY"] for r in rows)))
-    print("written:", out / "reviewer_sheet.csv")
-    print("written:", out / "Label_Review_Sheet.pdf")
+    # Master CSV across all quarters (one row per chip/scene).
+    build_csv(master, args.out_root, "all_chips_review.csv")
+    print(f"\nTOTAL chip rows: {len(master)}")
+    print("written:", args.out_root / "all_chips_review.csv")
     return 0
 
 

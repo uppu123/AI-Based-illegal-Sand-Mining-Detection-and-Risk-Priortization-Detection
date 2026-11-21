@@ -83,57 +83,69 @@ def build_csv(rows: list[dict], out: Path) -> None:
 
 
 def build_pdf(rows: list[dict], out: Path) -> None:
+    """Print-ready contact sheet.
+
+    Uses real Image flowables in fixed-width columns instead of <img> tags inside
+    a Paragraph. The earlier version overflowed two 118 pt images into a 66 mm
+    cell, which made the pictures overlap the statistics column.
+    """
     ss = getSampleStyleSheet()
     h1 = ParagraphStyle("h1", parent=ss["Heading1"], fontName="Helvetica-Bold",
-                        fontSize=16, textColor=NAVY, spaceAfter=6)
-    h2 = ParagraphStyle("h2", parent=ss["Heading2"], fontName="Helvetica-Bold",
-                        fontSize=11, textColor=GOLD, spaceBefore=8, spaceAfter=4)
+                        fontSize=15, textColor=NAVY, spaceAfter=5)
     body = ParagraphStyle("body", parent=ss["BodyText"], fontName="Helvetica",
-                          fontSize=8.6, leading=11.5, alignment=TA_LEFT)
-    small = ParagraphStyle("small", parent=body, fontSize=7.4, leading=9.2, spaceAfter=0)
+                          fontSize=8.2, leading=12.0, alignment=TA_LEFT)
+    small = ParagraphStyle("small", parent=body, fontSize=7.4, leading=10.5, spaceAfter=0)
+    tiny = ParagraphStyle("tiny", parent=body, fontSize=6.6, leading=9.0,
+                          textColor=GREY, spaceAfter=0)
+    th = ParagraphStyle("th", parent=small, fontName="Helvetica-Bold",
+                        textColor=colors.white)
 
     story = [Paragraph("Label Review Sheet - Sentinel-2 2023 Q2 (REBUILT CHIPS)", h1)]
     story.append(Paragraph(
-        "42 candidate labels, computed from spectral indices, are <b>NOT ground truth</b>. "
-        "For each chip: view the true-colour and NDSI panels, then write MINING / NOT MINING / "
-        "UNSURE in the last column. Use UNSURE rather than guessing. Sand is dark/blue-to-red "
-        "in NDSI under the (B3-B11) convention used here; active mining needs visible extraction "
-        "signatures (bare sediment bars, pits, spoil heaps, tracks, barges), not sand alone.", body))
-    story.append(Paragraph(
-        "Truecolour and NDSI previews were generated from the FIXED composites (correct B8 "
-        "band order). The candidate column is carried over from the earlier pass and must be "
-        "confirmed or corrected.", body))
-    story.append(Spacer(1, 6))
+        "42 candidate labels are <b>auto-generated, NOT ground truth</b>. For each chip, view "
+        "both panels and write your decision in the last column. In the NDSI panel, bare sand "
+        "trends blue and open water trends red. Mining requires visible extraction signatures "
+        "(bare bars, pits, spoil heaps, tracks, barges) - sand alone is not enough. "
+        "Use UNSURE rather than guessing.", body))
+    story.append(Spacer(1, 4))
 
-    per_page = 6
+    col_w = [22 * mm, 34 * mm, 34 * mm, 58 * mm, 30 * mm]  # 178 mm < 180 mm available
+    img_w = img_h = 30 * mm
+    per_page = 5
+
     for i in range(0, len(rows), per_page):
         page = rows[i:i + per_page]
-        data = []
+        data = [[Paragraph(t, th) for t in
+                 ("CHIP", "TRUE COLOUR", "NDSI", "MEASURED / CANDIDATE", "YOUR LABEL")]]
         for r in page:
-            tc = out / "previews" / f"{r['chip_id']}_truecolour.png"
-            nd = out / "previews" / f"{r['chip_id']}_NDSI.png"
-            img_cell = ""
-            if tc.exists() and nd.exists():
-                img_cell = ('<table><tr><td><img src="%s" width="118" height="118"/></td>'
-                            '<td><img src="%s" width="118" height="118"/></td></tr></table>'
-                            % (tc.as_posix(), nd.as_posix()))
-            stats = ("NDVI {mean_NDVI} | NDSI {mean_NDSI}<br/>"
-                     "sand {sand_frac} | cand <b>{candidate_label_AUTO_ONLY}</b>").format(**r)
+            cells = []
+            for suffix in ("truecolour", "NDSI"):
+                p = out / "previews" / f"{r['chip_id']}_{suffix}.png"
+                cells.append(Image(str(p), width=img_w, height=img_h)
+                             if p.exists() else Paragraph("missing", tiny))
+            stats = (
+                "<b>NDVI</b> {mean_NDVI} &nbsp; <b>NDSI</b> {mean_NDSI}<br/>"
+                "<b>sand</b> {sand_frac} &nbsp; <b>cand</b> {candidate_label_AUTO_ONLY}"
+            ).format(**r)
+            write_in = Paragraph("MINING / NOT / UNSURE<br/>&nbsp;<br/>&nbsp;", small)
             data.append([
                 Paragraph(f"<b>{r['chip_id']}</b>", small),
-                Paragraph(img_cell, small),
+                cells[0],
+                cells[1],
                 Paragraph(stats, small),
-                "____________",
+                write_in,
             ])
-        t = Table(data, colWidths=[26 * mm, 66 * mm, 55 * mm, 27 * mm], repeatRows=0)
+
+        t = Table(data, colWidths=col_w, repeatRows=1, hAlign="LEFT")
         t.setStyle(TableStyle([
-            ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ("BACKGROUND", (0, 0), (-1, 0), NAVY),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
             ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#C9D3DD")),
-            ("BACKGROUND", (0, 0), (0, -1), LIGHT),
-            ("TOPPADDING", (0, 0), (-1, -1), 5),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
-            ("LEFTPADDING", (0, 0), (-1, -1), 4),
-            ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+            ("BACKGROUND", (0, 1), (0, -1), LIGHT),
+            ("TOPPADDING", (0, 0), (-1, -1), 4),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ("LEFTPADDING", (0, 0), (-1, -1), 3),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 3),
         ]))
         story.append(t)
         if i + per_page < len(rows):

@@ -42,13 +42,11 @@ Protocol: strict gated stages (2026-11-22). Status legend: `[x] PASS`, `[!] BLOC
   - Kaggle: `notebooks/stage6_rf_kaggle.py` + `reports/stage6_rf_local/kaggle_run_instructions.md` prepared; user can run same split on Kaggle and place outputs in `reports/stage6_rf_kaggle/`.
 
 ## Stage 7: Deep Learning Segmentation
-- [!] BLOCKED (awaiting Kaggle run/results) - U-Net and LMS-Net Kaggle kernels pushed; smoke tests passed locally.
-  - U-Net: `kiramada/yamuna-stage7-unet` v3 (ipynb, GPU, dataset `kiramada/yamuna-stage7-input`). Local smoke 1 epoch PASS (`reports/stage7_unet_smoke/`): CV IoU 0.00682 Dice 0.01349.
-  - LMS-Net reference FOUND: `C:\Users\upend\Downloads\remotesensing-17-00227-v2.pdf` (Zhang et al., *Remote Sensing* 2025, 17, 227, DOI 10.3390/rs17020227). See `docs/lmsnet_reference.md`.
-  - LMS-Net implementation: `notebooks/stage7_lmsnet_kaggle.ipynb` paper-faithful structure (LMS block dilations 1/2/3/5 + depthwise, CAM, 5-level encoder-decoder) with explicit deviations (14-band input, binary mask, explicit channels [32,64,128,256,512], Stage 7 protocol). Old `models/train_segmentation.py --lmsnet` is NON-COMPLIANT with this paper.
-  - LMS-Net local smoke 1 epoch PASS (`reports/stage7_lmsnet_smoke/`): CV IoU 0.000158 Dice 0.000316 (smoke only). Kaggle kernel `kiramada/yamuna-stage7-lmsnet` v1 pushed, GPU, dataset attached.
-  - Protocol: 2023 mask chips GroupKFold-by-transect CV/selection; 2024 held out report-only; flip/90° train-fold augmentation only; no leakage; sequential.
-  - Gate requires Kaggle outputs in `reports/stage7_unet_kaggle/` and `reports/stage7_lmsnet_kaggle/`, review, and honest metrics.
+- [!] BLOCKED (runs complete, gate not passed due low metrics) - U-Net and LMS-Net full runs completed on Colab (40 epochs, 3-fold GroupKFold by transect, 2023 CV; 2024 held-out report-only; flip/90° train-fold aug only; no leakage). Smoke tests were only smoke.
+  - U-Net Colab (`reports/stage7_unet_colab/`): CV IoU 0.01592, Dice 0.03134, P 0.01967, R 0.10054, F1 0.03134; held-out 2024 report-only IoU 0.04729, Dice 0.08627. Metrics/CSVs saved; checkpoints not committed due size.
+  - LMS-Net Colab (`reports/stage7_lmsnet_colab/`, paper-faithful impl, explicit deviations in `docs/lmsnet_reference.md`): CV IoU 0.01605, Dice 0.03158, P 0.01827, R 0.18645, F1 0.03158; held-out 2024 report-only all zeros. Old `models/train_segmentation.py --lmsnet` remains NON-COMPLIANT.
+  - **Gate decision**: NOT PASS. Metrics are near-zero/low on sparse 28-mask dataset; not defensible as strong segmentation evidence. Honest review recorded; do not overclaim. Before Stage 8/9, decide: accept as weak baseline evidence with caveats, improve masks/data/architecture, or keep Stage 7 blocked.
+  - Kaggle kernels were queued earlier; Colab runs used as execution path.
 
 ## Stage 8: Self-Training (Optional, Gated)
 - [!] BLOCKED (approval/template ready) - `docs/selftrain_approval.md` drafted. Still blocked until Stage 7 PASS/stable and explicit approval; no pseudo-masks on test set.

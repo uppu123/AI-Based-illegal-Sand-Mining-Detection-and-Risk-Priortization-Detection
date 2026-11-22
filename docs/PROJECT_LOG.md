@@ -1146,3 +1146,22 @@ Then rebuild all composites.
 - `docs/selftrain_approval.md` — optional self-training approval checklist; no pseudo-masks on test set.
 
 **Gate impact:** Stages 8-10 remain BLOCKED. No model/risk/dashboard gate passed.
+
+---
+
+## 2026-11-22 - Stage 7: U-Net + LMS-Net Colab full runs completed (honest review)
+
+**Execution:** Colab GPU via MCP; Kaggle dataset `kiramada/yamuna-stage7-input` downloaded. Sequential runs (U-Net then LMS-Net). Duplicate U-Net process was detected and stopped to keep single DL job.
+
+**U-Net (`reports/stage7_unet_colab/`):**
+- CV overall (2023, 3-fold GroupKFold by transect): IoU 0.01592, Dice 0.03134, P 0.01967, R 0.10054, F1 0.03134.
+- Held-out 2024 report-only: IoU 0.04729, Dice 0.08627, P 0.11476, R 0.06919, F1 0.08627.
+- Artifacts saved: metrics.json, cv_fold_metrics.csv, heldout_2024_predictions.csv, REVIEW.md. Checkpoints omitted from git (size).
+
+**LMS-Net (`reports/stage7_lmsnet_colab/`):**
+- Paper-faithful structure (Zhang et al., Remote Sensing 2025, 17:227, doi 10.3390/rs17020227) with explicit deviations (14-band input, binary mask, explicit channels [32,64,128,256,512], Stage 7 protocol).
+- CV overall (2023): IoU 0.01605, Dice 0.03158, P 0.01827, R 0.18645, F1 0.03158.
+- Held-out 2024 report-only: all zeros (reported as-is).
+- Artifacts saved: metrics.json, cv_fold_metrics.csv, heldout_2024_predictions.csv, REVIEW.md. Checkpoints omitted from git.
+
+**Gate decision:** [!] Stage 7 NOT PASS. Runs are protocol-compliant, but metrics are near-zero/low on sparse 28-mask dataset; not defensible as strong segmentation evidence. No overclaim. Next options require user decision: treat as weak baseline/caveated evidence, improve labels/data/model, or keep blocked before Stage 8/9.

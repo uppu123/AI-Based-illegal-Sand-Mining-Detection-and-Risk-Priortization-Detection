@@ -1,6 +1,6 @@
 # Dashboard Scope (DRAFT — PROPOSED, NOT APPROVED)
 
-**Status**: DRAFT / PROPOSED. **Not gate evidence.**  
+**Status**: DROPPED FOR NOW (user decision, 2026-11-22). Retained as draft reference only. **Not gate evidence.**  
 **Stage 10 gate requires**: user-approved `docs/dashboard_scope.md`; show only PASS-gated results as final.
 
 ## Goal (MVP)

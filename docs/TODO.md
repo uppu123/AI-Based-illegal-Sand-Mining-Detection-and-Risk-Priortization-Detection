@@ -55,7 +55,7 @@ Protocol: strict gated stages (2026-11-22). Status legend: `[x] PASS`, `[!] BLOC
 - [!] BLOCKED (draft prep ready) - `docs/ahp_matrices.md` and `docs/ahp_approval.md` drafted (PROPOSED, CR=0.01528 < 0.10). Blocked until prior gates PASS, supervisor approval recorded, and weights reconciled with `models/compute_risk_score.py`. No 40/30/20/10, no risk accuracy.
 
 ## Stage 10: Dashboard MVP
-- [!] BLOCKED (scope draft ready) - `docs/dashboard_scope.md` drafted (PROPOSED). Blocked until user approves scope and only PASS results are shown as final.
+- [ ] DROPPED (user decision, 2026-11-22) - Dashboard plan dropped for now. `docs/dashboard_scope.md` retained as draft reference; revisit only if user explicitly requests.
 
 ## Stage 11: Documentation
 - [ ] NOT RUN

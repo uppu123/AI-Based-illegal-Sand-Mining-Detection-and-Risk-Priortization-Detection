@@ -1165,3 +1165,12 @@ Then rebuild all composites.
 - Artifacts saved: metrics.json, cv_fold_metrics.csv, heldout_2024_predictions.csv, REVIEW.md. Checkpoints omitted from git.
 
 **Gate decision:** [!] Stage 7 NOT PASS. Runs are protocol-compliant, but metrics are near-zero/low on sparse 28-mask dataset; not defensible as strong segmentation evidence. No overclaim. Next options require user decision: treat as weak baseline/caveated evidence, improve labels/data/model, or keep blocked before Stage 8/9.
+
+
+---
+
+## 2026-11-22 - Stage 10 dashboard plan dropped (user decision)
+
+- User requested dropping dashboard plan for now.
+- `docs/TODO.md` Stage 10 marked `[ ] DROPPED (user decision, 2026-11-22)`.
+- `docs/dashboard_scope.md` retained as draft reference with dropped status; no dashboard implementation planned unless user explicitly revisits.

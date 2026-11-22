@@ -42,7 +42,11 @@ Protocol: strict gated stages (2026-11-22). Status legend: `[x] PASS`, `[!] BLOC
   - Kaggle: `notebooks/stage6_rf_kaggle.py` + `reports/stage6_rf_local/kaggle_run_instructions.md` prepared; user can run same split on Kaggle and place outputs in `reports/stage6_rf_kaggle/`.
 
 ## Stage 7: Deep Learning Segmentation
-- [ ] NOT RUN - Planned: train only on locked train split/folds (GroupKFold by transect); safe augmentation (flip/90° rotate) allowed on train only, no photometric aug on 14-band spectral chips initially; 2024 excluded from model selection/early stopping; LMS-Net only if architecture table/ref exists on disk.
+- [!] BLOCKED (awaiting Kaggle run/results) - U-Net Kaggle package prepared: `notebooks/stage7_unet_kaggle.py`, `notebooks/stage7_kaggle_instructions.md`.
+  - Protocol in script: 2023 mask chips for GroupKFold-by-transect CV/selection; 2024 mask chips held out from selection (report-only); augmentation flip/90° on train folds only; no leakage; sequential single run.
+  - LMS-Net: BLOCKED unless Zhang et al. 2025 architecture table/reference present on disk (not found/confirmed).
+  - Prior local runs (old protocol, not Stage-7 compliant): U-Net IoU 0.01537; LMS-Net IoU 0.00589. Not used as gate evidence.
+  - Gate requires Kaggle run outputs placed in `reports/stage7_unet_kaggle/` and review.
 
 ## Stage 8: Self-Training (Optional, Gated)
 - [ ] NOT RUN

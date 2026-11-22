@@ -1085,3 +1085,27 @@ Then rebuild all composites.
 - 2024 excluded from CV/model selection as required.
 
 **Gate result:** [x] PASS (local baseline). Kaggle rerun package ready for reproducibility check.
+
+
+---
+
+## 2026-11-22 - Stage 7: U-Net Kaggle Package Prepared
+
+**Command:** Prepared Stage 7 U-Net Kaggle script/instructions (no remote execution from agent).
+
+**Inputs (required on Kaggle):**
+- `C:\New folder\chips_fixed\` (252 chip TIFs)
+- `C:\New folder\annotation\chips.json` (28 mask entries)
+- `C:\New folder\annotation\masks\` (28 mask PNGs)
+
+**Outputs (repo):**
+- `notebooks/stage7_unet_kaggle.py`
+- `notebooks/stage7_kaggle_instructions.md`
+
+**Protocol encoded:**
+- 2023 mask chips: GroupKFold by transect CV/model selection.
+- 2024 mask chips: held out from selection, report-only.
+- Augmentation: flip/90° on training fold samples only.
+- Sequential single run; no leakage.
+
+**Gate result:** [!] BLOCKED - awaiting Kaggle execution and result review. LMS-Net blocked unless on-disk architecture reference found.

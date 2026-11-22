@@ -1,0 +1,18 @@
+{
+  "rows": 252,
+  "cutoffs_2023": {
+    "ndsi_mean_high_p75_2023": -0.15841375000000002,
+    "ndsi_mean_low_p25_2023": -0.1920955,
+    "cmi_mean_high_p75_2023": 0.099825,
+    "cmi_mean_low_p25_2023": 0.069875,
+    "water_frac_high_p75_2023": 0.0376815,
+    "ndvi_mean_high_p75_2023": 0.270455,
+    "distance_mean_m_near_p25_2023": 546.6
+  },
+  "group_counts": {
+    "PROPOSAL_UNSURE_REVIEW": 209,
+    "PROPOSAL_MIXED_REVIEW": 27,
+    "PROPOSAL_NOT_MINING_LIKE": 16
+  },
+  "status": "PROPOSALS_ONLY"
+}

@@ -1,0 +1,7 @@
+2026-11-22 18:18:09,502 INFO chips found: 252
+2026-11-22 18:18:09,506 INFO extra features rows: 252
+2026-11-22 18:18:14,235 INFO wrote C:\Users\upend\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\metadata\features_stage2_raw.csv
+2026-11-22 18:18:14,237 INFO wrote C:\Users\upend\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\metadata\features_v2.csv (water_frac blank pending decision)
+2026-11-22 18:18:15,553 INFO wrote C:\Users\upend\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\metadata\water_hist.png
+2026-11-22 18:18:15,554 INFO wrote C:\Users\upend\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\docs\water_threshold_candidates.md
+2026-11-22 18:18:15,554 INFO stage2 compute complete

@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-22",
+  "approved_by_user_message": "approve Stage 5 split",
+  "status": "LOCKED_CORRECTED_TRANSECT_DISJOINT",
+  "n_total": 30,
+  "n_train": 24,
+  "n_test": 6,
+  "train_counts": {
+    "MINING": 12,
+    "NOT MINING": 12
+  },
+  "test_counts": {
+    "MINING": 3,
+    "NOT MINING": 3
+  },
+  "train_quarters": [
+    "2023_Q1",
+    "2023_Q2",
+    "2023_Q3",
+    "2023_Q4",
+    "2024_Q1"
+  ],
+  "test_quarters": [
+    "2023_Q1",
+    "2023_Q3",
+    "2023_Q4"
+  ],
+  "test_chip_ids": [
+    "T018_2023_Q1",
+    "T027_2023_Q3",
+    "T034_2023_Q1",
+    "T043_2023_Q3",
+    "T046_2023_Q4",
+    "T050_2023_Q3"
+  ],
+  "transect_overlap": [],
+  "test_has_2024": false,
+  "notes": [
+    "Corrected proposal: transect-disjoint between train and test.",
+    "Test uses 2023 chips only; 2024 agreed chips remain in train. 2024 excluded from model selection/early stopping per protocol.",
+    "No augmentation before split. Augmentation allowed only on train split/folds after lock, never on test."
+  ],
+  "correction": "Replaced T051_2023_Q3 with T050_2023_Q3 to remove T051 transect overlap; correction recorded before Stage 6."
+}

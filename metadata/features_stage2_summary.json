@@ -1,0 +1,40 @@
+{
+  "chips": 252,
+  "ndsi_2023_pixels": 11010048,
+  "percentiles_2023": {
+    "50": -0.18300002813339233,
+    "75": -0.12879997491836548,
+    "90": -0.08539998531341553,
+    "95": -0.04640001058578491,
+    "99": 0.1303999423980713
+  },
+  "candidates": [
+    {
+      "threshold_ndsi_gt": -0.1,
+      "water_pixel_fraction_2023": 0.13848
+    },
+    {
+      "threshold_ndsi_gt": -0.05,
+      "water_pixel_fraction_2023": 0.05235
+    },
+    {
+      "threshold_ndsi_gt": 0.0,
+      "water_pixel_fraction_2023": 0.032684
+    },
+    {
+      "threshold_ndsi_gt": 0.05,
+      "water_pixel_fraction_2023": 0.022024
+    },
+    {
+      "threshold_ndsi_gt": 0.1,
+      "water_pixel_fraction_2023": 0.013343
+    }
+  ],
+  "water_frac_status": "POPULATED",
+  "water_threshold_decision": {
+    "threshold": 0.0,
+    "status": "APPROVED_BY_STUDENT",
+    "date": "2026-11-22",
+    "note": "2024 excluded from threshold selection"
+  }
+}

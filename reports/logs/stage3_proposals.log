@@ -1,0 +1,4 @@
+2026-11-22 18:23:02,869 INFO wrote C:\Users\upend\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\metadata\proposed_groups.csv
+2026-11-22 18:23:02,870 INFO wrote C:\New folder\annotation\review_queue.csv
+2026-11-22 18:23:02,870 INFO wrote C:\Users\upend\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\docs\proposal_rules.md
+2026-11-22 18:23:02,870 INFO groups: {'PROPOSAL_UNSURE_REVIEW': 209, 'PROPOSAL_MIXED_REVIEW': 27, 'PROPOSAL_NOT_MINING_LIKE': 16}

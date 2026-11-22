@@ -1,0 +1,13 @@
+2026-11-22 19:55:01,959 INFO Stage 6 RF baseline start
+2026-11-22 19:55:01,960 INFO Args: {'locked_split': WindowsPath('C:/Users/upend/AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization/metadata/test_split_LOCKED.csv'), 'features_csv': WindowsPath('C:/Users/upend/AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization/metadata/features_v2.csv'), 'output_dir': WindowsPath('C:/Users/upend/AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization/reports/stage6_rf_local'), 'log_file': WindowsPath('C:/Users/upend/AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization/reports/logs/stage6_rf_local.log'), 'n_estimators': 500, 'max_depth': None, 'min_samples_leaf': 1, 'random_state': 42, 'cv_splits': 5, 'include_sand_frac': False}
+2026-11-22 19:55:01,960 INFO Features: ['ndvi_mean', 'ndwi_mean', 'ndbi_mean', 'ndsi_mean', 'cmi_mean', 'water_frac', 'distance_mean_m']
+2026-11-22 19:55:01,978 INFO Loaded 30 rows: {'train': 24, 'test': 6}
+2026-11-22 19:55:01,981 INFO CV train rows (2023 only): 21, excluded 2024 train rows: 3
+2026-11-22 19:55:02,721 INFO Fold 1: val_n=5 f1_macro=1.000 acc=1.000
+2026-11-22 19:55:03,534 INFO Fold 2: val_n=4 f1_macro=1.000 acc=1.000
+2026-11-22 19:55:04,351 INFO Fold 3: val_n=4 f1_macro=0.733 acc=0.750
+2026-11-22 19:55:05,166 INFO Fold 4: val_n=4 f1_macro=0.500 acc=1.000
+2026-11-22 19:55:05,956 INFO Fold 5: val_n=4 f1_macro=0.733 acc=0.750
+2026-11-22 19:55:06,704 INFO Final model fit on 24 train rows
+2026-11-22 19:55:06,886 INFO CV f1_macro=0.9028 test f1_macro=1.0000
+2026-11-22 19:55:06,886 INFO Wrote outputs to C:\Users\upend\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\reports\stage6_rf_local

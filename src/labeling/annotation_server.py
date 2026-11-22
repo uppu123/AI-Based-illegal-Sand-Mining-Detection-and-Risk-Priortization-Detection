@@ -32,7 +32,12 @@ def index():
 
 @app.route("/images/<name>")
 def images(name):
-    return send_from_directory(str(IMAGES), name)
+    resp = send_from_directory(str(IMAGES), name)
+    # Force fresh image bytes in browser; stale 304s can look like broken/black previews.
+    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
+    return resp
 
 
 @app.route("/api/chips")

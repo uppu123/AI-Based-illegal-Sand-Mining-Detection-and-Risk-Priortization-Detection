@@ -1,0 +1,247 @@
+{
+  "stage": 6,
+  "model": "RandomForestClassifier",
+  "timestamp_utc": "2026-11-22T14:25:06.847267+00:00",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "python": "3.12.1",
+  "locked_split": "C:\\Users\\upend\\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\\metadata\\test_split_LOCKED.csv",
+  "features_csv": "C:\\Users\\upend\\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\\metadata\\features_v2.csv",
+  "feature_cols": [
+    "ndvi_mean",
+    "ndwi_mean",
+    "ndbi_mean",
+    "ndsi_mean",
+    "cmi_mean",
+    "water_frac",
+    "distance_mean_m"
+  ],
+  "n_train": 24,
+  "n_test": 6,
+  "train_class_counts": {
+    "NOT MINING": 12,
+    "MINING": 12
+  },
+  "test_class_counts": {
+    "MINING": 3,
+    "NOT MINING": 3
+  },
+  "cv": {
+    "overall": {
+      "n": 21,
+      "accuracy": 0.9047619047619048,
+      "precision_macro": 0.9027777777777777,
+      "recall_macro": 0.9027777777777777,
+      "f1_macro": 0.9027777777777777,
+      "f1_mining": 0.8888888888888888,
+      "f1_not_mining": 0.9166666666666666,
+      "confusion_matrix_labels": [
+        "NOT MINING",
+        "MINING"
+      ],
+      "confusion_matrix": [
+        [
+          11,
+          1
+        ],
+        [
+          1,
+          8
+        ]
+      ],
+      "cv_splits": 5,
+      "excluded_2024_train_rows": 3
+    },
+    "folds": [
+      {
+        "n": 5,
+        "accuracy": 1.0,
+        "precision_macro": 1.0,
+        "recall_macro": 1.0,
+        "f1_macro": 1.0,
+        "f1_mining": 1.0,
+        "f1_not_mining": 1.0,
+        "confusion_matrix_labels": [
+          "NOT MINING",
+          "MINING"
+        ],
+        "confusion_matrix": [
+          [
+            4,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "fold": 1,
+        "train_n": 16,
+        "val_n": 5
+      },
+      {
+        "n": 4,
+        "accuracy": 1.0,
+        "precision_macro": 1.0,
+        "recall_macro": 1.0,
+        "f1_macro": 1.0,
+        "f1_mining": 1.0,
+        "f1_not_mining": 1.0,
+        "confusion_matrix_labels": [
+          "NOT MINING",
+          "MINING"
+        ],
+        "confusion_matrix": [
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "fold": 2,
+        "train_n": 17,
+        "val_n": 4
+      },
+      {
+        "n": 4,
+        "accuracy": 0.75,
+        "precision_macro": 0.8333333333333333,
+        "recall_macro": 0.75,
+        "f1_macro": 0.7333333333333334,
+        "f1_mining": 0.6666666666666666,
+        "f1_not_mining": 0.8,
+        "confusion_matrix_labels": [
+          "NOT MINING",
+          "MINING"
+        ],
+        "confusion_matrix": [
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "fold": 3,
+        "train_n": 17,
+        "val_n": 4
+      },
+      {
+        "n": 4,
+        "accuracy": 1.0,
+        "precision_macro": 0.5,
+        "recall_macro": 0.5,
+        "f1_macro": 0.5,
+        "f1_mining": 1.0,
+        "f1_not_mining": 0.0,
+        "confusion_matrix_labels": [
+          "NOT MINING",
+          "MINING"
+        ],
+        "confusion_matrix": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            4
+          ]
+        ],
+        "fold": 4,
+        "train_n": 17,
+        "val_n": 4
+      },
+      {
+        "n": 4,
+        "accuracy": 0.75,
+        "precision_macro": 0.75,
+        "recall_macro": 0.8333333333333333,
+        "f1_macro": 0.7333333333333334,
+        "f1_mining": 0.6666666666666666,
+        "f1_not_mining": 0.8,
+        "confusion_matrix_labels": [
+          "NOT MINING",
+          "MINING"
+        ],
+        "confusion_matrix": [
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "fold": 5,
+        "train_n": 17,
+        "val_n": 4
+      }
+    ]
+  },
+  "test": {
+    "n": 6,
+    "accuracy": 1.0,
+    "precision_macro": 1.0,
+    "recall_macro": 1.0,
+    "f1_macro": 1.0,
+    "f1_mining": 1.0,
+    "f1_not_mining": 1.0,
+    "confusion_matrix_labels": [
+      "NOT MINING",
+      "MINING"
+    ],
+    "confusion_matrix": [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        3
+      ]
+    ]
+  },
+  "feature_importance": [
+    {
+      "feature": "distance_mean_m",
+      "importance": 0.16957285525229285
+    },
+    {
+      "feature": "ndsi_mean",
+      "importance": 0.16540603475536841
+    },
+    {
+      "feature": "cmi_mean",
+      "importance": 0.15223641642442962
+    },
+    {
+      "feature": "ndvi_mean",
+      "importance": 0.1502585573248497
+    },
+    {
+      "feature": "ndwi_mean",
+      "importance": 0.14855569239403826
+    },
+    {
+      "feature": "ndbi_mean",
+      "importance": 0.13564233943433956
+    },
+    {
+      "feature": "water_frac",
+      "importance": 0.0783281044146817
+    }
+  ],
+  "artifact_note": null,
+  "protocol_notes": [
+    "Locked test split used; test not used for CV/model selection.",
+    "GroupKFold by transect for CV on 2023 train rows only; 2024 train rows excluded from CV/model selection but included in final train fit.",
+    "No augmentation.",
+    "Small n=30 total; metrics are indicative, not production accuracy."
+  ]
+}

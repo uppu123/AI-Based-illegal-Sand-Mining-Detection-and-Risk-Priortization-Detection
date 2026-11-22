@@ -224,10 +224,11 @@ canvas.addEventListener('pointercancel', stop);
 async function loadChip(i){
   if(i<0 || i>=chips.length) return;
   idx=i; const c=chips[i];
-  tcImg.src='/images/'+c.chip_id+'_truecolour.png';
-  ndImg.src='/images/'+c.chip_id+'_NDSI.png';
-  wtImg.src='/images/'+c.chip_id+'_water.png';
-  waImg.src='/images/'+c.chip_id+'_water.png';
+  const t=Date.now();
+  tcImg.src='/images/'+c.chip_id+'_truecolour.png?t='+t;
+  ndImg.src='/images/'+c.chip_id+'_NDSI.png?t='+t;
+  wtImg.src='/images/'+c.chip_id+'_water.png?t='+t;
+  waImg.src='/images/'+c.chip_id+'_water.png?t='+t;
   waterFracEl.textContent='water: '+(c.water_frac!==undefined?(c.water_frac*100).toFixed(1)+'%':'—');
   // load existing mask if present
   const r=await fetch('/api/mask/'+c.chip_id).then(x=>x.json());

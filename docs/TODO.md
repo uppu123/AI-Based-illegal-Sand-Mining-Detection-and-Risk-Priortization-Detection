@@ -1,65 +1,57 @@
-# Yamuna Sand Mining Detection - Project TODO
+# Yamuna Sand Mining Detection - Gated Protocol TODO
 
-## Step 0: Setup
-- [x] Create directory structure (scripts, logs, metadata, centerline, transects, chips/2023_Q2/previews, labeling, docs)
-- [x] Create docs/TODO.md
-- [x] Create docs/PROJECT_LOG.md
-- [x] Verify required libraries import (rasterio, numpy, pandas, geopandas, shapely, pyproj, matplotlib, pillow)
-- [x] Install missing library: geopandas
-- [x] Create docs/README.md
+Protocol: strict gated stages (2026-11-22). Status legend: `[x] PASS`, `[!] BLOCKED (reason)`, `[ ] NOT RUN`.
 
-## Step 1: Verify Data Inventory (01_verify_inventory.py)
-- [x] Create script 01_verify_inventory.py
-- [x] Run script and verify all 29 expected files
-- [x] Generate inventory_check.csv
-- [x] Check: PASS (zero FAIL) - 12 OK, 18 WARN, 0 FAIL
+## Stage 0: Inventory
+- [x] PASS (after approved Option 1 additive copy) - `yamuna_data_fixed` now contains 29 products (11 S2, 12 S1, 6 L8).
+  - `yamuna_data_fixed/sentinel2`: 11 TIFs (PASS)
+  - `yamuna_data_fixed/sentinel1/2023_2024`: 12 TIFs (PASS) - copied additively from `C:\New folder\yamuna_data\sentinel1\2023_2024` with user approval; SHA256 verified, 0 overwrites.
+  - `yamuna_data_fixed/landsat8/2023_2024`: 6 TIFs (PASS) - copied additively from `C:\New folder\yamuna_data\landsat8\2023_2024` with user approval; SHA256 verified, 0 overwrites.
+  - `chips_fixed`: 252 chips, 42/quarter across 2023_Q1..2024_Q2 (PASS)
+  - `annotation/masks`: 28 `*_mask.png` files (PASS)
+  - `verified_labels.csv` (canonical checked: `C:\New folder\label_review\verified_labels.csv`, repo copy matches): 252 rows, MINING=55, NOT MINING=45, UNSURE=152 (PASS)
 
-## Step 2: Validate Centerline (02_validate_centerline.py)
-- [x] Create script 02_validate_centerline.py
-- [x] Check if centerline GeoJSON exists - **NOT FOUND**
-- [x] **Blocked by: user** - need to digitize in QGIS
-- [x] Created auto-generation script using S1 VV (generate_centerline_s1.py)
-- [x] Generated centerline (50.21 km, within 45-60 km range)
-- [x] Run validation checks - **PASS**
-- [x] Generate centerline_validation.txt and centerline_check.png
-- [x] Oriented version saved (north-to-south)
+## Stage 1: Band Mapping and Index Verification
+- [x] PASS (with metadata caveat) - Script 09 conclusion/stacking order evidence found (`C:\New folder\yamuna_work\verification\stacking_order_check.md`, `band_mapping_report.md`; `C:\New folder\rebuild_reports\verification_09\band_mapping_report.md`, `band_mapping_stats.csv`; git `1189d2a` Phase A rebuild). 14-band layout present for all 11 S2 composites (uint16, nodata=0.0). Independent Option 2 read-only check: band10 fixed vs raw identical on 3 sampled 512x512 windows for 11/11 composites (max_abs=0, equal_frac=1.0); control bands 4/7 differ as expected. Raw 2023_Q2 metadata lists B12 at band 10. 5-chip deterministic recomputation (seed=42) PASS: NDVI/NDWI/NDBI/NDSI max abs diff <= 0.000488 (<0.01). See `docs/index_status.md`, `docs/band_fix_plan.md`.
+  - Caveat: fixed S2 composite band descriptions are all None (metadata hygiene). Pixel-level B12 position verified; optional additive metadata repair needs approval.
 
-## Step 3: Create Transects (03_make_transects.py)
-- [x] Create script 03_make_transects.py
-- [x] Generate transect points, lines, table, and map
-- [x] Validate transects - 51 transects, 0 outside AOI, all centers within 5m of centerline
+## Stage 2: Feature Table
+- [x] PASS - Computed 252-chip features on valid pixels from `C:\New folder\chips_fixed` + existing `C:\New folder\extra_features\chip_features.csv` (CMI/distance). Wrote `metadata/features_stage2_raw.csv`, `metadata/features_v2.csv`, `metadata/water_hist.png`, `metadata/features_stage2_summary.json`, `docs/water_threshold_candidates.md`. 2023-only NDSI pixels: 11,010,048; candidates evaluated: -0.10, -0.05, 0.0, 0.05, 0.10. 2024 excluded from threshold selection.
+  - Student decision recorded in `docs/water_threshold_decision.md`: `NDSI > 0.0` approved by Upendra Kumar on 2026-11-22. `water_frac` populated for 252/252 chips in `features_v2.csv`.
 
-## Step 4: Extract Chips 2023_Q2 (04_extract_chips.py)
-- [x] Create script 04_extract_chips.py
-- [x] Extract 256x256 chips for each transect point
-- [x] Generate chips, previews, contact sheet
-- [x] Generate chips_2023Q2.csv and skipped_transects.csv
-- [x] Results: 42 kept, 9 skipped (outside_raster)
+## Stage 3: Proposed Groups (Proposals Only)
+- [x] PASS (proposals only, no final labels) - Percentile cutoffs derived from 2023 chips only; 2024 excluded from cutoff derivation. Wrote `docs/proposal_rules.md`, `metadata/proposed_groups.csv` (252 rows, all `PROPOSAL_FOR_HUMAN_CONFIRMATION_ONLY`), `annotation/review_queue.csv` (human_decision/human_notes blank), `metadata/proposed_groups_summary.json`.
+  - Groups: PROPOSAL_UNSURE_REVIEW=209, PROPOSAL_MIXED_REVIEW=27, PROPOSAL_NOT_MINING_LIKE=16, PROPOSAL_MINING_LIKE=0. No labels written to `verified_labels.csv`.
+  - Gate note: no cutoff used without percentile basis; water-threshold-dependent water_frac is now populated after approved Stage 2 decision.
 
-## Step 8: Band Mapping Check (09_band_mapping_check.py)
-- [x] Create script 09_band_mapping_check.py
-- [x] Run all 7 steps
-- [x] Generate band_mapping_report.md
-- [x] Generate band_mapping_stats.csv
-- [x] Results: Root cause found - band order bug in processing script (B8 written at position 4 instead of 7)
+## Stage 4: Labelling and Agreement
+- [x] PASS - `C:\New folder\annotation\agreement\agreement_report.md/json`:
+  - double_labelled=18 (>=15), agreement=88.89% (>=85%), agreed MINING=15, agreed NOT MINING=15, UNSURE=0, invalid=0. gate_pass=true.
+  - Source: user-reviewed `agreement_template.xlsx` converted to CSV; labels treated as human-confirmed.
 
-## Step 9: Fix Band Order & Rebuild Composites
-- [x] Fix band order in extract_yamuna_data.py (S2_SPECTRAL_BANDS corrected to wavelength order)
-- [ ] Rebuild Sentinel-2 composites - **BLOCKED: zip files deleted after extraction**
-- [ ] Re-run verification (script 08) on rebuilt composites
+## Stage 5: Locked Test Split
+- [x] PASS - `metadata/test_split_LOCKED.csv` created (30 agreed chips: 24 train / 6 test, 3 MINING + 3 NOT MINING in test). Transect-disjoint, 2023-only test, 2024 kept in train. Corrected pre-Stage-6: replaced T051_2023_Q3 with T050_2023_Q3 to remove transect leakage.
+  - Locked 2026-11-22 by Upendra Kumar ("lock Stage 5 split"). Proposal: `docs/test_split_proposal.md`.
+  - Augmentation policy: no augmentation before split; augmentation only on train split/folds after lock, never test.
 
-## Step 6: Prepare Labeling Set (05_prepare_labeling.py)
-- [x] Create script 05_prepare_labeling.py
-- [x] Copy KEEP chips to labeling/images/
-- [x] Copy previews to labeling/previews/
-- [x] Create label_guidelines.md
-- [x] Create label_manifest.csv
-- [x] Create agreement_log.csv template
+## Stage 6: Baseline Model
+- [x] PASS (local RF baseline complete; Kaggle package prepared) - `src/analysis/stage6_rf_baseline.py` run on locked split.
+  - Local run (`reports/stage6_rf_local/`): CV (2023 train, GroupKFold by transect, 5 splits, n=21) accuracy=0.9048 f1_macro=0.9028, CM [[11,1],[1,8]]; Locked test (n=6, 2023-only) accuracy=1.0000 f1_macro=1.0000, CM [[3,0],[0,3]].
+  - Protocol: locked test unused for selection; 2024 train rows (3) excluded from CV/model selection but included in final fit; no augmentation; features exclude sand_frac.
+  - Caveat: n=30 total (24 train/6 test) - metrics indicative only, not production accuracy. Feature importances spread (distance/ndsi/cmi/ndvi/ndwi/ndbi/water_frac).
+  - Kaggle: `notebooks/stage6_rf_kaggle.py` + `reports/stage6_rf_local/kaggle_run_instructions.md` prepared; user can run same split on Kaggle and place outputs in `reports/stage6_rf_kaggle/`.
 
-## Final Step
-- [ ] Mark all TODO items complete or blocked with reason
-- [ ] Print directory tree
-- [ ] Print KEEP/skipped counts and first 5 manifest rows
-- [ ] Print last 40 lines of PROJECT_LOG.md
-- [ ] List all assumptions
-- [ ] Create memory vault in Obsidian
+## Stage 7: Deep Learning Segmentation
+- [ ] NOT RUN - Planned: train only on locked train split/folds (GroupKFold by transect); safe augmentation (flip/90° rotate) allowed on train only, no photometric aug on 14-band spectral chips initially; 2024 excluded from model selection/early stopping; LMS-Net only if architecture table/ref exists on disk.
+
+## Stage 8: Self-Training (Optional, Gated)
+- [ ] NOT RUN
+
+## Stage 9: Morphology and Risk Scoring
+- [ ] NOT RUN
+
+## Stage 10: Dashboard MVP
+- [ ] NOT RUN
+
+## Stage 11: Documentation
+- [ ] NOT RUN

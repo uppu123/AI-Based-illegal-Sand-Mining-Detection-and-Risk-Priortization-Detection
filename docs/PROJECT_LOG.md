@@ -718,3 +718,370 @@ Then rebuild all composites.
 ---
 
 *This section will be updated after each step with prose suitable for the report's methods chapter.*
+---
+## 2026-11-22 - Stage 0: Inventory (GATED PROTOCOL)
+
+**Command:** Read-only PowerShell inventory checks (Get-ChildItem/Import-Csv/Group-Object) over C:\New folder\yamuna_data_fixed, C:\New folder\chips_fixed, C:\New folder\annotation\masks, and verified_labels.csv candidates.
+
+**Inputs:**
+- C:\New folder\yamuna_data_fixed\
+- C:\New folder\chips_fixed\
+- C:\New folder\annotation\masks\
+- C:\New folder\label_review\verified_labels.csv
+- C:\Users\upend\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\data\verified_labels.csv
+
+**Outputs:**
+- C:\Users\upend\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\docs\TODO.md (updated to gated protocol; Stage 0 marked BLOCKED)
+
+**Key numbers:**
+- yamuna_data_fixed/sentinel2: 11 GeoTIFFs (S2_2018-2022 composites + S2_2023_Q1..2024_Q2 = 11). PASS.
+- yamuna_data_fixed/sentinel1: directory missing; 0 GeoTIFFs. Expected 12. **MISMATCH**.
+- yamuna_data_fixed/landsat8: directory missing; 0 GeoTIFFs. Expected 6. **MISMATCH**.
+- Raw/read-only reference (not a workaround): C:\New folder\yamuna_data\sentinel1\2023_2024 has 12 .tif; C:\New folder\yamuna_data\landsat8\2023_2024 has 6 .tif.
+- chips_fixed: 252 TIF chips; 42 per quarter (2023_Q1, 2023_Q2, 2023_Q3, 2023_Q4, 2024_Q1, 2024_Q2). PASS.
+- nnotation/masks: 28 *_mask.png files. PASS.
+- erified_labels.csv: 252 rows; reviewer_final_label counts MINING=55, NOT MINING=45, UNSURE=152. Both label_review and repo copy match. PASS.
+
+**Warnings/assumptions:**
+- Gate is strict per protocol text: "yamuna_data_fixed: 29 products (11 S2, 12 S1, 6 L8)". Missing S1/L8 under yamuna_data_fixed is treated as count mismatch.
+- No files in C:\New folder\yamuna_data were modified. No downloads/network calls made.
+
+**Gate result:** [!] BLOCKED - yamuna_data_fixed has 11/29 expected products (missing 12 S1, 6 L8). Do not proceed to Stage 1 until gate condition is resolved by an approved, protocol-compliant path.
+
+---
+## 2026-11-22 - Stage 0: Gate Resolution (Option 1, user-approved)
+
+**Command:** Additive copy (no overwrites) from read-only C:\New folder\yamuna_data\... into C:\New folder\yamuna_data_fixed\...; SHA256 verification; re-inventory.
+
+**Inputs (read-only):**
+- C:\New folder\yamuna_data\sentinel1\2023_2024\ (12 S1 .tif)
+- C:\New folder\yamuna_data\landsat8\2023_2024\ (6 L8 .tif)
+
+**Outputs:**
+- C:\New folder\yamuna_data_fixed\sentinel1\2023_2024\ created; 12 S1 .tif copied
+- C:\New folder\yamuna_data_fixed\landsat8\2023_2024\ created; 6 L8 .tif copied
+- docs/TODO.md Stage 0 updated to PASS; Stage 1 unblocked
+
+**Key numbers:**
+- Copied: 18 files; skipped/existing: 0; overwrites: 0.
+- SHA256 verification: bad=0 (all 18 source/destination hashes match).
+- Re-inventory: S2=11, S1=12, L8=6, TOTAL=29.
+
+**Warnings/assumptions:**
+- User explicitly approved Option 1 (additive copy into protected yamuna_data_fixed, no overwrite). Raw C:\New folder\yamuna_data not modified.
+- Stage 0 gate now PASS. Stage 1 ready to start.
+
+
+---
+
+## 2026-11-22 - Stage 1: Band Mapping and Index Verification (GATED PROTOCOL)
+
+**Command:**
+- Read-only discovery: `Get-ChildItem C:\New folder -Recurse` for `stacking_order_check.md`, `band_mapping_report.md`, `band_mapping_stats.csv`, `*09*conclusion*`.
+- Read-only checks: Python/rasterio inspection of all 11 `C:\New folder\yamuna_data_fixed\sentinel2\**\*.tif`; deterministic 5-chip index recomputation (seed=42) from `C:\New folder\chips_fixed`.
+- Git evidence: `git -C <repo> log --oneline -5 -- src/verification/09_diagnose_band_mapping.py`.
+
+**Inputs:**
+- `C:\New folder\yamuna_work\verification\stacking_order_check.md`
+- `C:\New folder\yamuna_work\verification\band_mapping_report.md`
+- `C:\New folder\rebuild_reports\verification_09\band_mapping_report.md`
+- `C:\New folder\rebuild_reports\verification_09\band_mapping_stats.csv`
+- `C:\New folder\yamuna_data_fixed\sentinel2\**\*.tif` (11 files)
+- `C:\New folder\chips_fixed\**\*.tif` (252 files; sampled 5)
+
+**Outputs:**
+- `C:\Users\upend\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\docs\index_status.md`
+- `C:\Users\upend\AI-Based-illegal-Sand-Mining-Detection-and-Risk-Priortization\docs\band_fix_plan.md`
+- `docs/TODO.md` Stage 1 marked BLOCKED
+
+**Key numbers:**
+- S2 composites: 11/11 count=14, dtype=uint16, nodata=0.0; band descriptions all None (B12@10 not confirmable from metadata).
+- Script 09 evidence present: stacking_order_check.md + band_mapping reports/stats found; git `1189d2a` indicates Phase A corrected-order rebuild.
+- Rebuild report stats: NDVI B8/B4, NDWI B3/B8, NDBI B11/B8, NDSI B3/B11 median_mean_abs_diff ~6.9e-5..8.1e-5, median_frac_below_001==1.0.
+- 5-chip recomputation (seed=42; T010_2023_Q1, T034_2023_Q1, T034_2023_Q2, T045_2023_Q4, T025_2024_Q1): max abs diff NDVI<=0.000457, NDWI<=0.000429, NDBI<=0.000488, NDSI<=0.000469 (<0.01). Chip descriptions_ok=true.
+
+**Warnings/assumptions:**
+- Protocol gate: "B12 missing or misordered in any S2 composite = GATE FAILED, BLOCKED, STOP". Band descriptions missing on composites means B12 position is **not verified** by metadata; I did not assume it is correct or misordered.
+- Index recomputation used expected band positions; pass indicates stored indices match those positions, but does not independently prove physical B12 identity without metadata/reference check.
+- No raw data modified. No rebuild performed.
+
+**Gate result:** [!] BLOCKED - B12 band position not verified on all 11 S2 composites (descriptions missing). Stage 2+ not started.
+
+
+---
+
+## 2026-11-22 - Stage 1: B12 Independent Verification (Option 2, read-only)
+
+**Command:** Python/rasterio read-only comparison of `yamuna_data_fixed/sentinel2` band 10 vs `yamuna_data/sentinel2` band 10 for all 11 composites; 3 sampled 512x512 windows per composite (top-left, center, bottom-right), nodata=0 excluded. Control comparisons on bands 4 and 7.
+
+**Inputs:**
+- `C:\New folder\yamuna_data_fixed\sentinel2\**\S2_*_composite.tif` (11)
+- `C:\New folder\yamuna_data\sentinel2\**\S2_*_composite.tif` (11, read-only)
+- `C:\New folder\yamuna_data\sentinel2\2023_2024\S2_2023_Q2_composite_metadata.json` (raw band order reference)
+
+**Outputs:**
+- `docs/index_status.md` updated with B12 proof table
+- `docs/TODO.md` Stage 1 marked PASS (metadata caveat)
+- `docs/PROJECT_LOG.md` this entry
+
+**Key numbers:**
+- 11/11 composites: same shape, raw found, band10 fixed vs raw max_abs=0 mean_abs=0 p99=0 equal_frac=1.0 over sampled windows.
+- Control band4 fixed vs raw: max_abs 4042..7034, mean_abs 562..923 (differs, expected due to Phase A reorder).
+- Control band7 fixed vs raw: max_abs 1430..5124, mean_abs 93..149 (differs, expected).
+- Raw 2023_Q2 metadata band list includes `B12` at band position 10.
+
+**Warnings/assumptions:**
+- Sampled windows used for efficiency; not full-pixel scan. Max/mean/p99/equal_frac all zero in samples is strong evidence; a full scan can be run if desired.
+- Fixed composite band descriptions remain None. This does not invalidate pixel-level B12 verification but should be cleaned with approved additive metadata repair.
+
+**Gate result:** [x] PASS (metadata caveat). B12 band-position verified by independent read-only pixel comparison. Stage 2 may start after confirming Stage 1 record.
+
+
+---
+
+## 2026-11-22 - Stage 2: Feature Table (GATED PROTOCOL)
+
+**Command:**
+`python src/analysis/compute_chip_features_stage2.py --chips-dir "C:\New folder\chips_fixed" --extra-features "C:\New folder\extra_features\chip_features.csv" --out-dir "...\metadata" --docs-dir "...\docs" --log "...\reports\logs\stage2_features.log"`
+
+**Inputs:**
+- `C:\New folder\chips_fixed\**\T*_????_Q?.tif` (252 chips)
+- `C:\New folder\extra_features\chip_features.csv` (252 rows; CMI/distance/water_frac reference source only)
+- Prior Stage 1 PASS (band/index/B12 position verified)
+
+**Outputs:**
+- `src/analysis/compute_chip_features_stage2.py`
+- `metadata/features_stage2_raw.csv`
+- `metadata/features_v2.csv` (water_frac blank; water_threshold_status=PENDING_STUDENT_DECISION)
+- `metadata/features_stage2_summary.json`
+- `metadata/water_hist.png`
+- `docs/water_threshold_candidates.md`
+- `reports/logs/stage2_features.log`
+
+**Key numbers:**
+- Chips processed: 252 (42/quarter across 2023_Q1..2024_Q2).
+- 2023 NDSI valid pixels (threshold-selection pool): 11,010,048. 2024 excluded from threshold selection.
+- 2023 NDSI percentiles: p50=-0.1830, p75=-0.1288, p90=-0.0854, p95=-0.0464, p99=0.1304.
+- Candidate water fractions (2023, NDSI>t): t=-0.10 -> 0.138480; t=-0.05 -> 0.052350; t=0.00 -> 0.032684; t=0.05 -> 0.022024; t=0.10 -> 0.013343.
+- `features_v2.csv` water_frac blank for 252/252 rows by design.
+
+**Warnings/assumptions:**
+- Water threshold not chosen by assistant. `docs/water_threshold_decision.md` required from student before water_frac can be populated.
+- CMI and distance copied from existing local `extra_features/chip_features.csv` for convenience; they are feature columns, not threshold decisions.
+- No 2024 data used for threshold selection. No raw data modified.
+
+**Gate result:** [!] BLOCKED - awaiting student decision in `docs/water_threshold_decision.md`.
+
+
+---
+
+## 2026-11-22 - Stage 2: Water Threshold Decision Applied
+
+**Command:** Python/rasterio script applied `NDSI > 0.0` on valid pixels for all 252 `chips_fixed` chips; updated `features_v2.csv`, `features_stage2_raw.csv`, `features_stage2_summary.json`.
+
+**Inputs:**
+- `docs/water_threshold_decision.md` (student-approved: NDSI > 0.0, 2026-11-22)
+- `metadata/features_v2.csv`, `metadata/features_stage2_raw.csv`
+- `C:\New folder\chips_fixed\**\T*_????_Q?.tif`
+
+**Outputs:**
+- `docs/water_threshold_decision.md`
+- `metadata/features_v2.csv` (water_frac populated 252/252, threshold 0.0)
+- `metadata/features_stage2_raw.csv` (water_frac populated)
+- `metadata/features_stage2_summary.json` (decision recorded)
+
+**Key numbers:**
+- Threshold: 0.0 (`NDSI > 0.0`).
+- water_frac populated: 252/252.
+- 2024 excluded from threshold selection (recorded in decision).
+
+**Gate result:** [x] PASS. Stage 3 may proceed.
+
+
+---
+
+## 2026-11-22 - Stage 3: Proposed Groups (GATED PROTOCOL)
+
+**Command:** `python src/analysis/propose_groups_stage3.py`
+
+**Inputs:**
+- `metadata/features_v2.csv` (252 rows, water_frac populated, threshold 0.0 approved)
+
+**Outputs:**
+- `src/analysis/propose_groups_stage3.py`
+- `docs/proposal_rules.md`
+- `metadata/proposed_groups.csv`
+- `metadata/proposed_groups_summary.json`
+- `C:\New folder\annotation\review_queue.csv`
+
+**Key numbers:**
+- 252 chips; 2023-only percentile cutoffs used (2024 excluded from cutoff derivation).
+- Cutoffs: ndsi_mean p75_2023=-0.158414, p25_2023=-0.192096; cmi_mean p75_2023=0.099825, p25_2023=0.069875; water_frac p75_2023=0.037681; ndvi_mean p75_2023=0.270455.
+- Groups: PROPOSAL_UNSURE_REVIEW=209, PROPOSAL_MIXED_REVIEW=27, PROPOSAL_NOT_MINING_LIKE=16, PROPOSAL_MINING_LIKE=0.
+- All rows marked `PROPOSAL_FOR_HUMAN_CONFIRMATION_ONLY`; human_decision/human_notes blank.
+
+**Warnings/assumptions:**
+- No final labels generated. Proposals are heuristic and require human confirmation.
+- No mining-like proposal met the strict 2-cue rule; this is recorded as-is, not adjusted.
+
+**Gate result:** [x] PASS (proposals only). Stage 4 requires human labelling/agreement.
+
+
+---
+
+## 2026-11-22 - Stage 4: Agreement Package Prepared (GATED PROTOCOL)
+
+**Command:**
+- `python src/analysis/prepare_stage4_agreement.py`
+- `python "C:\New folder\annotation\agreement\compute_agreement.py"` (initial report)
+
+**Inputs:**
+- `C:\New folder\label_review\verified_labels.csv` (reference only; not copied to agreed_label)
+- `metadata/features_v2.csv`
+
+**Outputs:**
+- `src/analysis/prepare_stage4_agreement.py`
+- `C:\New folder\annotation\agreement\agreement_template.csv`
+- `C:\New folder\annotation\agreement\decisive_candidates_reference.csv`
+- `C:\New folder\annotation\agreement\compute_agreement.py`
+- `C:\New folder\annotation\agreement\agreement_report.json`
+- `C:\New folder\annotation\agreement\agreement_report.md`
+- `C:\New folder\annotation\agreement\README.md`
+
+**Key numbers:**
+- Agreement template: 30 rows (15 prior MINING refs, 15 prior NOT MINING refs), 15 marked double_label_required=YES.
+- Current agreement report: n_double_labelled=0, agreement_pct=0.0, agreed_mining=0, agreed_not_mining=0, gate_pass=false.
+
+**Warnings/assumptions:**
+- No final labels generated. `suggested_prior_label_DO_NOT_USE_AS_FINAL` is reference only.
+- Human double-labelling and adjudication required. Stage 4 remains BLOCKED until gate passes.
+
+**Gate result:** [!] BLOCKED - human labelling/agreement required.
+
+
+---
+
+## 2026-11-22 - Stage 4: Agreement Gate FAILED (human labels evaluated)
+
+**Command:**
+- Converted `C:\New folder\annotation\agreement\agreement_template.xlsx` -> `agreement_template.csv`
+- `python "C:\New folder\annotation\agreement\compute_agreement.py"`
+
+**Inputs:**
+- `C:\New folder\annotation\agreement\agreement_template.xlsx` (user-filled)
+
+**Outputs:**
+- `C:\New folder\annotation\agreement\agreement_template.csv` (normalized labels)
+- `C:\New folder\annotation\agreement\agreement_report.json`
+- `C:\New folder\annotation\agreement\agreement_report.md`
+
+**Key numbers:**
+- Rows: 30. Double-labelled: 18. Agreement: 12/18 = 66.67%.
+- Agreed counts: MINING=4, NOT MINING=12, UNSURE=14. Invalid=0.
+- Gate checks: double_label_ge_15 PASS, agreement_ge_85 FAIL, agreed_mining_ge_15 FAIL, agreed_not_mining_ge_15 FAIL, no_invalid_labels PASS.
+- Disagreements: T046_2023_Q4 (UNSURE/MINING->MINING), T018_2023_Q1 (NOT MINING/UNSURE->NOT MINING), T017_2023_Q1 (UNSURE/MINING->MINING), T039_2023_Q3 (NOT MINING/UNSURE->UNSURE), T043_2023_Q3 (NOT MINING/UNSURE->NOT MINING), T051_2023_Q2 (NOT MINING/UNSURE->UNSURE).
+
+**Warnings/assumptions:**
+- No labels were forced or auto-corrected. Stage 4 remains BLOCKED per protocol.
+
+**Gate result:** [!] BLOCKED - agreement and agreed-class counts below gate.
+
+
+---
+
+## 2026-11-22 - Stage 4: Agreement Gate PASS
+
+**Command:**
+- Converted `C:\New folder\annotation\agreement\agreement_template.xlsx` -> `agreement_template.csv`
+- `python "C:\New folder\annotation\agreement\compute_agreement.py"`
+
+**Inputs:** `C:\New folder\annotation\agreement\agreement_template.xlsx` (user-reviewed)
+
+**Outputs:**
+- `C:\New folder\annotation\agreement\agreement_template.csv`
+- `C:\New folder\annotation\agreement\agreement_report.json`
+- `C:\New folder\annotation\agreement\agreement_report.md`
+
+**Key numbers:**
+- Rows: 30. Double-labelled: 18. Agreement: 16/18 = 88.89%.
+- Agreed counts: MINING=15, NOT MINING=15, UNSURE=0. Invalid=0.
+- Gate checks all PASS: double_label_ge_15, agreement_ge_85, agreed_mining_ge_15, agreed_not_mining_ge_15, no_invalid_labels.
+
+**Gate result:** [x] PASS. Stage 5 may proceed.
+
+
+---
+
+## 2026-11-22 - Stage 5: Test Split Locked
+
+**Command:** Generated proposal/lock via Python scripts; user confirmed "lock Stage 5 split".
+
+**Inputs:**
+- `C:\New folder\annotation\agreement\agreement_template.csv` (30 agreed MINING/NOT MINING)
+- `metadata/features_v2.csv`
+
+**Outputs:**
+- `docs/test_split_proposal.md`
+- `metadata/test_split_PROPOSED.csv`
+- `metadata/test_split_PROPOSED_summary.json`
+- `metadata/test_split_LOCKED.csv`
+
+**Key numbers:**
+- 30 chips total: 24 train (12 MINING, 12 NOT MINING), 6 test (3 MINING, 3 NOT MINING).
+- Test chips: T018_2023_Q1, T027_2023_Q3, T034_2023_Q1, T043_2023_Q3, T046_2023_Q4, T050_2023_Q3.
+- Transect-disjoint: true. Test has 2024 chips: false. 2024 excluded from model/threshold selection/early stopping.
+- Augmentation: none before split; train-only after lock.
+
+**Gate result:** [x] PASS. Stage 6 may proceed.
+
+
+---
+
+## 2026-11-22 - Stage 5: Split Correction (pre-Stage 6)
+
+**Reason:** Locked split contained transect leakage (T051 in both train and test). Detected immediately after lock, before any Stage 6 training.
+
+**Correction:** Replaced `T051_2023_Q3` (NOT MINING, test) with `T050_2023_Q3` (NOT MINING, 2023_Q3, single-chip transect). T051_2023_Q3 moved to train.
+
+**Final test chips:** T018_2023_Q1, T027_2023_Q3, T034_2023_Q1, T043_2023_Q3, T046_2023_Q4, T050_2023_Q3.
+
+**Checks:** Transect overlap empty; 24 train / 6 test; 12/12 train class balance; 3/3 test class balance; no 2024 in test.
+
+**Gate result:** [x] PASS (corrected, still locked).
+
+
+---
+
+## 2026-11-22 - Stage 6: RF Baseline (Local) + Kaggle Package
+
+**Command:**
+- `python src/analysis/stage6_rf_baseline.py --locked-split metadata/test_split_LOCKED.csv --features-csv metadata/features_v2.csv --output-dir reports/stage6_rf_local --log-file reports/logs/stage6_rf_local.log`
+
+**Inputs:**
+- `metadata/test_split_LOCKED.csv` (30 agreed chips, locked 2026-11-22)
+- `metadata/features_v2.csv`
+
+**Outputs:**
+- `src/analysis/stage6_rf_baseline.py`
+- `notebooks/stage6_rf_kaggle.py`
+- `reports/stage6_rf_local/stage6_rf_metrics.json`
+- `reports/stage6_rf_local/stage6_rf_cv_predictions.csv`
+- `reports/stage6_rf_local/stage6_rf_test_predictions.csv`
+- `reports/stage6_rf_local/stage6_rf_feature_importance.csv`
+- `reports/stage6_rf_local/stage6_rf_report.md`
+- `reports/stage6_rf_local/kaggle_run_instructions.md`
+- `reports/logs/stage6_rf_local.log`
+
+**Key numbers:**
+- Features (7, no sand_frac): ndvi_mean, ndwi_mean, ndbi_mean, ndsi_mean, cmi_mean, water_frac, distance_mean_m.
+- Train 24 (12/12), Test 6 (3/3). CV on 2023 train only: 21 rows, 3 2024 train rows excluded from CV/model selection but included in final fit.
+- CV GroupKFold(5, by transect): accuracy=0.9048, f1_macro=0.9028, CM [[11,1],[1,8]] (labels NOT MINING, MINING).
+- Locked test: accuracy=1.0000, f1_macro=1.0000, CM [[3,0],[0,3]].
+- Feature importance: distance_mean_m 0.1696, ndsi_mean 0.1654, cmi_mean 0.1522, ndvi_mean 0.1503, ndwi_mean 0.1486, ndbi_mean 0.1356, water_frac 0.0783.
+
+**Warnings/assumptions:**
+- n=30 total; metrics indicative only. 6-chip test is too small for strong claims.
+- Sand_frac excluded from features; sand_frac was previously observed as a label artifact in larger decisive set - this must be stated in reports.
+- 2024 excluded from CV/model selection as required.
+
+**Gate result:** [x] PASS (local baseline). Kaggle rerun package ready for reproducibility check.

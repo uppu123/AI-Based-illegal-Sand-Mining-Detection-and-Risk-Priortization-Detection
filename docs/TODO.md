@@ -42,11 +42,12 @@ Protocol: strict gated stages (2026-11-22). Status legend: `[x] PASS`, `[!] BLOC
   - Kaggle: `notebooks/stage6_rf_kaggle.py` + `reports/stage6_rf_local/kaggle_run_instructions.md` prepared; user can run same split on Kaggle and place outputs in `reports/stage6_rf_kaggle/`.
 
 ## Stage 7: Deep Learning Segmentation
-- [!] BLOCKED (runs complete, gate not passed due low metrics) - U-Net and LMS-Net full runs completed on Colab (40 epochs, 3-fold GroupKFold by transect, 2023 CV; 2024 held-out report-only; flip/90° train-fold aug only; no leakage). Smoke tests were only smoke.
-  - U-Net Colab (`reports/stage7_unet_colab/`): CV IoU 0.01592, Dice 0.03134, P 0.01967, R 0.10054, F1 0.03134; held-out 2024 report-only IoU 0.04729, Dice 0.08627. Metrics/CSVs saved; checkpoints not committed due size.
-  - LMS-Net Colab (`reports/stage7_lmsnet_colab/`, paper-faithful impl, explicit deviations in `docs/lmsnet_reference.md`): CV IoU 0.01605, Dice 0.03158, P 0.01827, R 0.18645, F1 0.03158; held-out 2024 report-only all zeros. Old `models/train_segmentation.py --lmsnet` remains NON-COMPLIANT.
-  - **Gate decision**: NOT PASS. Metrics are near-zero/low on sparse 28-mask dataset; not defensible as strong segmentation evidence. Honest review recorded; do not overclaim. Before Stage 8/9, decide: accept as weak baseline evidence with caveats, improve masks/data/architecture, or keep Stage 7 blocked.
-  - Kaggle kernels were queued earlier; Colab runs used as execution path.
+- [!] BLOCKED (aug45 reruns complete, gate not passed) - Gate-compliant augmented reruns completed on Colab (40 epochs, 3-fold GroupKFold by transect, 2023 CV; 2024 held-out report-only; augmentation only on training fold samples after split; val/held-out real-only; no leakage).
+  - Augmentation: 1 real + rot 45/90/135/180 + pixel shifts ±16px x/y = 9 samples per real training chip; image bilinear/reflect, mask nearest/reflect + re-binarized; 45/135 interpolation artifacts documented.
+  - U-Net aug45 (`reports/stage7_unet_aug45_colab/`): CV IoU 0.03381, Dice 0.06540, P 0.04773, R 0.11520, F1 0.06540; held-out 2024 report-only IoU 0.07779, Dice 0.13463. Improved over prior U-Net but still low/weak.
+  - LMS-Net aug45 (`reports/stage7_lmsnet_aug45_colab/`, paper-faithful, explicit deviations in `docs/lmsnet_reference.md`): CV IoU 0.03063, Dice 0.05943, P 0.06369, R 0.06831, F1 0.05943; held-out 2024 report-only IoU 0.05124, Dice 0.08504. Improved over prior LMS-Net but still low/weak.
+  - Prior non-aug baseline: U-Net CV IoU 0.01592/Dice 0.03134; LMS-Net CV IoU 0.01605/Dice 0.03158 (`reports/stage7_unet_colab/`, `reports/stage7_lmsnet_colab/`).
+  - **Gate decision**: NOT PASS. Augmentation helped, but metrics remain low on sparse 28-mask dataset; not defensible as strong segmentation evidence. No overclaim. Before Stage 8/9, decide: improve labels/data/model, or explicitly accept weak baseline with caveats.
 
 ## Stage 8: Self-Training (Optional, Gated)
 - [!] BLOCKED (approval/template ready) - `docs/selftrain_approval.md` drafted. Still blocked until Stage 7 PASS/stable and explicit approval; no pseudo-masks on test set.

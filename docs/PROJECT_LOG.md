@@ -1174,3 +1174,19 @@ Then rebuild all composites.
 - User requested dropping dashboard plan for now.
 - `docs/TODO.md` Stage 10 marked `[ ] DROPPED (user decision, 2026-11-22)`.
 - `docs/dashboard_scope.md` retained as draft reference with dropped status; no dashboard implementation planned unless user explicitly revisits.
+
+---
+
+## 2026-11-22 - Stage 7: gate-compliant aug45 U-Net/LMS-Net reruns (Colab)
+
+**Protocol (gate-compliant):** Split first on real 2023 mask chips (GroupKFold by transect, 3 folds); 2024 held out report-only; no 2024 in selection/early stopping; no leakage. Augmentation applied only to training-fold samples after split; val/held-out 2024 real-only.
+
+**Augmentation:** 1 real + rot 45/90/135/180 + pixel shifts ±16px x/y = 9 samples per real training chip. Image bilinear/reflect; mask nearest/reflect + re-binarized. 45/135 interpolation/corner artifacts documented.
+
+**U-Net aug45 (`reports/stage7_unet_aug45_colab/`):** CV overall IoU 0.03381, Dice 0.06540, P 0.04773, R 0.11520, F1 0.06540. Held-out 2024 report-only IoU 0.07779, Dice 0.13463, P 0.19979, R 0.10153, F1 0.13463.
+
+**LMS-Net aug45 (`reports/stage7_lmsnet_aug45_colab/`, paper-faithful with deviations):** CV overall IoU 0.03063, Dice 0.05943, P 0.06369, R 0.06831, F1 0.05943. Held-out 2024 report-only IoU 0.05124, Dice 0.08504, P 0.10906, R 0.06969, F1 0.08504.
+
+**Comparison:** prior non-aug baselines were U-Net CV IoU 0.01592/Dice 0.03134 and LMS-Net CV IoU 0.01605/Dice 0.03158. Augmentation improved metrics but they remain low.
+
+**Gate decision:** [!] Stage 7 NOT PASS. Runs are protocol-compliant; evidence is honest but weak on sparse 28-mask dataset. No overclaim. User decision needed before Stage 8/9: improve labels/data/model or explicitly accept weak baseline with caveats.

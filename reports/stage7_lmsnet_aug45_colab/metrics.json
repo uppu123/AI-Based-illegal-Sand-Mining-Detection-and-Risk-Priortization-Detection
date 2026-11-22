@@ -1,0 +1,127 @@
+{
+  "stage": 7,
+  "model": "LMSNet",
+  "arch": "lmsnet",
+  "paper": "Zhang et al. 2025 Remote Sensing 17:227 doi:10.3390/rs17020227",
+  "channels": [
+    32,
+    64,
+    128,
+    256,
+    512
+  ],
+  "epochs": 40,
+  "seed": 42,
+  "device": "cuda",
+  "timestamp_utc": "2026-11-22T17:43:14.858279+00:00",
+  "n_mask_entries_total": 28,
+  "n_cv_2023": 24,
+  "n_heldout_2024": 4,
+  "cv_overall": {
+    "iou": 0.03062570230621311,
+    "dice": 0.059428982183804414,
+    "precision": 0.06368707920820509,
+    "recall": 0.0683131804162627,
+    "f1": 0.059428982183804414
+  },
+  "cv_folds": [
+    {
+      "tp": 2357,
+      "fp": 22739,
+      "fn": 54363,
+      "tn": 4114845,
+      "precision": 0.0939193496971629,
+      "recall": 0.04155500705218618,
+      "f1": 0.057617092011342526,
+      "iou": 0.029663096691375426,
+      "dice": 0.057617092011342526,
+      "positive_fraction": 0.013523101806640625,
+      "fold": 1,
+      "best_epoch": 34,
+      "val_chips": [
+        "T006_2023_Q1",
+        "T006_2023_Q2",
+        "T006_2023_Q3",
+        "T006_2023_Q4",
+        "T007_2023_Q1",
+        "T007_2023_Q3",
+        "T011_2023_Q1",
+        "T011_2023_Q3"
+      ],
+      "train_n_real": 16,
+      "train_n_aug": 144
+    },
+    {
+      "tp": 4727,
+      "fp": 88633,
+      "fn": 64129,
+      "tn": 4036815,
+      "precision": 0.05063196229648672,
+      "recall": 0.0686505170210294,
+      "f1": 0.05828031760122306,
+      "iou": 0.030014794684073174,
+      "dice": 0.05828031760122306,
+      "positive_fraction": 0.016416549682617188,
+      "fold": 2,
+      "best_epoch": 4,
+      "val_chips": [
+        "T008_2023_Q3",
+        "T014_2023_Q3",
+        "T014_2023_Q4",
+        "T015_2023_Q1",
+        "T015_2023_Q3",
+        "T018_2023_Q1",
+        "T020_2023_Q2",
+        "T020_2023_Q3"
+      ],
+      "train_n_real": 16,
+      "train_n_aug": 144
+    },
+    {
+      "tp": 6354,
+      "fp": 130262,
+      "fn": 60718,
+      "tn": 3996970,
+      "precision": 0.04650992563096563,
+      "recall": 0.09473401717557252,
+      "f1": 0.06238953693884765,
+      "iou": 0.03219921554319073,
+      "dice": 0.06238953693884765,
+      "positive_fraction": 0.0159912109375,
+      "fold": 3,
+      "best_epoch": 8,
+      "val_chips": [
+        "T004_2023_Q3",
+        "T009_2023_Q3",
+        "T010_2023_Q3",
+        "T010_2023_Q4",
+        "T019_2023_Q1",
+        "T019_2023_Q3",
+        "T022_2023_Q3",
+        "T022_2023_Q4"
+      ],
+      "train_n_real": 16,
+      "train_n_aug": 144
+    }
+  ],
+  "heldout_2024_summary_report_only": {
+    "iou": 0.051236263736263735,
+    "dice": 0.08504331965344278,
+    "precision": 0.10906432748538011,
+    "recall": 0.06969357249626308,
+    "f1": 0.08504331965344276
+  },
+  "deviations": [
+    "Input adapted to 14-band S2 chips",
+    "Binary 1-channel mining mask output",
+    "Explicit channel schedule [32,64,128,256,512]",
+    "Stage 7 project protocol (2023 CV, 2024 heldout report-only, flip/90 train-only, no leakage)"
+  ],
+  "protocol_notes": [
+    "2024 excluded from CV/model selection/early stopping; report only.",
+    "Augmentation (real + rot45/90/135/180 + pixel shifts \u00b116px x/y = 9x per training sample) on training fold samples only; 45/135 use reflect interpolation and mask re-binarization.",
+    "GroupKFold by transect on 2023 mask chips.",
+    "No leakage.",
+    "Sparse/tiny masks may yield near-zero IoU/Dice; report as-is."
+  ]
+}

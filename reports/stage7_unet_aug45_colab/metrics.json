@@ -1,0 +1,114 @@
+{
+  "stage": 7,
+  "model": "UNet",
+  "arch": "unet",
+  "base": 16,
+  "epochs": 40,
+  "seed": 42,
+  "device": "cuda",
+  "timestamp_utc": "2026-11-22T17:01:06.211624+00:00",
+  "n_mask_entries_total": 28,
+  "n_cv_2023": 24,
+  "n_heldout_2024": 4,
+  "cv_overall": {
+    "iou": 0.033814441448745215,
+    "dice": 0.06540255895961646,
+    "precision": 0.04772605833384572,
+    "recall": 0.11520420619572685,
+    "f1": 0.06540255895961646
+  },
+  "cv_folds": [
+    {
+      "tp": 8439,
+      "fp": 224977,
+      "fn": 48281,
+      "tn": 3912607,
+      "precision": 0.036154333893135,
+      "recall": 0.14878349788434414,
+      "f1": 0.05817271900074447,
+      "iou": 0.029957720529505107,
+      "dice": 0.05817271900074448,
+      "positive_fraction": 0.013523101806640625,
+      "fold": 1,
+      "best_epoch": 18,
+      "val_chips": [
+        "T006_2023_Q1",
+        "T006_2023_Q2",
+        "T006_2023_Q3",
+        "T006_2023_Q4",
+        "T007_2023_Q1",
+        "T007_2023_Q3",
+        "T011_2023_Q1",
+        "T011_2023_Q3"
+      ],
+      "train_n_real": 16,
+      "train_n_aug": 144
+    },
+    {
+      "tp": 7537,
+      "fp": 137295,
+      "fn": 61319,
+      "tn": 3988153,
+      "precision": 0.052039604507291205,
+      "recall": 0.10946032299291275,
+      "f1": 0.07054209876081016,
+      "iou": 0.036560579381133246,
+      "dice": 0.07054209876081015,
+      "positive_fraction": 0.016416549682617188,
+      "fold": 2,
+      "best_epoch": 7,
+      "val_chips": [
+        "T008_2023_Q3",
+        "T014_2023_Q3",
+        "T014_2023_Q4",
+        "T015_2023_Q1",
+        "T015_2023_Q3",
+        "T018_2023_Q1",
+        "T020_2023_Q2",
+        "T020_2023_Q3"
+      ],
+      "train_n_real": 16,
+      "train_n_aug": 144
+    },
+    {
+      "tp": 5860,
+      "fp": 100716,
+      "fn": 61212,
+      "tn": 4026516,
+      "precision": 0.054984236601110945,
+      "recall": 0.08736879770992366,
+      "f1": 0.06749285911729476,
+      "iou": 0.0349250244355973,
+      "dice": 0.06749285911729476,
+      "positive_fraction": 0.0159912109375,
+      "fold": 3,
+      "best_epoch": 25,
+      "val_chips": [
+        "T004_2023_Q3",
+        "T009_2023_Q3",
+        "T010_2023_Q3",
+        "T010_2023_Q4",
+        "T019_2023_Q1",
+        "T019_2023_Q3",
+        "T022_2023_Q3",
+        "T022_2023_Q4"
+      ],
+      "train_n_real": 16,
+      "train_n_aug": 144
+    }
+  ],
+  "heldout_2024_summary_report_only": {
+    "iou": 0.07778831478811687,
+    "dice": 0.13462911783630976,
+    "precision": 0.19979136851104956,
+    "recall": 0.10152937831554248,
+    "f1": 0.13462911783630976
+  },
+  "protocol_notes": [
+    "2024 excluded from CV/model selection/early stopping; held out for report only.",
+    "Augmentation (flip/90deg) applied only to training fold samples.",
+    "GroupKFold by transect on 2023 mask chips.",
+    "No test leakage; held-out 2024 not used for selection.",
+    "Sparse/tiny masks may produce near-zero IoU/Dice; report as-is."
+  ]
+}

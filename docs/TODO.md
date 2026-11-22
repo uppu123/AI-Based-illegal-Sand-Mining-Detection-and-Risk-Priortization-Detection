@@ -42,11 +42,13 @@ Protocol: strict gated stages (2026-11-22). Status legend: `[x] PASS`, `[!] BLOC
   - Kaggle: `notebooks/stage6_rf_kaggle.py` + `reports/stage6_rf_local/kaggle_run_instructions.md` prepared; user can run same split on Kaggle and place outputs in `reports/stage6_rf_kaggle/`.
 
 ## Stage 7: Deep Learning Segmentation
-- [!] BLOCKED (awaiting Kaggle run/results) - U-Net Kaggle package prepared: `notebooks/stage7_unet_kaggle.py`, `notebooks/stage7_kaggle_instructions.md`.
-  - Protocol in script: 2023 mask chips for GroupKFold-by-transect CV/selection; 2024 mask chips held out from selection (report-only); augmentation flip/90° on train folds only; no leakage; sequential single run.
-  - LMS-Net: BLOCKED unless Zhang et al. 2025 architecture table/reference present on disk (not found/confirmed).
-  - Prior local runs (old protocol, not Stage-7 compliant): U-Net IoU 0.01537; LMS-Net IoU 0.00589. Not used as gate evidence.
-  - Gate requires Kaggle run outputs placed in `reports/stage7_unet_kaggle/` and review.
+- [!] BLOCKED (awaiting Kaggle run/results) - U-Net and LMS-Net Kaggle kernels pushed; smoke tests passed locally.
+  - U-Net: `kiramada/yamuna-stage7-unet` v3 (ipynb, GPU, dataset `kiramada/yamuna-stage7-input`). Local smoke 1 epoch PASS (`reports/stage7_unet_smoke/`): CV IoU 0.00682 Dice 0.01349.
+  - LMS-Net reference FOUND: `C:\Users\upend\Downloads\remotesensing-17-00227-v2.pdf` (Zhang et al., *Remote Sensing* 2025, 17, 227, DOI 10.3390/rs17020227). See `docs/lmsnet_reference.md`.
+  - LMS-Net implementation: `notebooks/stage7_lmsnet_kaggle.ipynb` paper-faithful structure (LMS block dilations 1/2/3/5 + depthwise, CAM, 5-level encoder-decoder) with explicit deviations (14-band input, binary mask, explicit channels [32,64,128,256,512], Stage 7 protocol). Old `models/train_segmentation.py --lmsnet` is NON-COMPLIANT with this paper.
+  - LMS-Net local smoke 1 epoch PASS (`reports/stage7_lmsnet_smoke/`): CV IoU 0.000158 Dice 0.000316 (smoke only). Kaggle kernel `kiramada/yamuna-stage7-lmsnet` v1 pushed, GPU, dataset attached.
+  - Protocol: 2023 mask chips GroupKFold-by-transect CV/selection; 2024 held out report-only; flip/90° train-fold augmentation only; no leakage; sequential.
+  - Gate requires Kaggle outputs in `reports/stage7_unet_kaggle/` and `reports/stage7_lmsnet_kaggle/`, review, and honest metrics.
 
 ## Stage 8: Self-Training (Optional, Gated)
 - [ ] NOT RUN

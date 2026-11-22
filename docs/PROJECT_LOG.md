@@ -1109,3 +1109,27 @@ Then rebuild all composites.
 - Sequential single run; no leakage.
 
 **Gate result:** [!] BLOCKED - awaiting Kaggle execution and result review. LMS-Net blocked unless on-disk architecture reference found.
+
+
+---
+
+## 2026-11-22 - Stage 7: LMS-Net reference verified, smoke tests, Kaggle kernels
+
+**Reference check:**
+- Correct paper: `C:\Users\upend\Downloads\remotesensing-17-00227-v2.pdf` — Zhang, Liu, Liu, *Lightweight Multi-Scale Network for Segmentation of Riverbank Sand Mining Area in Satellite Images*, Remote Sensing 2025, 17, 227, doi:10.3390/rs17020227.
+- Irrelevant prior attachments: arXiv 2502.05473 (Learned Mumford-Shah medical FSS), Scientific Reports UAV FTC.
+- `models/train_segmentation.py --lmsnet` is NON-COMPLIANT with Remote Sensing LMS-Net (ASPP-like bottleneck, not LMS/CAM).
+
+**Implementation:**
+- Added `docs/lmsnet_reference.md`.
+- Added `notebooks/stage7_lmsnet_kaggle.ipynb` (paper-faithful LMS block dilations 1/2/3/5 + depthwise concat; CAM; 5-level encoder-decoder). Deviations: 14-band input, binary mask, explicit channels [32,64,128,256,512], Stage 7 protocol.
+
+**Smoke tests (local, 1 epoch, GTX 1650):**
+- U-Net PASS: `reports/stage7_unet_smoke/`, CV IoU 0.00682 Dice 0.01349.
+- LMS-Net PASS: `reports/stage7_lmsnet_smoke/`, CV IoU 0.000158 Dice 0.000316. Smoke only.
+
+**Kaggle:**
+- `kiramada/yamuna-stage7-unet` v3 ipynb pushed (GPU, dataset attached).
+- `kiramada/yamuna-stage7-lmsnet` v1 ipynb pushed (GPU, dataset attached).
+
+**Gate:** [!] BLOCKED awaiting Kaggle full-run outputs/review.

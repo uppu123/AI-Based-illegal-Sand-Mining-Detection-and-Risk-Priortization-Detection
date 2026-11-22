@@ -1133,3 +1133,16 @@ Then rebuild all composites.
 - `kiramada/yamuna-stage7-lmsnet` v1 ipynb pushed (GPU, dataset attached).
 
 **Gate:** [!] BLOCKED awaiting Kaggle full-run outputs/review.
+
+
+---
+
+## 2026-11-22 - Stage 8-10 draft prep (no gate pass)
+
+**Created (DRAFT/PROPOSED, not gate evidence):**
+- `docs/ahp_matrices.md` — proposed 5-factor AHP matrix, principal-eigenvector weights, λ_max=5.068439, CI=0.017110, CR=0.015277 (<0.10). Reconciliation note vs `models/compute_risk_score.py` defaults.
+- `docs/ahp_approval.md` — supervisor approval template; Stage 9 blocked until approved.
+- `docs/dashboard_scope.md` — MVP scope draft; only PASS-gated results shown as final; Stage 10 blocked until user approval.
+- `docs/selftrain_approval.md` — optional self-training approval checklist; no pseudo-masks on test set.
+
+**Gate impact:** Stages 8-10 remain BLOCKED. No model/risk/dashboard gate passed.

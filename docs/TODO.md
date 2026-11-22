@@ -51,13 +51,13 @@ Protocol: strict gated stages (2026-11-22). Status legend: `[x] PASS`, `[!] BLOC
   - Gate requires Kaggle outputs in `reports/stage7_unet_kaggle/` and `reports/stage7_lmsnet_kaggle/`, review, and honest metrics.
 
 ## Stage 8: Self-Training (Optional, Gated)
-- [ ] NOT RUN
+- [!] BLOCKED (approval/template ready) - `docs/selftrain_approval.md` drafted. Still blocked until Stage 7 PASS/stable and explicit approval; no pseudo-masks on test set.
 
 ## Stage 9: Morphology and Risk Scoring
-- [ ] NOT RUN
+- [!] BLOCKED (draft prep ready) - `docs/ahp_matrices.md` and `docs/ahp_approval.md` drafted (PROPOSED, CR=0.01528 < 0.10). Blocked until prior gates PASS, supervisor approval recorded, and weights reconciled with `models/compute_risk_score.py`. No 40/30/20/10, no risk accuracy.
 
 ## Stage 10: Dashboard MVP
-- [ ] NOT RUN
+- [!] BLOCKED (scope draft ready) - `docs/dashboard_scope.md` drafted (PROPOSED). Blocked until user approves scope and only PASS results are shown as final.
 
 ## Stage 11: Documentation
 - [ ] NOT RUN
